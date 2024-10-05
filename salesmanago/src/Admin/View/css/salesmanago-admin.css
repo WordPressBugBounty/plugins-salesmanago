@@ -1,0 +1,534 @@
+/**
+ * All of the CSS for your admin-specific functionality should be
+ * included in this file.
+ */
+
+#salesmanago .nav-tab-wrapper
+{
+	max-width: calc(100% - 80px)
+}
+
+#salesmanago .button-logout
+{
+	position: absolute;
+	right: 20px;
+}
+.refresh-owner-success {
+	display:inline-block;
+	width: 10px;
+	height:18px;
+	-ms-transform: rotate(45deg); /* IE 9 */
+	-webkit-transform: rotate(45deg); /* Chrome, Safari, Opera */
+	transform: rotate(45deg);
+}
+
+.checkmark_stem_success {
+	position: absolute;
+	width:3px;
+	height:9px;
+	background-color: #119D00;
+	left:11px;
+	top:6px;
+}
+
+.checkmark_kick_success {
+	position: absolute;
+	width:3px;
+	height:3px;
+	background-color: #119D00;
+	left:8px;
+	top:12px;
+}
+
+#salesmanago-logo
+{
+	max-height: 35px;
+	max-width: 175px;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+#salesmanago select
+{
+	min-width: 230px;
+}
+
+#salesmanago input[type="text"],
+#salesmanago input[type="password"],
+#salesmanago input[type="email"]
+{
+	min-width: 230px;
+}
+
+
+#salesmanago select[value=""]
+{
+	color: gray;
+}
+
+#salesmanago option
+{
+	color: black;
+}
+
+#salesmanago .form-title-header
+{
+	display: flex;
+	justify-content: space-between;
+	max-width: 590px;
+}
+
+
+#salesmanago .button-inline
+{
+	margin: 0 20px;
+}
+
+#salesmanago .salesmanago-button
+{
+	margin: 0 15px;
+}
+
+#salesmanago .salesmanago-form-configuration .button-inline
+{
+	margin: 10px 20px;
+}
+
+#salesmanago .hidden
+{
+	display: none !important;
+}
+
+#salesmanago th .plugin-not-active
+{
+	font-weight: normal;
+	margin: 0;
+	color: #FF0000;
+}
+
+#salesmanago .notice
+{
+	display: inline-block;
+	padding: 11px 15px;
+	font-size: 14px;
+	line-height: 1.4;
+	width: calc(100% - 40px);
+}
+
+#salesmanago-export-notice
+{
+	margin-top: 20px;
+	display: none;
+}
+
+#salesmanago-export-restore
+{
+	margin-top: 20px;
+	display: none;
+}
+
+#salesmanago-export-continue
+{
+	margin-top: 20px;
+}
+
+#salesmanago progress
+{
+	width: 100%;
+	max-width: 380px;
+	color: rgb(45,0,247);
+}
+#salesmanago progress::-moz-progress-bar
+{
+	background: rgb(45,0,247);
+	background: linear-gradient(90deg, rgba(45,0,247,1) 0%, rgba(188,0,221,1) 50%, rgba(242,0,137,1) 100%);
+}
+#salesmanago progress::-webkit-progress-value
+{
+	background: rgb(45,0,247);
+	background: linear-gradient(90deg, rgba(45,0,247,1) 0%, rgba(188,0,221,1) 50%, rgba(242,0,137,1) 100%);
+}
+
+#salesmanago-content #monitcode-area
+{
+	background: rgb(255,255,255);
+	resize: none;
+	cursor: not-allowed;
+}
+
+#salesmanago .log-textarea
+{
+	background: rgb(255,255,255);
+	resize: none;
+	cursor: not-allowed;
+	width: 60%;
+	min-height: 256px;
+	margin-bottom: 2px;
+}
+
+#salesmanago .about-info-span
+{
+	display: block;
+	text-align: start !important;
+	font-size: 12px;
+	letter-spacing: 1px;
+}
+
+#salesmanago .button-count
+{
+	margin-bottom: 20px;
+	display: inline-block;
+}
+
+#salesmanago .salesmanago-count-result
+{
+	display: inline-block;
+	margin-bottom: 20px;
+	font-size: 16px;
+}
+
+.salesmanago-export-modal-button
+{
+	margin-left: 5px !important;
+}
+
+.text-input-validation-error
+{
+	border: 2px solid #FF0000 !important;
+}
+
+.sm-product-catalog-info-list
+{
+	font-size: 14px;
+}
+
+.sm-product-catalog-container
+{
+	display: flex;
+	padding: 10px;
+}
+
+.sm-product-catalog-image-container
+{
+	margin: auto;
+	padding: 20px;
+}
+
+.sm-product-catalog-text-container
+{
+	height: auto;
+}
+
+.sm-product-catalog-input-container
+{
+	display: flex;
+}
+
+.sm-create-catalog-form-container
+{
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.sm-create-catalog-input-container
+{
+	display: flex;
+	flex-direction: column;
+	gap: 3px;
+}
+
+.sm-product-catalog-input
+{
+	width: 60%;
+	margin: 4px 0;
+	border-style: solid;
+	border-width: 1px;
+	padding: 5px;
+}
+
+.sm-product-catalog-description
+{
+	font-size: 12px !important;
+}
+
+.sm-product-catalog-button
+{
+	border-style: solid;
+	background-color: #D7FC81;
+	border-width: 1px;
+	border-left: none;
+	cursor: pointer;
+	min-width: 60px;
+	margin: 4px 0;
+}
+
+.sm-product-catalog-button:hover
+{
+	filter: brightness(95%);
+}
+
+.sm-product-api-label
+{
+	font-weight: bold;
+}
+
+.sm-product-catalog-label-container
+{
+	padding: 4px;
+	color: #646970;
+}
+
+.sm-product-catalog-synchro-container
+{
+	width: 100%;
+}
+
+.sm-product-export-container
+{
+	margin-top: 100px;
+}
+
+.sm-product-synchro-heading
+{
+	margin-bottom: 2px;
+}
+
+.sm-btn-top-margin
+{
+	margin-top: 10px !important;
+}
+
+.sm-product-catalog-select-wrapper
+{
+	display: flex;
+}
+
+.sm-modal
+{
+	display: none;
+}
+.sm-center-content
+{
+	text-align: center;
+}
+
+#sm-product-export-notice
+{
+	display: none;
+	margin-top: 20px;
+}
+#sm-btn-set-active-catalog
+{
+	margin-right: 3px;
+	height: 50%;
+	text-transform: uppercase;
+}
+
+.sm-hidden
+{
+	display: none;
+}
+
+.span-error
+{
+	color: #FF0000;
+}
+
+.sm-new-api-v3-error
+{
+	border-color: #FF0000 !important;
+}
+
+.sm-api-key-error-wrapper
+{
+	height: 30px;
+}
+
+.sm-api-v3-log-label-wrapper
+{
+	display: flex;
+	width: 60%;
+}
+
+.sm-tooltip
+{
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+}
+
+.sm-tooltip .sm-tooltip-text
+{
+	background-color: #fff;
+	color: #646970;
+	min-width: 150px;
+	text-align: center;
+	border-radius: 6px;
+	border: 1px solid #8c8f94;
+	padding: 5px 5px;
+	font-family: apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif;
+	position: absolute;
+	z-index: 1;
+	bottom: 20px;
+	left: 20px;
+	opacity: 0;
+	visibility: hidden;
+	transition: opacity .3s;
+}
+
+.sm-tooltip:hover .sm-tooltip-text
+{
+	opacity: 1;
+	visibility: visible;
+}
+
+.sm-create-catalog-tooltip-container
+{
+	display: flex;
+	align-items: center;
+	gap: 5px;
+}
+
+.salesmanago-arrow-icon
+{
+	font-size: 15px;
+	margin-top: 7.5px;
+}
+
+.sm-product-catalog-headline-and-btn-wrapper
+{
+	display: flex;
+	justify-content: space-between;
+	text-decoration: none;
+	padding-right: 20px;
+}
+
+.sm-product-catalog-headline-and-btn-wrapper a
+{
+	text-decoration: none;
+}
+
+.sm-btn-link
+{
+	text-align: center;
+	padding: 10px;
+}
+
+.sm-refresh-catalogs
+{
+	text-decoration: none;
+	position: relative;
+	color: #2271b1;
+	cursor: pointer;
+	height: 50%;
+}
+
+.sm-refresh-catalog-success
+{
+	margin-top: 5px;
+	color: #119D00;
+}
+
+.sm-refresh-catalog-fail
+{
+	margin-top: 5px;
+	color: #FF0000;
+}
+
+.sm-rotating
+{
+	animation: rotation 1s ease-in 1;
+}
+
+.sm-int-exp-item
+{
+	display: grid;
+	grid-template-columns: 165px 150px;
+	column-gap: 10px;
+}
+
+#sm-btn-turn-off-catalog
+{
+	display: inline-flex;
+	align-items: center;
+	text-transform: uppercase;
+	gap: 2px;
+}
+
+#sm-notice-product-exp-interrupted-wrapper,
+#sm-continue-product-exp-btn-wrapper
+{
+	display: none;
+}
+
+#sm-product-catalog-btn-and-refresh-wrapper
+{
+	display: flex;
+	align-items: center;
+	height: 50%;
+}
+#sm-btn-product-export-try-again,
+#sm-btn-product-export
+{
+	text-transform: uppercase;
+}
+
+@keyframes rotation {
+	from {
+		transform: rotate(0deg) scale(1) skew(0deg);
+		pointer-events: none;
+	}
+	to {
+		transform: rotate(359deg) scale(1) skew(0deg);
+		pointer-events: none;
+	}
+}
+
+
+@media screen and (min-width: 1440px){
+	#salesmanago .nav-tab-wrapper
+	{
+		max-width: 100%;
+	}
+}
+
+@media screen and (max-width: 1270px) {
+	.sm-product-catalog-container
+	{
+		flex-direction: column;
+	}
+	#salesmanago-refresh-owner
+	{
+		margin: 5px 0 !important;
+	}
+}
+
+@media screen and (max-width: 786px){
+	#salesmanago .nav-tab-wrapper
+	{
+		max-width: 100%;
+	}
+	#salesmanago .button-logout
+	{
+		margin-top: -45px;
+	}
+	#sm-product-catalog-flow
+	{
+		max-width: 300px;
+		height: auto;
+	}
+	.sm-tooltip .sm-tooltip-text-responsive
+	{
+		left: auto;
+		right: 15px;
+	}
+	#salesmanago-add-form-button
+	{
+		margin: 5px 0 !important;
+	}
+	.sm-product-catalog-select-wrapper
+	{
+		flex-direction: column;
+	}
+}

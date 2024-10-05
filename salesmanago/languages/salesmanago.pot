@@ -1,0 +1,1491 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: SALESmanago\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-07-03 13:23+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: \n"
+"Language: \n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.5.0; wp-5.5.3\n"
+"X-Domain: salesmanago"
+
+#: src/Admin/View/product_api/add_api_key.php:38
+msgid " and paste it below in the API v3 key field"
+msgstr ""
+
+# This label should be translated by the end-user
+#. This is a declaration for translation plugins. Do not remove
+#: src/Frontend/Model/HooksModel.php:267 src/Frontend/Model/HooksModel.php:269
+#: src/Admin/View/partials/opt_in.php:77
+msgid "!optInInputLabel"
+msgstr ""
+
+#. This is a declaration for translation plugins. Do not remove
+#: src/Frontend/Model/HooksModel.php:293 src/Frontend/Model/HooksModel.php:295
+#: src/Admin/View/partials/opt_in.php:144
+msgid "!optInMobileInputLabel"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:74 src/Admin/View/partials/opt_in.php:141
+msgid "('salesmanago' plugin text domain)."
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:125
+msgid "1 h"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:127
+msgid "12 h"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:124
+msgid "15 min"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:126
+msgid "4 h"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:128
+msgid "7 days"
+msgstr ""
+
+#: src/Admin/Model/AdminModel.php:769
+msgid ""
+"A different 'sw.js' file already exists. Your developer should modify this "
+"file manually"
+msgstr ""
+
+#: src/Admin/View/export.php:39
+#: src/Admin/View/product_api/product_catalog.php:188
+msgid "Abort this export"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:193
+#: src/Admin/View/partials/navbar.php:68
+msgid "About"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:90
+msgid "Account settings"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:33 src/Admin/View/partials/forms.php:35
+#: src/Admin/View/partials/custom_properties.php:30
+msgid "Add"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:68
+msgid "Add 'smbanners' flag to monitoring code"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:52
+msgid "Add 'smcustom' flag to monitoring code"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:12
+msgid "Add forms to synchronize"
+msgstr ""
+
+#: src/Admin/Entity/Plugins/Cf7.php:39 src/Admin/Entity/Plugins/Gf.php:48
+#: src/Admin/Entity/Plugins/Ff.php:36
+msgid "add new form"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:84
+msgid "Add popup.js (necessary for HTML and Advanced Popups)"
+msgstr ""
+
+#: src/Admin/View/export.php:84
+msgid "Add tags"
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:32
+msgid "Additional details type"
+msgstr ""
+
+#: src/Admin/View/export.php:176
+msgid "Advanced options"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:140
+msgid "After this time, cart updates will be treated as new external events"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:32 src/Admin/View/partials/forms.php:166
+msgid "All forms have been configured"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:74
+msgid "API v3 key"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:32 src/Admin/View/partials/opt_in.php:99
+msgid "Append field to registration and checkout forms"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:28 src/Admin/View/partials/opt_in.php:95
+msgid "Append field to registration form"
+msgstr ""
+
+#: src/Admin/View/export.php:133
+msgid "are most likely already in SALESmanago."
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:133
+msgid ""
+"Authentication successful. You can select an existing Product Catalog or "
+"create a new one."
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:89
+msgid "Authorization error. Make sure email and password are correct"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:90
+msgid "Available in Recommendation Frames"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:115
+msgid "Back"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:80
+msgid "Browser language"
+msgstr ""
+
+#: src/Admin/View/plugins.php:23
+msgid "Capture Contact Form 7 submissions"
+msgstr ""
+
+#: src/Admin/View/plugins.php:18
+msgid "Capture contacts created as WooCommerce customers"
+msgstr ""
+
+#: src/Admin/View/plugins.php:13
+msgid "Capture contacts created as WordPress users"
+msgstr ""
+
+#: src/Admin/View/plugins.php:31
+msgid "Capture Fluent Forms submissions"
+msgstr ""
+
+#: src/Admin/View/plugins.php:27
+msgid "Capture Gravity Forms submissions"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:129
+msgid "Cart update will always update ext. events"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:123
+msgid "Cart updates will always create new ext. events"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:27
+msgid "Catalog name"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:45
+msgid "Change default monitoring cookie lifetime"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:84
+msgid "Check browser console (F12) for details."
+msgstr ""
+
+#: src/Admin/View/export.php:231
+msgid "Choose external event type to be assigned to the exported orders"
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:34
+msgid "Choose how additional details are transferred to SALESmanago."
+msgstr ""
+
+#: src/Admin/View/partials/owner.php:43
+msgid "Choose owner contacts will be assigned to"
+msgstr ""
+
+#: src/Admin/View/partials/identifier.php:24
+msgid ""
+"Chosen identifier type must match ID in Product Feed uploaded to SALESmanago"
+msgstr ""
+
+#: src/Admin/View/export.php:31
+#: src/Admin/View/product_api/product_catalog.php:182
+msgid "Completion:"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:55 src/Admin/View/partials/forms.php:118
+msgid "Configuration for:"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:160
+msgid "Contact Form 7"
+msgstr ""
+
+#: src/Admin/View/partials/owner.php:11 src/Admin/View/partials/owner.php:15
+msgid "Contact owner"
+msgstr ""
+
+#: src/Admin/View/export.php:38
+#: src/Admin/View/product_api/product_catalog.php:187
+msgid "Continue this export"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:117
+msgid "Cookie lifetime"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:60
+msgid "COPY"
+msgstr ""
+
+#: src/Admin/View/about.php:26 src/Admin/View/about.php:109
+#: src/Admin/View/about.php:118
+msgid "Copy"
+msgstr ""
+
+#: src/Admin/View/export.php:104 src/Admin/View/export.php:242
+msgid "Count"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:120
+msgid "CREATE"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:23
+msgid ""
+"Create a new API key. Enter your name (e.g. WordPress), Webhook URL, and "
+"expiry time. You can copy the webhook URL from the Webhook URL field below."
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:180
+msgid "Create sw.js file to enable Web Push consents from your domain"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:43
+msgid "Currency"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:90
+msgid "Currently used JavaScript"
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:18
+#: src/Admin/View/partials/custom_properties.php:65
+msgid "Custom detail"
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:6
+msgid "Custom details"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:33
+msgid "Custom monitoring cookie lifetime"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:56 src/Admin/View/partials/forms.php:119
+msgid "Delete"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:77
+msgid "Detected by WordPress"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:25
+msgid "Disable monitoring code"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:26
+msgid "Display the API key using an eye icon "
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:22 src/Admin/View/partials/opt_in.php:89
+msgid "Do not use opt-in field"
+msgstr ""
+
+#: src/Admin/View/export.php:280
+#: src/Admin/View/product_api/product_catalog.php:9
+msgid "Done"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:12
+msgid "Double opt-in"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:17
+msgid ""
+"Easily set up product synchronization to instantly reflect all changes from "
+"WordPress in Recommendation Frames, Personal Shopping Inbox, and other "
+"modules"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:32
+msgid "Email ID"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:36
+msgid "Enable this option if you want to add monitoring code on your own"
+msgstr ""
+
+#: src/Admin/View/export.php:187
+msgid "Enable this option to choose order statuses and product identifier"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:112
+msgid ""
+"Enable this option to omit consecutive PURCHASE events (within 30 second)"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:111 src/Admin/View/login_form.php:26
+msgid "Endpoint"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:112
+msgid "Endpoint your account assigned to"
+msgstr ""
+
+#: src/Admin/View/about.php:23
+msgid ""
+"Error log contains crucial information about any potential problems with API "
+"v3 data transfer. If you need support with troubleshooting, contact us at "
+msgstr ""
+
+#: src/Admin/View/about.php:14
+msgid "Error log for API v3 data transfer"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:118
+msgid "Error on Contact Form 7 plugin settings page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:114
+msgid "Error on Export page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:122
+msgid "Error on Fluent Forms plugin settings page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:92
+msgid "Error on getting Owner List"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:120
+msgid "Error on Gravity Forms plugin settings page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:113
+msgid "Error on Integration Settings page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:119
+msgid "Error on listing Contact 7 Forms"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:123
+msgid "Error on listing Fluent Forms"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:121
+msgid "Error on listing Gravity Forms"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:91
+msgid "Error on login page rendering"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:93
+msgid ""
+"Error on logout. If this persists, try removing "
+"wp_options/salesmanago_configuration from your database."
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:124
+msgid "Error on Monitoring code page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:115
+msgid "Error on Plugins settings page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:111
+msgid "Error on registering css/js/translations"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:109
+msgid "Error on registering menu pages"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:110
+msgid "Error on rendering settings page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:112
+msgid "Error on routing your request"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:138
+msgid "Error on setting the active catalog"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:117
+msgid "Error on WooCommerce plugin settings page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:116
+msgid "Error on WordPress plugin settings page"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:103
+msgid "Error while reading Configuration from DB"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:104
+msgid "Error while reading Settings from DB"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:105
+msgid "Error while writing Configuration to DB"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:106
+msgid "Error while writing Settings to DB"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:73
+msgid "Events"
+msgstr ""
+
+#: src/Admin/View/export.php:133
+msgid "Events created after"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:16
+msgid "Expired API Key. Refresh the page and add a new API key "
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:103
+#: src/Admin/View/partials/navbar.php:20
+msgid "Export"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:151
+msgid "Export all products"
+msgstr ""
+
+#: src/Admin/View/export.php:222
+msgid "Export as"
+msgstr ""
+
+#: src/Admin/View/export.php:119
+msgid "Export contacts"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:102
+msgid "Export contacts and events"
+msgstr ""
+
+#: src/Admin/View/export.php:256
+msgid "Export events"
+msgstr ""
+
+#: src/Admin/View/export.php:12
+#: src/Admin/View/product_api/product_catalog.php:204
+msgid "Export status"
+msgstr ""
+
+#: src/Admin/View/export.php:44
+msgid "Export WooCommerce cutomers to SALESmanago"
+msgstr ""
+
+#: src/Admin/View/export.php:122
+msgid "Export WooCommerce orders as external events to SALESmanago"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:14
+msgid "Exported packages: "
+msgstr ""
+
+#: src/Admin/View/export.php:129
+msgid ""
+"Exporting external events for the second time will duplicate them in "
+"SALESmanago."
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:114
+msgid "Failed to refresh the list. Try reloading the page."
+msgstr ""
+
+#: src/Admin/View/export.php:281
+#: src/Admin/View/product_api/product_catalog.php:10
+msgid "Failed. Check console for details."
+msgstr ""
+
+#: src/Admin/Model/AdminModel.php:774 src/Admin/Model/AdminModel.php:780
+msgid "File 'sw.js' created correctly"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:182
+msgid "Fluent Forms"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:49
+msgid "Form with ID"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:16
+msgid "Forms to synchronize"
+msgstr ""
+
+#: src/Admin/View/export.php:49 src/Admin/View/export.php:141
+msgid "From date"
+msgstr ""
+
+#: src/Admin/Model/AdminModel.php:753
+msgid "Function 'file_exists' is not available"
+msgstr ""
+
+#: src/Admin/Model/AdminModel.php:750
+msgid "Function 'file_get_contents' is not available"
+msgstr ""
+
+#: src/Admin/Model/AdminModel.php:747
+msgid "Function 'file_put_contents' is not available"
+msgstr ""
+
+#: src/Admin/View/about.php:70
+msgid "Functionality tests"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:7
+msgid "General settings"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:53
+msgid "General settings of SALESmanago integration"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:176
+msgid "Generate sw.js"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:13
+msgid ""
+"Get all the benefits of real-time Product Catalog synchronization with "
+"Product API"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:192
+msgid "Get system information"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:14
+msgid "Go back"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:171
+msgid "Gravity Forms"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:45
+msgid "Guest Purchase tags"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:49
+msgid "has been removed"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:77
+msgid "Hook activating purchase event"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:160
+msgid ""
+"https://support.salesmanago.com/domain-configuration-for-web-push-"
+"notifications/?"
+"utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:26
+msgid ""
+"https://support.salesmanago.com/email-confirming-subscription/?"
+"utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
+msgstr ""
+
+#: src/Admin/View/about.php:50 src/Admin/View/plugins/plugin_cf7.php:12
+msgid ""
+"https://support.salesmanago.com/how-do-i-integrate-salesmanago-with-contact-"
+"form-7-wordpress/?"
+"utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
+msgstr ""
+
+#: src/Admin/View/about.php:51 src/Admin/View/plugins/plugin_gf.php:12
+msgid ""
+"https://support.salesmanago.com/integration-with-wordpress-gravity-forms-"
+"plugin/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
+msgstr ""
+
+#: src/Admin/View/about.php:53
+msgid ""
+"https://support.salesmanago.com/integration-with-wordpress/?"
+"utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
+msgstr ""
+
+#: src/Admin/View/about.php:52
+msgid ""
+"https://support.salesmanago.com/woocommerce-integration-settings/?"
+"utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
+msgstr ""
+
+#. URI of the plugin
+#. Author URI of the plugin
+msgid ""
+"https://www.salesmanago.com/?"
+"utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:98
+msgid ""
+"If you use a custom payment method, the default hook might not work. You can "
+"try using a different one"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:96
+msgid "If you want, you can change default 'location' for external events"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:13
+msgid "Ignored domains"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:126
+msgid "Important"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:67
+msgid ""
+"Important: Your server must have SSL enabled to receive webhooks with error "
+"notices from SALESmanago"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:224
+msgid "In order to use Product Catalog, please install the WooCommerce plugin."
+msgstr ""
+
+#: src/Admin/View/export.php:279
+#: src/Admin/View/product_api/product_catalog.php:8
+msgid "In progress"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:107
+msgid ""
+"In SALESmanago, you can limit the access to the Product Catalog to analytics "
+"only. To make the Catalog available in Recommendation Frames, Emails, PSI, "
+"and other features, select \"true\"."
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:137
+msgid ""
+"Incorrect location field value. Please check it in the Integration settings "
+"tab"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:43 src/Admin/View/partials/opt_in.php:50
+#: src/Admin/View/partials/opt_in.php:110
+#: src/Admin/View/partials/opt_in.php:117
+msgid "Input name"
+msgstr ""
+
+#: src/Admin/View/about.php:106
+msgid "Integration data"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:68
+#: src/Admin/View/partials/navbar.php:8
+msgid "Integration settings"
+msgstr ""
+
+#: src/Admin/View/export.php:28
+#: src/Admin/View/product_api/product_catalog.php:174
+msgid "Interrupted on:"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:92
+msgid "Invalid API Key. Make sure the key exists in the SALESmanago app"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:58
+msgid "ISO currency code of your store (e.g. EUR, USD)"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:57 src/Admin/View/partials/opt_in.php:124
+msgid "Label"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:72
+msgid "Language detection method"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:84
+msgid ""
+"Language is used when sending double opt-in confirmation emails. You can use "
+"language detected by WordPress or user's browser language"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:178
+msgid "Last exported package:"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_gf.php:12
+#: src/Admin/View/plugins/plugin_cf7.php:12
+msgid "Learn how to name input fields on"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:159
+msgid "Learn more about Web Push consents on our"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:26
+msgid "Learn more on"
+msgstr ""
+
+#: src/Admin/View/export.php:62 src/Admin/View/export.php:154
+msgid "Leave empty/default to export all"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:23
+msgid "Let contacts confirm newsletter signup with email confirmation"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:70
+msgid "Location"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:95
+msgid "Location field for external events"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:20
+msgid "Log in to SALESmanago and go to Integration Center ➔ API ➔ API v3 tab"
+msgstr ""
+
+#: src/Admin/View/partials/navbar.php:84
+msgid "Log out"
+msgstr ""
+
+#: src/Admin/Controller/LoginController.php:67
+#: src/Admin/Entity/MessageEntity.php:128
+msgid "Logged in."
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:129
+msgid "Logged out."
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:78
+msgid "Login"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:37
+#: src/Admin/View/plugins/plugin_wp.php:30
+msgid "Login tags"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:77
+msgid "Login to SALESmanago account"
+msgstr ""
+
+#: src/Admin/View/export.php:283
+msgid "Making sure everything was exported"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:159
+#: src/Admin/View/plugins/plugin_cf7.php:9
+msgid "Manage Contact Form 7 integration"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:181
+#: src/Admin/View/plugins/plugin_ff.php:9
+msgid "Manage Fluent Forms integration"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:170
+#: src/Admin/View/plugins/plugin_gf.php:9
+msgid "Manage Gravity Forms integration"
+msgstr ""
+
+#: src/Admin/View/plugins.php:4 src/Admin/Controller/SettingsController.php:126
+#: src/Admin/Controller/SettingsController.php:202
+msgid "Manage integrations with plugins"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:18
+msgid "Manage options in WooCommerce settings"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wp.php:12
+msgid "Manage options in WordPress settings"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:114
+msgid "Manage product catalog"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:67
+msgid "Manage SM integration settings"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:148
+#: src/Admin/View/plugins/plugin_wc.php:13
+msgid "Manage WooCommerce integration"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:137
+#: src/Admin/View/plugins/plugin_wp.php:9
+msgid "Manage WordPress integration"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:18
+msgid "Manage your monitoring code features"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:25 src/Admin/View/partials/opt_in.php:92
+msgid "Map an existing field"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:91
+#: src/Admin/View/partials/navbar.php:14
+msgid "Monitoring code"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:90
+msgid "Monitoring code features"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:51
+msgid "Monitoring cookie lifetime"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:48
+msgid "New Product Catalog"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:136
+#: src/Admin/View/product_api/product_catalog.php:38
+msgid "New Product Catalog has been created. Please refresh Catalog list to use it."
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wp.php:12
+msgid "New users must be able to register."
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:13
+msgid "Newsletter and Mobile Marketing consents"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:33
+#: src/Admin/View/plugins/plugin_wp.php:26
+msgid "Newsletter tags"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:102
+msgid "No"
+msgstr ""
+
+#: src/Admin/View/export.php:287
+msgid "No data to export in the selected time range"
+msgstr ""
+
+#: src/Admin/Entity/Plugins/Cf7.php:39
+msgid "No forms for CF7 found:"
+msgstr ""
+
+#: src/Admin/Entity/Plugins/Ff.php:36
+msgid "No forms for FF found:"
+msgstr ""
+
+#: src/Admin/Entity/Plugins/Gf.php:48
+msgid "No forms for GF found:"
+msgstr ""
+
+#: src/Admin/View/SettingsRenderer.php:420
+msgid "No forms found"
+msgstr ""
+
+#: src/Admin/Model/AdminModel.php:744
+msgid "No permissions to write in the root directory"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:13
+msgid "No products to export"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:66
+msgid "None (do not synchronize products in real-time)"
+msgstr ""
+
+#: src/Admin/View/about.php:32
+msgid "NOTICED!"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:15
+msgid "Number of products: "
+msgstr ""
+
+#: src/Frontend/Model/RestApiModel.php:49
+#: src/Frontend/Model/RestApiModel.php:57
+#: src/Frontend/Model/RestApiModel.php:73
+#: src/Frontend/Model/RestApiModel.php:82
+msgid "OK"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:17
+msgid "Opt-in input"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:84
+msgid "Opt-in mobile input"
+msgstr ""
+
+#: src/Admin/View/about.php:45
+msgid "Our support pages"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:50
+msgid ""
+"Paste the ID of the subscription confirmation email. You can find it in "
+"Email list ➔ Subscription confirmation ➔ Preview"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:83
+msgid "Paste your API v3 key here"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:63
+msgid "Please enter a number between 0 and 3652"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:64
+msgid "Please enter the currency as ISO code"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:100
+msgid "Please use lowercase and uppercase letters, numbers, and underscore"
+msgstr ""
+
+#: src/Admin/View/plugins.php:42
+msgid "Plugin not detected"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:127
+#: src/Admin/View/partials/navbar.php:32
+msgid "Plugins"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:74
+msgid "popup.js"
+msgstr ""
+
+#: src/Admin/View/export.php:278
+#: src/Admin/View/product_api/product_catalog.php:7
+msgid "Preparing"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:110
+msgid "Prevent duplication of PURCHASE events"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:105
+msgid "Prevent event duplication"
+msgstr ""
+
+#: src/Admin/View/export.php:19
+msgid "Previous export details:"
+msgstr ""
+
+#: src/Admin/View/export.php:18
+msgid "Previous export has not been completed!"
+msgstr ""
+
+#: src/Frontend/Model/RestApiModel.php:59
+#: src/Frontend/Model/RestApiModel.php:75
+#: src/Frontend/Model/RestApiModel.php:84
+#: src/Admin/View/plugins/plugin_wc.php:183
+msgid "Problem"
+msgstr ""
+
+#: src/Admin/View/SettingsRenderer.php:55
+msgid "SALESmanago Product API Error detected. Check the About tab."
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:119
+msgid "Product API Webhook URL"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:115
+#: src/Admin/View/partials/navbar.php:26
+msgid "Product catalog"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:140
+msgid ""
+"Product Catalog has not been created. Please check the About tab for error "
+"information."
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:20
+#: src/Admin/View/product_api/product_catalog.php:53
+msgid "Product Catalog setup"
+msgstr ""
+
+#: src/Admin/View/partials/identifier.php:11
+msgid "Product ID"
+msgstr ""
+
+#: src/Admin/View/partials/identifier.php:4
+msgid "Product identifier transferred in external events"
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:44
+msgid "Properties"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:41
+msgid "Purchase tags"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:10
+#: src/Admin/View/product_api/product_catalog.php:43
+msgid "Real-time product synchronization"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:99
+msgid "Refresh Catalog list"
+msgstr ""
+
+#: src/Admin/View/partials/owner.php:33
+msgid "Refresh list"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:29
+#: src/Admin/View/plugins/plugin_wp.php:22
+msgid "Registration tags"
+msgstr ""
+
+#: src/Admin/View/export.php:125
+msgid "Remember to export contacts before exporting external events."
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:186 src/Admin/View/about.php:95
+#: src/Admin/View/plugins/plugin_wc.php:168
+msgid "Results"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:182
+msgid "returned status:"
+msgstr ""
+
+#. Name of the plugin
+#. Author of the plugin
+#: src/Admin/Controller/SettingsController.php:54
+msgid "SALESmanago"
+msgstr ""
+
+#. Description of the plugin
+msgid ""
+"SALESmanago Marketing Automation integration for WordPress, WooCommerce, "
+"Contact Form 7, Gravity Forms"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:62 src/Admin/View/partials/forms.php:124
+msgid "SALESmanago owner"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:161
+#: src/Admin/View/plugins/plugin_gf.php:12
+#: src/Admin/View/plugins/plugin_cf7.php:12
+msgid "SALESmanago support page"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:26
+msgid "SALESmanago support page."
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:203
+msgid "SALESmanago.com"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:91
+#: src/Admin/View/partials/save.php:7
+msgid "Save"
+msgstr ""
+
+#: src/Admin/View/export.php:197
+msgid "Select order statuses to be exported"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:82
+msgid "Select Product Catalog for real-time synchronization"
+msgstr ""
+
+#: src/Admin/View/login_form.php:20
+msgid "Select this option to set a custom endpoint"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:27
+msgid ""
+"Separated with commas, for example: <b>10minutemail.net,temp-mail.com</b>"
+msgstr ""
+
+#: src/Admin/View/login_form.php:31
+msgid ""
+"Set custom endpoint only if you were instructed to do so by your Project "
+"Manager."
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:8
+msgid "Set input names that will be transferred as custom details."
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:130
+msgid "Settings have been saved."
+msgstr ""
+
+#: src/Admin/View/partials/identifier.php:12
+msgid "SKU"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:58
+msgid "smbanners"
+msgstr ""
+
+#: src/Admin/View/monitcode.php:42
+msgid "smcustom"
+msgstr ""
+
+#: src/Admin/Model/AdminModel.php:781 src/Admin/Model/AdminModel.php:787
+msgid ""
+"Something went wrong while trying to create sw.js. Check server error log "
+"for more details"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:104
+msgid "Sometimes called 'short ID'"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:100
+msgid ""
+"Specified endpoint cannot be resolved. On SALESmanago panel go to Settings ->"
+" Integration and check your endpoint in API access tab."
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:198
+msgid "Start export"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:8
+msgid ""
+"Start real-time product synchronization by creating a new Product Catalog"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:15
+msgid ""
+"You have reached the limit of catalogs. Contact the Customer Success department if you would like to create more."
+msgstr ""
+
+#: src/Admin/View/export.php:25
+#: src/Admin/View/product_api/product_catalog.php:170
+msgid "Started on:"
+msgstr ""
+
+#: src/Admin/View/export.php:12 src/Admin/View/export.php:284
+#: src/Admin/View/product_api/product_catalog.php:12
+#: src/Admin/View/product_api/product_catalog.php:204
+msgid "Starting"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:127
+msgid "Success."
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:107
+msgid "Successfully refreshed the list"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:159
+msgid "Synchronize all products from WordPress now"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:24
+#: src/Admin/View/plugins/plugin_wp.php:17
+msgid "Tags"
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:50
+msgid "Tags (key-value)"
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:47
+msgid "Tags (value)"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:46
+msgid "Tags assigned after guest purchase (separated with commas)"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:38
+#: src/Admin/View/plugins/plugin_wp.php:31
+msgid "Tags assigned after login (separated with commas)"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:42
+msgid "Tags assigned after purchase (separated with commas)"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:30
+#: src/Admin/View/plugins/plugin_wp.php:23
+msgid "Tags assigned after registration (separated with commas)"
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:34
+#: src/Admin/View/plugins/plugin_wp.php:27
+msgid ""
+"Tags assigned after subscription to the newsletter (separated with commas)"
+msgstr ""
+
+#: src/Admin/View/export.php:95
+msgid "Tags assigned to all exported contacts (separated with commas)"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:79 src/Admin/View/partials/forms.php:140
+msgid "Tags to add"
+msgstr ""
+
+#: src/Admin/View/partials/forms.php:89 src/Admin/View/partials/forms.php:149
+msgid "Tags to remove"
+msgstr ""
+
+#: src/Admin/View/export.php:34
+msgid "Tags:"
+msgstr ""
+
+#: src/Admin/View/about.php:73 src/Admin/View/plugins/plugin_wc.php:146
+msgid "Test cart recovery"
+msgstr ""
+
+#: src/Admin/View/about.php:88 src/Admin/View/plugins/plugin_wc.php:161
+msgid "Test REST API to debug cart recovery links."
+msgstr ""
+
+#: src/Admin/View/about.php:85 src/Admin/View/plugins/plugin_wc.php:158
+msgid "Test REST routes and functions"
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:64 src/Admin/View/partials/opt_in.php:131
+msgid "Text to be displayed next to checkbox"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:134
+msgid ""
+"The API key doesn’t seem valid. Make sure the key is active and all "
+"characters have been copied."
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:154
+msgid ""
+"The export is divided into packages, each consisting of 100 products. This "
+"improves the export speed, without impacting the performance of your website."
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:166
+msgid "The previous export has not been completed."
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:139
+msgid "The request has timed out. Please try again"
+msgstr ""
+
+#: src/Admin/View/about.php:42 src/Admin/View/about.php:121
+msgid ""
+"There is no SALESmanago error or plugin has no permission to read error log."
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:44
+msgid "This field has to contain 36 characters or be empty"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:83
+msgid ""
+"This field is used to assign products to External Events. The value is "
+"assigned automatically."
+msgstr ""
+
+#: src/Admin/View/partials/opt_in.php:72 src/Admin/View/partials/opt_in.php:139
+msgid "This input label is available for translation under the name"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:47
+msgid ""
+"This looks like template ID. You can find the email ID in Email list ➔ "
+"Subscription confirmation ➔ Preview"
+msgstr ""
+
+#: src/Admin/View/SettingsRenderer.php:133
+#: src/Admin/View/SettingsRenderer.php:146
+#: src/Admin/View/SettingsRenderer.php:160
+#: src/Admin/View/SettingsRenderer.php:175
+msgid "This plugin was not detected."
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:66
+msgid "Time in days. Default value is 10 years (3652 days)"
+msgstr ""
+
+#: src/Admin/View/export.php:68 src/Admin/View/export.php:160
+msgid "To date"
+msgstr ""
+
+#: src/Admin/View/export.php:110 src/Admin/View/export.php:248
+msgid "To export:"
+msgstr ""
+
+#: src/Admin/View/partials/custom_properties.php:39
+msgid "Transfer additional details as"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:215
+msgid "Try again"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:138
+msgid "Turn off"
+msgstr ""
+
+#: src/Admin/View/export.php:22
+msgid "Type:"
+msgstr ""
+
+#: src/Admin/View/export.php:282
+#: src/Admin/View/product_api/product_catalog.php:11
+msgid "Unknown"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:135
+msgid "Unknown API error."
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:86
+msgid "Unknown error"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:108
+msgid "Unknown error in SALESmanago plugin"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:102
+msgid "Unknown error on settings read/write"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:99
+msgid "Unknown error while connecting to SALESmanago with Guzzle Client"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:97
+msgid "Unknown export (batch upsert) error"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:88
+msgid "Unknown login error"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:95
+msgid "Unknown upsert error"
+msgstr ""
+
+#: src/Admin/View/login_form.php:15
+msgid "Use custom endpoint"
+msgstr ""
+
+#: src/Admin/View/partials/double_opt_in.php:17
+msgid "Use double opt-in"
+msgstr ""
+
+#: src/Admin/Entity/MessageEntity.php:90
+msgid "User inactive. Contact Customer Success for more information"
+msgstr ""
+
+#: src/Admin/View/partials/identifier.php:13
+msgid "Variant ID"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:168
+msgid "Web Push consent"
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:157
+msgid "Web Push Notifications"
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:47
+msgid ""
+"Webhook is a modern way to report any potential problems with data transfer "
+"back to WordPress. Paste this URL when creating a new API v3 key."
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:120
+msgid ""
+"Webhook is a modern way to report any potential problems with data transfer "
+"back to Wordpress. Paste this URL when creating a new API v3 key."
+msgstr ""
+
+#: src/Admin/View/product_api/add_api_key.php:43
+msgid "Webhook URL"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:149
+msgid "WooCommerce"
+msgstr ""
+
+#: src/Admin/View/export.php:285
+msgid "WooCommerce customers"
+msgstr ""
+
+#: src/Admin/View/export.php:286
+msgid "WooCommerce orders"
+msgstr ""
+
+#: src/Admin/Controller/SettingsController.php:138
+msgid "WordPress"
+msgstr ""
+
+#: src/Admin/View/about.php:114
+msgid "Wordpress error log"
+msgstr ""
+
+#: src/Admin/View/product_api/create_catalog.php:99
+msgid "Yes"
+msgstr ""
+
+#: src/Admin/View/product_api/product_catalog.php:130
+msgid ""
+"You are about to turn off the real-time product synchronization. As a result,"
+" your emails, Web Push notifications, and Recommendation Frames might not "
+"display accurate product data."
+msgstr ""
+
+#: src/Admin/View/plugins/plugin_wc.php:17
+msgid "You can allow customers to create new accounts."
+msgstr ""
+
+#: src/Admin/View/integration_settings.php:103
+msgid "Your client ID"
+msgstr ""

@@ -1,0 +1,60 @@
+{
+    "packages": [
+        {
+            "name": "salesmanago/api-sso-util",
+            "version": "3.3.0",
+            "version_normalized": "3.3.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://bitbucket.org/benhauerdev/api-sso-util.git",
+                "reference": "973540c436189dda23bc726652006b7f0fc93054"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://bitbucket.org/benhauerdev/api-sso-util/get/973540c436189dda23bc726652006b7f0fc93054.zip",
+                "reference": "973540c436189dda23bc726652006b7f0fc93054",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "fzaninotto/faker": "^1",
+                "phpstan/phpstan": "1.7.0",
+                "phpunit/phpunit": "^9",
+                "squizlabs/php_codesniffer": "^3.5.8"
+            },
+            "time": "2024-08-29T13:47:00+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "SALESmanago\\": [
+                        "src/"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "SALESmanago",
+                    "email": "dev@salesmanago.pl"
+                }
+            ],
+            "description": "core api code",
+            "homepage": "https://bitbucket.org/benhauerdev/api-sso-util",
+            "support": {
+                "source": "https://bitbucket.org/benhauerdev/api-sso-util/src/973540c436189dda23bc726652006b7f0fc93054/?at=3.3.0"
+            },
+            "install-path": "../salesmanago/api-sso-util"
+        }
+    ],
+    "dev": false,
+    "dev-package-names": []
+}

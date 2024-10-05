@@ -1,0 +1,22 @@
+{
+    "name": "salesmanago/wordpress",
+    "description": "Wordpress marketing automation extension",
+    "version": "3.4.0",
+    "require": {
+        "php": ">=7.1",
+        "salesmanago/api-sso-util": "^3.2",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5",
+        "fzaninotto/faker": "*",
+        "dealerdirect/phpcodesniffer-composer-installer": "*",
+        "wp-coding-standards/wpcs": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "bhr\\" : "src/",
+            "tests\\": "tests/"
+        }
+    }
+}
