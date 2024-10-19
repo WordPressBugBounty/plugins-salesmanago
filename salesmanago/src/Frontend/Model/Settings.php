@@ -50,7 +50,7 @@ class Settings extends AbstractModel
                     : $config->cookieTtl)
                 ->setIgnoredDomains($config->ignoredDomains)
                 ->setLocation($config->location)
-                ->setSmApp($config->smApp);
+                ->setSmApp($config->smApp ?? null);
         } catch (\Exception $e) {
             error_log($e->getMessage());
         }

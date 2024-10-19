@@ -189,7 +189,7 @@ class AdminModel extends AbstractModel
 			if ( empty( $stmt ) || empty( $stmt['option_value'] ) || $stmt['option_value'] == '{}' ) {
 				$stmt = $this->db->get_row( $this->db->prepare( "SELECT option_value FROM {$this->db->options} WHERE option_name = %s LIMIT 1", 'salesmanago_settings' ), ARRAY_A );
 				if ( $stmt == null ) {
-					return false;
+					return $this;
 				}
 				$conf = json_decode( $stmt['option_value'] );
 				$this->setLegacyConfiguration( $conf );

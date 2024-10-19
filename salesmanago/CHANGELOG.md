@@ -1,3 +1,8 @@
+# 3.4.1 released 18.10.2024
+- Fixed bug when SM_APP is not defined in monitoring code
+- Fixed configuration error when logging in for the first time
+- Updated API-SSO-UTIL library to 3.3.0
+
 # 3.4.0 released 29.08.2024
 - Fixed bug with mapping product identifiers in Product Catalogs
 - Added automated process of API V3 key connection

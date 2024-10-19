@@ -101,8 +101,14 @@ class TestCaseFeature extends TestCase
             $unionConfiguration->setApiV3Endpoint($apiV3Endpoint);
         }
 
+        if (!empty($apiV3Key)) {
+            $unionConfiguration->setApiV3Key($apiV3Key);
+        }
+
         $AccountController = new AccountController($unionConfiguration, null);
+
         $AccountController->login($User);
+
     }
 
     /**

@@ -4,16 +4,16 @@ Plugin URI:  https://support.salesmanago.com/integration-with-wordpress/
 Contributors: Benhauer Sp. z o.o.
 Tags: marketing automation, email marketing, crm, live chat, social media, lead nurturing, lead generation, personalized marketing, woocommerce, contacts, lead tracking, click tracking, visitor tracking, inbound marketing, subscription, marketing, newsletter, popup, email, contacts database, contact form, popup form
 Requires at least: 5.6
-Tested up to: 6.5.3
+Tested up to: 6.7
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.4.0
+Stable tag: 3.4.1
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
 Domain Path: /languages
-Requires PHP: 7.1
+Requires PHP: 7.4
 
 Customer Engagement Platform for impact-hungry eCommerce marketing teams.
 
