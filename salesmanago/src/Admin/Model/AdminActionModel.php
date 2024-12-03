@@ -78,6 +78,8 @@ class AdminActionModel
         }
 
         try {
+            $currency = function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : '';
+        
             $this->Event
                 ->setContactExtEventType( $eventType )
                 ->setProducts( isset( $products['products'] ) ? $products['products'] : '' )
@@ -93,7 +95,8 @@ class AdminActionModel
                         '5' => isset( $products['detail5'] ) ? $products['detail5'] : '',
                         '6' => isset( $products['detail6'] ) ? $products['detail6'] : '',
                         '7' => isset( $products['detail7'] ) ? $products['detail7'] : '',
-                        '8' => !empty( $lang ) ? $lang : ''
+                        '8' => !empty( $lang ) ? $lang : '',
+                        '9' => $currency ?? ''
                     )
                 )
                 ->setDate( time() )

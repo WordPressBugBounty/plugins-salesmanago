@@ -8,7 +8,7 @@ Tested up to: 6.7
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.4.1
+Stable tag: 3.5.0
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -137,6 +137,29 @@ During the online Marketing Automation course you will get answers to the follow
 - How can I receive the SALESmanago Marketing Automation Specialist Certificate?
 
 == Changelog ==
+= 3.5.0 =
+- Fixed method for getting main image url
+- Added sending currency ISO in detail9 for external events
+- Added sending product images from WC gallery to Product Catalog
+- Added sending new fields in woocommerce registration form
+- Changed hook for removing item from cart to 'woocommerce_cart_item_removed'
+= 3.4.1 =
+- Fixed bug when SM_APP is not defined in monitoring code
+- Fixed configuration error when logging in for the first time
+- Updated API-SSO-UTIL library to 3.3.0
+= 3.4.0 =
+- Fixed bug with mapping product identifiers in Product Catalogs
+- Added automated process of API V3 key connection
+- Added checking limits of product catalogs
+= 3.3.1 =
+- Fixed bug while creating product catalogs, wrong error notification
+- Secured creating catalog view when there is no API v3 key
+= 3.3.0 =
+- Fixed sending product to Product Catalog with too many categories assigned
+- Fixed bug that prevents changing order status if product no longer exists
+- Added product identifier mapping for products export and upsert to Product Catalogs
+= 3.2.7=
+- Added to svn missing files for Marketplace
 = 3.2.6 =
 - Fixed filtering admin notifications
 - Fixed problems with deprecated warnings in debug mode

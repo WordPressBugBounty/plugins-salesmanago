@@ -63,14 +63,15 @@ class WcEventModel extends AbstractModel {
 				->setLocation( ! empty( $location ) ? $location : Helper::getLocation() )
 				->setDetails(
 					array(
-						'1' => isset( $products['detail1'] ) ? $products['detail1'] : '',
-						'2' => isset( $products['detail2'] ) ? $products['detail2'] : '',
-						'3' => isset( $products['detail3'] ) ? $products['detail3'] : '',
-						'4' => isset( $products['detail4'] ) ? $products['detail4'] : '',
-						'5' => isset( $products['detail5'] ) ? $products['detail5'] : '',
-						'6' => isset( $products['detail6'] ) ? $products['detail6'] : '',
-						'7' => isset( $products['detail7'] ) ? $products['detail7'] : '',
-                        '8' => !empty($lang) ? $lang : ''
+						'1' => $products['detail1'] ?? '',
+						'2' => $products['detail2'] ?? '',
+						'3' => $products['detail3'] ?? '',
+						'4' => $products['detail4'] ?? '',
+						'5' => $products['detail5'] ?? '',
+						'6' => $products['detail6'] ?? '',
+						'7' => $products['detail7'] ?? '',
+                        '8' => !empty($lang) ? $lang : '',
+						'9' => function_exists('get_woocommerce_currency') ? get_woocommerce_currency() : ''
 					)
 				)
 				->setEventId( $smevent )

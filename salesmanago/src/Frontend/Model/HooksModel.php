@@ -63,7 +63,7 @@ class HooksModel {
             /* Cart Hooks */
             Helper::addAction('woocommerce_add_to_cart', array($this, 'initWc'));
             Helper::addAction('woocommerce_update_cart_action_cart_updated', array($this, 'initWc'));
-            Helper::addAction('woocommerce_remove_cart_item', array($this, 'initWc'));
+            Helper::addAction('woocommerce_cart_item_removed', array($this, 'initWc'));
 
             /* Purchase Hook */
             $purchaseHook = $this->SettingsModel->getPlatformSettings()->PluginWc->purchaseHook;
@@ -180,14 +180,14 @@ class HooksModel {
                 $WcController->createUser($data, $oldData);
                 break;
             case 'user_register':
-                $WcController->registerUser($data);
+                $WcController->registerUser();
                 break;
             case 'wp_login':
                 $WcController->loginUser($data);
                 break;
             case 'woocommerce_add_to_cart':
             case 'woocommerce_update_cart_action_cart_updated':
-            case 'woocommerce_remove_cart_item':
+            case 'woocommerce_cart_item_removed':
                 $WcController->addToCart();
                 break;
             case 'woocommerce_order_status_changed':

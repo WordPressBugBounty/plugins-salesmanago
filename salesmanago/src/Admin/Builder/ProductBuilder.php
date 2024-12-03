@@ -41,11 +41,14 @@ class ProductBuilder {
 	/**
 	 * Gets wc_product data
 	 *
-	 * @param string $product_id Product id.
-	 * @param array  $product_data Basic product data from DB.
+	 * @param  string  $product_id  Product id.
+	 * @param $product_identifier_type
+	 * @param  array  $parentImageUrls
+	 * @param  bool  $webhook
+	 *
 	 * @return array|null
 	 */
-	protected function get_wc_product_data( $product_id, $product_identifier_type ) {
+	protected function get_wc_product_data( $product_id, $product_identifier_type, $parentImageUrls = [], $webhook = true ) {
 		try {
 			$wc_product = wc_get_product( $product_id );
 
@@ -81,10 +84,25 @@ class ProductBuilder {
 			}
 			$quantity                        = $wc_product->get_stock_quantity();
 			$wc_product_data['quantity']     = ! is_null( $quantity ) ? $quantity : '';
-			$wc_product_data['mainImageUrl'] = ! empty( $wc_product->get_image() ) ? IncludesHelper::getImageUrl( $wc_product->get_image() ) : '';
+			$wc_product_data['mainImageUrl'] = ! empty( $wc_product->get_image() ) ? IncludesHelper::getImageUrl( $wc_product->get_image_id() ) : '';
 			$wc_product_data['productUrl']   = ! empty( $wc_product->get_permalink() ) ? $wc_product->get_permalink() : '';
 			$wc_product_data['active']       = ! ( $wc_product->get_catalog_visibility() === self::PRODUCT_INACTIVE );
 			$wc_product_data['available']    = $this->determine_product_availability( $wc_product );
+
+			if ($webhook) {
+				// live synchro case
+				$imageUrls = !empty($parentImageUrls)
+					? $parentImageUrls
+					: (array_map([IncludesHelper::class, 'getImageUrl'], $wc_product->get_gallery_image_ids() ?? []));
+			} else {
+				// export case
+				$imageUrls = !empty($parentImageUrls)
+					? (array_map([IncludesHelper::class, 'getImageUrl'], $parentImageUrls))
+					: (array_map([IncludesHelper::class, 'getImageUrl'], $wc_product->get_gallery_image_ids() ?? []));
+			}
+
+			$wc_product_data['imageUrls'] = array_slice($imageUrls, 0, 5);
+
 			return $wc_product_data;
 		} catch ( Exception | Error $e ) {
 			Helper::salesmanago_log( $e->getMessage(), __FILE__ );
@@ -102,18 +120,34 @@ class ProductBuilder {
 	 */
 	public function add_products_to_collection( $products, $product_identifier_type ) {
 		try {
+			$parentImageUrls = [];
+			$childrens = [];
+
 			$products_collection = new Collection();
 			foreach ( $products as $product ) {
-				if ( empty( $product['productId'] ) ) {
+				if ( empty( $product['productId'] )
+				     || ( empty( $product['_sku'] ) && $product_identifier_type == WcEventModel::PRODUCT_IDENTIFIER_TYPE_SKU )
+				) {
 					continue;
 				}
-				if ( empty( $product['_sku'] ) &&  $product_identifier_type == WcEventModel::PRODUCT_IDENTIFIER_TYPE_SKU ) {
-					continue;
+
+				$wc_product = wc_get_product( $product['productId'] );
+
+				if ($wc_product->is_type('variable') && !empty($wc_product->get_children())) {
+					$childrens = $wc_product->get_children();
+					$parentImageUrls = $wc_product->get_gallery_image_ids();
 				}
-				$wc_product_data = $this->get_wc_product_data( $product['productId'], $product_identifier_type );
+
+				if (in_array($product['productId'], $childrens)) {
+					$wc_product_data = $this->get_wc_product_data( $product['productId'], $product_identifier_type, $parentImageUrls, false );
+				} else {
+					$wc_product_data = $this->get_wc_product_data( $product['productId'], $product_identifier_type, [], false );
+				}
+
 				if ( ! $this->is_product_valid( $wc_product_data ) ) {
 					continue;
 				}
+
 				$product_entity = $this->build_product_entity( $wc_product_data );
 				$products_collection->addItem( $product_entity );
 			}
@@ -132,13 +166,13 @@ class ProductBuilder {
 	 * @return Collection
 	 * @throws SmException SALESmanago exception.
 	 */
-	public function add_product_to_collection( $product_id, $product_identifier_type, $products_collection = null ) {
+	public function add_product_to_collection( $product_id, $product_identifier_type, $products_collection = null, $parentImageUrls = [] ) {
 		try {
 			if ( is_null( $products_collection ) ) {
 				$products_collection = new Collection();
 			}
 			if ( ! empty( $product_id ) ) {
-				$wc_product_data = $this->get_wc_product_data( $product_id, $product_identifier_type );
+				$wc_product_data = $this->get_wc_product_data( $product_id, $product_identifier_type, $parentImageUrls, true );
 				if ( $this->is_product_valid( $wc_product_data ) ) {
 					$product_entity = $this->build_product_entity( $wc_product_data );
 					$products_collection->addItem( $product_entity );
@@ -167,7 +201,8 @@ class ProductBuilder {
 			->setCategoryExternalId( (int) $wc_product_data['categoryExternalId'] )
 			->setProductUrl( $wc_product_data['productUrl'] )
 			->setActive( $wc_product_data['active'] )
-			->setMainImageUrl( $wc_product_data['mainImageUrl'] );
+			->setMainImageUrl( $wc_product_data['mainImageUrl'] )
+		    ->setImageUrls( $wc_product_data['imageUrls'] );
 		if ( is_numeric( $wc_product_data['price'] ) ) {
 			$product_entity->setPrice( round( $wc_product_data['price'], 2 ) );
 		}

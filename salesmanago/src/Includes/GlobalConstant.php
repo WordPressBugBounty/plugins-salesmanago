@@ -10,6 +10,9 @@ class GlobalConstant
         L_NAME = 'last_name',
         DESC   = 'description',
         LOCALE = 'locale',
+	    EMAIL  = 'email',
+	    PHONE  = 'phone',
+	    BIRTHDAY = 'birthday',
 
         LOCATION_PREFIX = 'sm_',
 
@@ -23,6 +26,7 @@ class GlobalConstant
         B_ADDRESS_1 = 'billing_address_1',
         B_ADDRESS_2 = 'billing_address_2',
         B_COUNTRY   = 'billing_country',
+	    B_BIRTHDAY  = 'billing_birthday',
 
         P_NO_ACC_EMAIL     = '_billing_email',
         P_NO_ACC_COMPANY   = '_billing_company',
@@ -34,6 +38,7 @@ class GlobalConstant
         P_NO_ACC_POSTCODE  = '_billing_postcode',
         P_NO_ACC_CITY      = '_billing_city',
         P_NO_ACC_COUNTRY   = '_billing_country',
+	    P_NO_ACC_BIRTHDAY  = '_billing_birthday',
 
         SINGLE_VALUE       = true,
         ID                 = 'id',

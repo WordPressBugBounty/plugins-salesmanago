@@ -248,8 +248,10 @@ class ProductCatalogController {
 			$ProductCollection = $ProductBuilder->add_product_to_collection( $wc_product->id, $productIdentifierType );
 			// Variable product case - simple products have no children
 			if ( $wc_product->get_children() ) {
+				$items = $ProductCollection->getItems();
+				$parentImageUrls = reset( $items )->getImageUrls();
 				foreach ( $wc_product->get_children() as $product_variation_id ) {
-					$ProductCollection = $ProductBuilder->add_product_to_collection( $product_variation_id, $productIdentifierType, $ProductCollection );
+					$ProductCollection = $ProductBuilder->add_product_to_collection( $product_variation_id, $productIdentifierType, $ProductCollection, $parentImageUrls );
 				}
 			}
 			$Catalog = new CatalogEntity(

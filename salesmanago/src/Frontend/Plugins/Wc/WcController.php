@@ -107,12 +107,11 @@ class WcController {
 	 * Parse woocommerce user to SM contact, send contact to SM
 	 * Set smclient for contact
 	 *
-	 * @param $userId - registered user id
 	 * @return bool
 	 */
-	public function registerUser( $userId ) {
+	public function registerUser() {
 		try {
-			if ( $this->ContactModel->parseContact( $userId, GlobalConstant::ID ) ) {
+			if ( $this->ContactModel->parseCustomerFromPost() ) {
 				$this->ContactModel->setTagsFromConfig( ContactModel::TAGS_REGISTRATION );
 				Helper::doAction( 'salesmanago_wc_register_contact', array( 'Contact' => $this->ContactModel->get() ) );
 				return $this->TransferController->transferContact( $this->ContactModel->get() );

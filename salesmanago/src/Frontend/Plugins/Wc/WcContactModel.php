@@ -2,236 +2,288 @@
 
 namespace bhr\Frontend\Plugins\Wc;
 
-if(!defined('ABSPATH')) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 use bhr\Frontend\Model\AbstractContactModel;
 use bhr\Frontend\Model\Helper;
 use bhr\Includes\GlobalConstant;
 use SALESmanago\Entity\Contact\Contact;
 
-class WcContactModel extends AbstractContactModel
-{
-    public  $user;      //holds userId or user login
-    public  $userType;  //login or register
+class WcContactModel extends AbstractContactModel {
 
-    public function __construct($PlatformSettings)
-    {
-        //do not continue without settings
-        if(empty($PlatformSettings) || empty($PlatformSettings->PluginWc)) {
-            return false;
-        }
-        //create an Abstract Contact
-        parent::__construct($PlatformSettings, $PlatformSettings->PluginWc);
-        return true;
-    }
+	public $user;      // holds userId or user login
+	public $userType;  // login or register
 
-    /**
-     * @param $user
-     * @param $userType
-     * @param $oldData
-     *
-     * @return false|Contact
-     */
-    public function parseContact($user, $userType = 'id', $oldData = null)
-    {
-        $this->user     = $user;
-        $this->userType = $userType;
-        if (empty($this->user)) {
-            return null;
-        }
+	public function __construct( $PlatformSettings ) {
+		// do not continue without settings
+		if ( empty( $PlatformSettings ) || empty( $PlatformSettings->PluginWc ) ) {
+			return false;
+		}
+		// create an Abstract Contact
+		parent::__construct( $PlatformSettings, $PlatformSettings->PluginWc );
+		return true;
+	}
 
-        $contactData = '';
-        if ($this->userType === GlobalConstant::ID) {
-            $contactData = Helper::getUserBy('id', $this->user);
-        } elseif ($this->userType === GlobalConstant::LOGIN) {
-            $contactData = Helper::getUserBy('login', $this->user);
-        }
+	/**
+	 * @param $user
+	 * @param $userType
+	 * @param $oldData
+	 *
+	 * @return false|Contact
+	 */
+	public function parseContact( $user, $userType = 'id', $oldData = null ) {
+		$this->user     = $user;
+		$this->userType = $userType;
+		if ( empty( $this->user ) ) {
+			return null;
+		}
 
-        if (empty($contactData)) {
-            return false;
-        }
+		$contactData = '';
+		if ( $this->userType === GlobalConstant::ID ) {
+			$contactData = Helper::getUserBy( 'id', $this->user );
+		} elseif ( $this->userType === GlobalConstant::LOGIN ) {
+			$contactData = Helper::getUserBy( 'login', $this->user );
+		}
 
-        /* email */
-        if (empty($contactData->user_email)) {
-            return false;
-        }
+		if ( empty( $contactData ) ) {
+			return false;
+		}
 
-        if ( ! empty( $oldData->user_email ) && $contactData->user_email !== $oldData->user_email ) {
-            $this->Contact->setEmail($oldData->user_email);
-            $this->Contact->getOptions()->setNewEmail($contactData->user_email);
-        } else {
-            $this->Contact->setEmail($contactData->user_email);
-        }
+		/* email */
+		if ( empty( $contactData->user_email ) ) {
+			return false;
+		}
 
-        /* name
-        Try to get name from Billing Address, Account Details, or Request
-         */
-        $name = trim(Helper::getPostMetaData($contactData->ID, GlobalConstant::F_NAME, true) . ' '
-            . Helper::getPostMetaData($contactData->ID, GlobalConstant::L_NAME, true));
-        if(empty($name)) {
-            $name = trim(Helper::getPostMetaData($contactData->ID, GlobalConstant::B_F_NAME, true) . ' '
-                . Helper::getPostMetaData($contactData->ID, GlobalConstant::B_L_NAME, true));
-        }
-        if (empty($name) && isset($_REQUEST['action']) && $_REQUEST['action'] == 'save_account_details') {
-            $name = trim($_REQUEST['account_first_name'] . ' '
-                . $_REQUEST['account_last_name']);
-        }
-        $this->Contact->setName($name);
+		if ( ! empty( $oldData->user_email ) && $contactData->user_email !== $oldData->user_email ) {
+			$this->Contact->setEmail( $oldData->user_email );
+			$this->Contact->getOptions()->setNewEmail( $contactData->user_email );
+		} else {
+			$this->Contact->setEmail( $contactData->user_email );
+		}
 
-        /* phone */
-        $phone = Helper::getPostMetaData($contactData->ID, GlobalConstant::B_PHONE, GlobalConstant::SINGLE_VALUE);
-        $this->Contact->setPhone($phone);
+		/*
+		name
+		Try to get name from Billing Address, Account Details, or Request
+		 */
+		$name = trim(
+			Helper::getPostMetaData( $contactData->ID, GlobalConstant::F_NAME, true ) . ' '
+			. Helper::getPostMetaData( $contactData->ID, GlobalConstant::L_NAME, true )
+		);
+		if ( empty( $name ) ) {
+			$name = trim(
+				Helper::getPostMetaData( $contactData->ID, GlobalConstant::B_F_NAME, true ) . ' '
+				. Helper::getPostMetaData( $contactData->ID, GlobalConstant::B_L_NAME, true )
+			);
+		}
+		if ( empty( $name ) && isset( $_REQUEST['action'] ) && $_REQUEST['action'] == 'save_account_details' ) {
+			$name = trim(
+				$_REQUEST['account_first_name'] . ' '
+				. $_REQUEST['account_last_name']
+			);
+		}
+		$this->Contact->setName( $name );
 
-        /* company */
-        $company = Helper::getPostMetaData($contactData->ID, GlobalConstant::B_COMPANY, GlobalConstant::SINGLE_VALUE);
-        $this->Contact->setCompany($company);
+		/* phone */
+		$phone = Helper::getPostMetaData( $contactData->ID, GlobalConstant::B_PHONE, GlobalConstant::SINGLE_VALUE );
+		$this->Contact->setPhone( $phone );
 
-        /* options */
-        $this->setLanguage();
-        if (Helper::preventMultipleDoubleOptInMails()) {
-            $this->setOptInStatuses();
-        }
+		/* company */
+		$company = Helper::getPostMetaData( $contactData->ID, GlobalConstant::B_COMPANY, GlobalConstant::SINGLE_VALUE );
+		$this->Contact->setCompany( $company );
 
-        return $this->Contact;
-    }
+		/* options */
+		$this->setLanguage();
+		if ( Helper::preventMultipleDoubleOptInMails() ) {
+			$this->setOptInStatuses();
+		}
 
-    /**
-     * @param $orderId
-     * @return Contact|null
-     */
-    public function parseCustomer($orderId)
-    {
-        /* email */
-        $email = Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_EMAIL, GlobalConstant::SINGLE_VALUE);
-        if(empty($email)) {
-            return null;
-        }
-        $this->Contact->setEmail($email);
+		return $this->Contact;
+	}
 
-        /* name */
-        $name = trim(Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_F_NAME, GlobalConstant::SINGLE_VALUE) . ' ' .
-            Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_L_NAME, GlobalConstant::SINGLE_VALUE));
-        $this->Contact->setName(!empty($name) ? $name : '');
+	/**
+	 * @param $orderId
+	 * @return Contact|null
+	 */
+	public function parseCustomer( $orderId ) {
+		/* email */
+		$email = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_EMAIL, GlobalConstant::SINGLE_VALUE );
+		if ( empty( $email ) ) {
+			return null;
+		}
+		$this->Contact->setEmail( $email );
 
-        /* phone */
-        $phone = Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_PHONE, GlobalConstant::SINGLE_VALUE);
-        $this->Contact->setPhone(!empty($phone) ? $phone : '');
+		/* name */
+		$name = trim(
+			Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_F_NAME, GlobalConstant::SINGLE_VALUE ) . ' ' .
+			Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_L_NAME, GlobalConstant::SINGLE_VALUE )
+		);
+		$this->Contact->setName( ! empty( $name ) ? $name : '' );
 
-        /* company */
-        $company = Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_COMPANY, GlobalConstant::SINGLE_VALUE);
-        $this->Contact->setCompany(!empty($company) ? $company : '');
+		/* phone */
+		$phone = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_PHONE, GlobalConstant::SINGLE_VALUE );
+		$this->Contact->setPhone( ! empty( $phone ) ? $phone : '' );
 
-        /* streetAddress */
-        $streetAddress = trim(Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_ADDRESS_1, GlobalConstant::SINGLE_VALUE) . ' ' .
-            Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_ADDRESS_2, GlobalConstant::SINGLE_VALUE));
-        $this->Address->setStreetAddress(!empty($streetAddress) ? $streetAddress : '');
+		/* company */
+		$company = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_COMPANY, GlobalConstant::SINGLE_VALUE );
+		$this->Contact->setCompany( ! empty( $company ) ? $company : '' );
 
-        /* zipCode */
-        $zipCode = Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_POSTCODE, GlobalConstant::SINGLE_VALUE);
-        $this->Address->setZipCode(!empty($zipCode) ? $zipCode : '');
+		/* streetAddress */
+		$streetAddress = trim(
+			Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_ADDRESS_1, GlobalConstant::SINGLE_VALUE ) . ' ' .
+			Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_ADDRESS_2, GlobalConstant::SINGLE_VALUE )
+		);
+		$this->Address->setStreetAddress( ! empty( $streetAddress ) ? $streetAddress : '' );
 
-        /* city */
-        $city = Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_CITY, GlobalConstant::SINGLE_VALUE);
-        $this->Address->setCity(!empty($city) ? $city : '');
+		/* zipCode */
+		$zipCode = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_POSTCODE, GlobalConstant::SINGLE_VALUE );
+		$this->Address->setZipCode( ! empty( $zipCode ) ? $zipCode : '' );
 
-        /* country */
-        $country = Helper::getPostMetaData($orderId, GlobalConstant::P_NO_ACC_COUNTRY, GlobalConstant::SINGLE_VALUE);
-        $this->Address->setCountry(!empty($country) ? $country : '');
+		/* city */
+		$city = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_CITY, GlobalConstant::SINGLE_VALUE );
+		$this->Address->setCity( ! empty( $city ) ? $city : '' );
 
-        $this->Contact->setAddress($this->Address);
+		/* country */
+		$country = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_COUNTRY, GlobalConstant::SINGLE_VALUE );
+		$this->Address->setCountry( ! empty( $country ) ? $country : '' );
 
-        /* options */
-        $this->setLanguage();
-        if (Helper::preventMultipleDoubleOptInMails()) {
-            $this->setOptInStatuses();
-        }
+		$this->Contact->setAddress( $this->Address );
 
-        return $this->Contact;
-    }
+		/* options */
+		$this->setLanguage();
+		if ( Helper::preventMultipleDoubleOptInMails() ) {
+			$this->setOptInStatuses();
+		}
 
-    /**
-     * @return array|null
-     */
-    public static function getSmClient()
-    {
-        $smclient = isset($_COOKIE['smclient']) ? $_COOKIE['smclient'] : null;
-        if(!$smclient) {
-            $smclient = isset($_SESSION['smclient']) ? $_SESSION['smclient'] : null;
-        }
-        return $smclient;
-    }
+		return $this->Contact;
+	}
 
-    /**
-     * @return mixed|null
-     */
-    public function getClientEmail()
-    {
-        try {
-            if (!empty($this->Contact->getEmail())) {
-                return $this->Contact->getEmail();
-            }
-        } catch (\Exception $e) {
-            //silence is gold
-        }
+	/**
+	 * @return array|null
+	 */
+	public static function getSmClient() {
+		$smclient = isset( $_COOKIE['smclient'] ) ? $_COOKIE['smclient'] : null;
+		if ( ! $smclient ) {
+			$smclient = isset( $_SESSION['smclient'] ) ? $_SESSION['smclient'] : null;
+		}
+		return $smclient;
+	}
 
-        if ($user = Helper::getUserBy('id', Helper::getCurrentUserId())) {
-            $currentUser = $user->data;
-            return !empty($currentUser->user_email) ? $currentUser->user_email : null;
-        }
-        return null;
-    }
+	/**
+	 * @return mixed|null
+	 */
+	public function getClientEmail() {
+		try {
+			if ( ! empty( $this->Contact->getEmail() ) ) {
+				return $this->Contact->getEmail();
+			}
+		} catch ( \Exception $e ) {
+			// silence is gold
+		}
 
-    /**
-     * @return Contact|null
-     */
-    public function parseCustomerFromPost()
-    {
-        /* email */
-        $email = empty($_REQUEST[GlobalConstant::B_EMAIL]) ? '' : $_REQUEST[GlobalConstant::B_EMAIL];
-        if(empty($email)) {
-            return null;
-        }
-        $this->Contact->setEmail($email);
+		if ( $user = Helper::getUserBy( 'id', Helper::getCurrentUserId() ) ) {
+			$currentUser = $user->data;
+			return ! empty( $currentUser->user_email ) ? $currentUser->user_email : null;
+		}
+		return null;
+	}
 
-        /* name */
-        $name = trim($_REQUEST[GlobalConstant::B_F_NAME] . ' ' .
-            $_REQUEST[GlobalConstant::B_L_NAME]);
-        $this->Contact->setName(!empty($name) ? $name : '');
+	/**
+	 * @return Contact|null
+	 */
+	public function parseCustomerFromPost() {
+		$data = $_REQUEST;
 
-        /* phone */
-        $phone = $_REQUEST[GlobalConstant::B_PHONE];
-        $this->Contact->setPhone(!empty($phone) ? $phone : '');
+		/* email */
+		$email = $data[ GlobalConstant::EMAIL ]
+			?? $data[ GlobalConstant::B_EMAIL ]
+			?? $data[ GlobalConstant::P_NO_ACC_EMAIL ]
+			?? null;
 
-        /* company */
-        $company = $_REQUEST[GlobalConstant::B_COMPANY];
-        $this->Contact->setCompany(!empty($company) ? $company : '');
+		if ( is_null( $email ) ) {
+			return null;
+		}
 
+		$this->Contact->setEmail( $email );
 
-        /* streetAddress */
-        $streetAddress = trim($_REQUEST[GlobalConstant::B_ADDRESS_1] . ' ' .
-            $_REQUEST[GlobalConstant::B_ADDRESS_2]);
-        $this->Address->setStreetAddress(!empty($streetAddress) ? $streetAddress : '');
+		/* name */
+		$name = trim(
+			implode(
+				' ',
+				array(
+					$data[ GlobalConstant::B_F_NAME ]
+					?? $data[ GlobalConstant::F_NAME ]
+					?? $data[ GlobalConstant::P_NO_ACC_F_NAME ]
+					?? '',
+					$data[ GlobalConstant::B_L_NAME ]
+					?? $data[ GlobalConstant::L_NAME ]
+					?? $data[ GlobalConstant::P_NO_ACC_L_NAME ]
+					?? '',
+				)
+			)
+		);
 
-        /* zipCode */
-        $zipCode = $_REQUEST[GlobalConstant::B_POSTCODE];
-        $this->Address->setZipCode(!empty($zipCode) ? $zipCode : '');
+		$this->Contact->setName( $name );
 
-        /* city */
-        $city = $_REQUEST[GlobalConstant::B_CITY];
-        $this->Address->setCity(!empty($city) ? $city : '');
+		/* phone */
+		$phone = $data[ GlobalConstant::B_PHONE ]
+			?? $data[ GlobalConstant::PHONE ]
+			?? $data[ GlobalConstant::P_NO_ACC_PHONE ]
+			?? '';
+		$this->Contact->setPhone( $phone );
 
-        /* country */
-        $country = $_REQUEST[GlobalConstant::B_COUNTRY];
-        $this->Address->setCountry(!empty($country) ? $country : '');
+		/* company */
+		$company = $data[ GlobalConstant::B_COMPANY ] ?? $data[ GlobalConstant::P_NO_ACC_COMPANY ] ?? '';
+		$this->Contact->setCompany( $company );
 
-        $this->Contact->setAddress($this->Address);
+		/* streetAddress */
+		$streetAddress = trim(
+			implode(
+				' ',
+				array(
+					$data[ GlobalConstant::B_ADDRESS_1 ]
+					?? $data[ GlobalConstant::P_NO_ACC_ADDRESS_1 ]
+					?? '',
+					$data[ GlobalConstant::B_ADDRESS_2 ]
+					?? $data[ GlobalConstant::P_NO_ACC_ADDRESS_2 ]
+					?? '',
+				)
+			)
+		);
+		$this->Address->setStreetAddress( $streetAddress );
 
-        /* options */
-        $this->setLanguage();
-        if (Helper::preventMultipleDoubleOptInMails()) {
-            $this->setOptInStatuses();
-        }
+		/* zipCode */
+		$zipCode = $data[ GlobalConstant::B_POSTCODE ] ?? $data[ GlobalConstant::P_NO_ACC_POSTCODE ] ?? '';
+		$this->Address->setZipCode( $zipCode );
 
-        return $this->Contact;
-    }
+		/* city */
+		$city = $data[ GlobalConstant::B_CITY ] ?? $data[ GlobalConstant::P_NO_ACC_CITY ] ?? '';
+		$this->Address->setCity( $city );
+
+		/* country */
+		$country = $data[ GlobalConstant::B_COUNTRY ] ?? $data[ GlobalConstant::P_NO_ACC_COUNTRY ] ?? '';
+		$this->Address->setCountry( $country );
+
+		$this->Contact->setAddress( $this->Address );
+
+		/* birthday */
+		$birthday = $data[ GlobalConstant::B_BIRTHDAY ]
+			?? $data[ GlobalConstant::BIRTHDAY ]
+			?? $data[ GlobalConstant::P_NO_ACC_BIRTHDAY ]
+			?? '';
+		try {
+			$this->Contact->setBirthday( $birthday );
+		} catch ( \Exception $e ) {
+			error_log( print_r( $e->getMessage(), true ) );
+		}
+
+		/* options */
+		$this->setLanguage();
+		if ( Helper::preventMultipleDoubleOptInMails() ) {
+			$this->setOptInStatuses();
+		}
+
+		return $this->Contact;
+	}
 }

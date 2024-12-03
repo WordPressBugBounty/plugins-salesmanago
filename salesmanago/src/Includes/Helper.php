@@ -317,12 +317,11 @@ trait Helper {
 	 *
 	 * @param $image_tag string
 	 *
-	 * @return string
+	 * @return string|false
 	 */
 	public static function getImageUrl( $image_tag ) {
-		$str = explode( 'src=', $image_tag )[1];
 
-		return trim( explode( ' ', $str )[0], '"' );
+		return wp_get_attachment_url( $image_tag );
 	}
 
 	/**

@@ -1,3 +1,10 @@
+# 3.5.0 released 2024-12-03
+- Fixed method for getting main image url
+- Added sending currency ISO in detail9 for external events
+- Added sending product images from WC gallery to Product Catalog
+- Added sending new fields in woocommerce registration form
+- Changed hook for removing item from cart to 'woocommerce_cart_item_removed'
+
 # 3.4.1 released 18.10.2024
 - Fixed bug when SM_APP is not defined in monitoring code
 - Fixed configuration error when logging in for the first time
