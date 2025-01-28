@@ -6,6 +6,16 @@ use JsonSerializable;
 
 interface SystemDetailsInterface extends JsonSerializable
 {
+    const BRAND      = 'brand',
+        MANUFACTURER = 'manufacturer',
+        POPULARITY   = 'popularity',
+        GENDER       = 'gender',
+        SEASON       = 'season',
+        COLOR        = 'color',
+        BESTSELLER   = 'bestseller',
+        NEW_PRODUCT  = 'newProduct';
+
+
     /**
      * @return string|null
      */
@@ -15,7 +25,7 @@ interface SystemDetailsInterface extends JsonSerializable
      * @param string $brand
      * @return SystemDetailsInterface
      */
-    public function setBrand($brand);
+    public function setBrand(?string $brand): SystemDetailsEntity;
 
     /**
      * @return string|null
@@ -26,7 +36,7 @@ interface SystemDetailsInterface extends JsonSerializable
      * @param string $manufacturer
      * @return SystemDetailsInterface
      */
-    public function setManufacturer($manufacturer);
+    public function setManufacturer(?string $manufacturer): SystemDetailsEntity;
 
     /**
      * @return int|null
@@ -37,7 +47,7 @@ interface SystemDetailsInterface extends JsonSerializable
      * @param int $popularity
      * @return SystemDetailsInterface
      */
-    public function setPopularity($popularity);
+    public function setPopularity(?int $popularity): SystemDetailsEntity;
 
     /**
      * @return int
@@ -48,7 +58,7 @@ interface SystemDetailsInterface extends JsonSerializable
      * @param int|null $gender
      * @return SystemDetailsInterface
      */
-    public function setGender($gender);
+    public function setGender(?int $gender): SystemDetailsInterface;
 
     /**
      * @return string|string
@@ -58,7 +68,7 @@ interface SystemDetailsInterface extends JsonSerializable
     /**
      * @param string $season
      */
-    public function setSeason($season);
+    public function setSeason(?string $season): SystemDetailsInterface;
 
     /**
      * @return string|null
@@ -69,7 +79,7 @@ interface SystemDetailsInterface extends JsonSerializable
      * @param string $color
      * @return SystemDetailsInterface
      */
-    public function setColor($color);
+    public function setColor(?string $color): SystemDetailsInterface;
 
     /**
      * @return bool
@@ -80,7 +90,7 @@ interface SystemDetailsInterface extends JsonSerializable
      * @param bool $bestseller
      * @return SystemDetailsInterface
      */
-    public function setBestseller($bestseller);
+    public function setBestseller(?bool $bestseller): SystemDetailsInterface;
 
     /**
      * @return bool
@@ -91,5 +101,5 @@ interface SystemDetailsInterface extends JsonSerializable
      * @param bool $newProduct
      * @return SystemDetailsInterface
      */
-    public function setNewProduct($newProduct);
+    public function setNewProduct(?bool $newProduct): SystemDetailsInterface;
 }

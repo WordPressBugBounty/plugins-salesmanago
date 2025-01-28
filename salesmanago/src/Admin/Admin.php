@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 use bhr\Admin\Controller\AdminActionController;
 use bhr\Admin\Controller\ProductCatalogController;
-use bhr\Admin\Controller\SettingsController as SettingsController;
+use bhr\Admin\Controller\SettingsController;
 use bhr\Admin\Entity\MessageEntity;
 use bhr\Admin\Model\AdminModel;
 use bhr\Admin\Model\Helper;
@@ -49,6 +49,7 @@ class Admin {
 
 		$this->AdminModel->getConfigurationFromDb();
 		$this->AdminModel->getPlatformSettingsFromDb();
+		$this->AdminModel->insertCronTableIfNotExist();
 
 		$this->AdminActionController = new AdminActionController(
 			$this->AdminModel->getConfiguration(),
@@ -230,6 +231,10 @@ class Admin {
 	 * @return void
 	 */
 	public function handle_wc_product( $product_id, $wc_product ) {
+		if ( $this->AdminModel->getPlatformSettings()->getCronEnabled() ) {
+			$this->ProductCatalogController->storeProduct( $wc_product );
+			return;
+		}
 		$this->ProductCatalogController->upsertProduct( $wc_product );
 	}
 

@@ -82,6 +82,8 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
 
     /**
      * @var
+     *
+     * deprecated since 3.6.0
      */
     protected $unitPrice;
 
@@ -337,6 +339,8 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
 
     /**
      * @return mixed
+     *
+     * deprecated since 3.6.0
      */
     public function getUnitPrice()
     {
@@ -345,6 +349,8 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
 
     /**
      * @param mixed $unitPrice
+     *
+     * deprecated since 3.6.0
      */
     public function setUnitPrice($unitPrice)
     {
@@ -353,11 +359,11 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
     }
 
     /**
-     * @return mixed
+     * @return DetailsInterface
      */
     public function getSystemDetails()
     {
-        return $this->systemDetails;
+        return !isset($this->systemDetails) ? new SystemDetailsEntity() : $this->systemDetails;
     }
 
     /**
@@ -370,11 +376,11 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
     }
 
     /**
-     * @return mixed
+     * @return DetailsInterface
      */
     public function getCustomDetails()
     {
-        return $this->customDetails;
+        return !isset($this->customDetails) ? new CustomDetailsEntity() : $this->customDetails;
     }
 
     /**
@@ -387,26 +393,69 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
         return $this;
     }
 
+    /**
+     * @param string $brand
+     * @return $this
+     */
+    public function setBrand(string $brand): ProductEntity
+    {
+        $this->customDetails->setBrand($brand);
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
     public function jsonSerialize(): array
     {
-        return DataHelper::filterDataArray([
-              "productId"          => $this->productId,
-              "name"               => $this->name,
-              "mainCategory"       => empty($this->mainCategory) ? self::DEFAULT_CATEGORY : $this->mainCategory,
-              "categoryExternalId" => $this->categoryExternalId,
-              "categories"         => $this->categories,
-              "description"        => $this->description,
-              "productUrl"         => $this->productUrl,
-              "mainImageUrl"       => $this->mainImageUrl,
-              "imageUrls"          => $this->imageUrls,
-              "available"          => $this->available,
-              "active"             => $this->active,
-              "quantity"           => $this->quantity,
-              "price"              => $this->price,
-              "discountPrice"      => $this->discountPrice,
-              "unitPrice"          => $this->unitPrice,
-              "systemDetails"      => $this->systemDetails,
-              "customDetails"      => $this->customDetails
-        ]);
+        $systemDetails = !empty($this->systemDetails) ? $this->systemDetails : null;
+        $customDetails = !empty($this->customDetails) ? $this->customDetails : null;
+
+        $data = [
+            "productId"          => $this->productId,
+            "name"               => $this->name,
+            "mainCategory"       => empty($this->mainCategory) ? self::DEFAULT_CATEGORY : $this->mainCategory,
+            "categoryExternalId" => $this->categoryExternalId,
+            "categories"         => $this->categories,
+            "description"        => $this->description,
+            "productUrl"         => $this->productUrl,
+            "mainImageUrl"       => $this->mainImageUrl,
+            "imageUrls"          => $this->imageUrls,
+            "available"          => $this->available,
+            "active"             => $this->active,
+            "quantity"           => $this->quantity,
+            "price"              => $this->price,
+            "discountPrice"      => $this->discountPrice
+        ];
+
+        if (!empty($customDetails)) {
+            $data['customDetails'] = $customDetails->jsonSerialize();
+        }
+
+        $data = DataHelper::filterDataArray($data);
+
+        if (!empty($systemDetails)) {
+            $data['systemDetails'] = $systemDetails->jsonSerialize();
+        }
+
+        $data['setAsNull'] = $this->buildSetAsNull();
+
+        return $data;
     }
+
+	/**
+	 * @return array
+	 */
+	protected function buildSetAsNull(): array
+	{
+		$setAsNull = [];
+
+		if (empty($this->discountPrice)) {
+			$setAsNull[] = ProductEntityInterface::DISCOUNT_PRICE;
+		}
+
+		$customDetails = !empty($this->customDetails) ? $this->customDetails : $this->getCustomDetails();
+
+		return array_merge($setAsNull, $customDetails->getEmptyFields());
+	}
 }

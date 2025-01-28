@@ -1,4 +1,9 @@
-# 3.5.0 released 2024-12-03
+# 3.6.0 released 28.01.2025
+- Added support for Details Mapping in Product Catalogs
+- Added support for sending products via WordPress CRON
+- Updated API-SSO-UTIL library to 3.6.0
+
+# 3.5.0 released 02.12.2024
 - Fixed method for getting main image url
 - Added sending currency ISO in detail9 for external events
 - Added sending product images from WC gallery to Product Catalog

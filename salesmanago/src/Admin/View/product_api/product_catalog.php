@@ -141,6 +141,87 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                             </div>
                         </div>
                     </form>
+                    <h3><?php _e( 'Details mapping', 'salesmanago' ); ?></h3>
+                    <div class="details-mapping-wrapper">
+                        <form method="post" action="">
+                            <!-- Standard Fields Section -->
+                            <div class="mapping-table-wrapper">
+                                <table class="salesmanago-table responsive-table" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            <?php echo esc_html( __( 'Field in SALESmanago', 'salesmanago' ) ); ?>
+                                        </th>
+                                        <th>
+                                            <?php echo esc_html( __( 'Attribute from WooCommerce', 'salesmanago' ) ); ?>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+
+                                    foreach ( $this->systemDetails as $field ) :?>
+                                        <tr>
+                                            <td><?php echo esc_html( $field ); ?></td>
+                                            <td>
+                                                <select name="attribute_mapping[<?php echo esc_attr( $field ); ?>]" class="attribute-select">
+                                                    <option value=""><?php echo esc_html( __( 'None', 'salesmanago' ) ); ?></option>
+                                                    <?php foreach ( $this->attributes as $attribute ) : ?>
+                                                        <option value="<?php echo esc_attr( $attribute ); ?>"
+                                                            <?php echo isset( $this->detailsMapping[ $field ] ) && $this->detailsMapping[ $field ] == $attribute ? 'selected' : ''; ?>>
+                                                            <?php echo esc_html( $attribute ); ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Detail Fields Section -->
+                            <div class="mapping-table-wrapper">
+                                <table class="salesmanago-table responsive-table" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            <?php echo esc_html( __( 'Field in SALESmanago', 'salesmanago' ) ); ?>
+                                        </th>
+                                        <th>
+                                            <?php echo esc_html( __( 'Attribute from WooCommerce', 'salesmanago' ) ); ?>
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+
+                                    foreach ( $this->customDetails as $field ) :
+                                        ?>
+                                        <tr>
+                                            <td><?php echo esc_html( $field ); ?></td>
+                                            <td>
+                                                <select name="attribute_mapping[<?php echo esc_attr( $field ); ?>]" class="attribute-select">
+                                                    <option value=""><?php echo esc_html( __( 'None', 'salesmanago' ) ); ?></option>
+                                                    <?php foreach ( $this->attributes as $attribute ) : ?>
+                                                        <option value="<?php echo esc_attr( $attribute ); ?>"
+                                                            <?php echo isset( $this->detailsMapping[ $field ] ) && $this->detailsMapping[ $field ] == $attribute ? 'selected' : ''; ?>>
+                                                            <?php echo esc_html( $attribute ); ?>
+                                                        </option>
+                                                    <?php endforeach; ?>
+                                                </select>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <p>
+                                <button type="submit" name="save_mapping" class="button button-primary"><?php echo esc_html( __( 'Save Mapping', 'salesmanago' ) ); ?></button>
+                            </p>
+                        </form>
+                    </div>
                     <script>
                         window.onload = () => {
                             salesmanagoCheckForInterruptedProductExport();

@@ -1,5 +1,24 @@
 SALESmanago library for integrations
 ------------------------------------
+Version 3.6.0 11.12.2024
+- Added setAsNull in ProductEntity, supporting details and discountPrice;
+- Fixed filtering empty data in product entity, sending empty system details still available;
+
+Version 3.5.1 09.12.2024
+- Fixed SystemDetails serialization for color;
+
+Version 3.5.0 07.10.2024
+- Added web logger helper;
+
+Version 3.4.2 06.11.2024
+- Fixed issue with ProductEntity empty system and custom details serialization;
+
+Version 3.4.1 30.10.2024
+- Fixed issue with ProductEntity serialization;
+
+Version 3.4.0 08.09.2024
+- Added mapping to ProductCatalog Service
+
 Version 3.3.0 29.08.2024
 - Added support for new API attribute validations;
 - Added callback in AccountController::login() method;

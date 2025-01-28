@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use bhr\Admin\Adapter\BasicProductDetailsAdapter;
+use bhr\Admin\Model\AdminModel;
 use bhr\Admin\Model\Helper;
 use bhr\Frontend\Plugins\Wc\WcEventModel;
 use bhr\Includes\Helper as IncludesHelper;
@@ -13,6 +15,8 @@ use Error;
 use Exception;
 use SALESmanago\Entity\Api\V3\Product\ProductEntity;
 use SALESmanago\Exception\Exception as SmException;
+use SALESmanago\Helper\Mapper\Map\ItemEntity;
+use SALESmanago\Helper\Mapper\ProductEntityBuilder;
 use SALESmanago\Model\Collections\Api\V3\ProductsCollection as Collection;
 use WC_Product_Variable;
 
@@ -27,15 +31,22 @@ class ProductBuilder {
 		  PRODUCT_OUTOFSTOCK             = 'outofstock',
 		  PRODUCT_INACTIVE               = 'hidden';
 
+    /*
+     * @var AdminModel
+     */
+    private AdminModel $AdminModel;
 
 	/**
 	 * ProductBuilder Constructor
 	 * Make sure that WooCommerce functions are available.
 	 */
-	public function __construct() {
+	public function __construct( ?AdminModel $AdminModel = null ) {
 		if ( ! function_exists( 'wc_get_product' ) ) {
 			Helper::loadSMPluginLast();
 		}
+        if ( $AdminModel ) {
+            $this->AdminModel = $AdminModel;
+        }
 	}
 
 	/**
@@ -65,6 +76,9 @@ class ProductBuilder {
 			$wc_product_data['stock_status']  = isset( $wc_product->get_data()['stock_status'] ) ? $wc_product->get_data()['stock_status'] : '';
 			$wc_product_data['price']         = $wc_product->get_regular_price() ?: $wc_product->get_price();
 			$wc_product_data['discountPrice'] = $wc_product->get_sale_price() ?: $wc_product->get_price();
+			$wc_product_data['attributes']    = $wc_product->is_type('variation')
+				? $wc_product->get_attributes()
+				: $this->getAttributesFromOptions($wc_product->get_attributes());
 			$wc_prod_categories = get_the_terms( $product_id, 'product_cat' );
 			if ( ! $wc_prod_categories && $wc_product->get_parent_id() ) {
 				$wc_prod_categories = get_the_terms( $wc_product->get_parent_id(), 'product_cat' );
@@ -110,6 +124,41 @@ class ProductBuilder {
 		}
 	}
 
+    /**
+     * @param array $attributes
+     *
+     * @return array
+     */
+    private function getAttributesFromOptions( array $attributes ) {
+        $result = array();
+
+        foreach ($attributes as $key => $object ) {
+            if ( is_object( $object ) && property_exists( $object, 'data' ) ) {
+                $data = $object->get_data();
+                if ( isset( $data[ 'options' ] ) ) {
+                    $names = array();
+
+                    foreach ( $data[ 'options' ] as $optionId ) {
+                        if ( $data[ 'id' ] > 0) {
+                            // if id > 0 then there is no attribute name in array, we need to fetch it from terms
+                            $term = get_term( $optionId );
+                            if ( $term && !is_wp_error( $term ) ) {
+                                $names[] = $term->name;
+                            }
+                        } else {
+                            // else this is custom attribute so we have its name in array
+                            $names[] = $optionId;
+                        }
+                    }
+
+                    $result[ $data[ 'name' ] ] = implode( ', ', $names );
+                }
+            }
+        }
+
+        return $result;
+    }
+
 	/**
 	 * Transform array to Products Collection (product export)
 	 *
@@ -149,7 +198,17 @@ class ProductBuilder {
 				}
 
 				$product_entity = $this->build_product_entity( $wc_product_data );
-				$products_collection->addItem( $product_entity );
+
+				$BasicProductDetailsAdapter = new BasicProductDetailsAdapter();
+
+				$smProduct = ( new ProductEntityBuilder() )->build (
+					$product_entity,
+					$this->prepareMap( $wc_product_data[ 'attributes' ] ),
+					$BasicProductDetailsAdapter,
+					$wc_product_data
+				);
+
+				$products_collection->addItem( $smProduct );
 			}
 			return $products_collection;
 		} catch ( Exception | Error $e ) {
@@ -175,7 +234,17 @@ class ProductBuilder {
 				$wc_product_data = $this->get_wc_product_data( $product_id, $product_identifier_type, $parentImageUrls, true );
 				if ( $this->is_product_valid( $wc_product_data ) ) {
 					$product_entity = $this->build_product_entity( $wc_product_data );
-					$products_collection->addItem( $product_entity );
+
+					$BasicProductDetailsAdapter = new BasicProductDetailsAdapter();
+
+					$smProduct = ( new ProductEntityBuilder() )->build (
+						$product_entity,
+						$this->prepareMap( $wc_product_data['attributes'] ),
+						$BasicProductDetailsAdapter,
+						$wc_product_data
+					);
+
+					$products_collection->addItem( $smProduct );
 				}
 			}
 			return $products_collection;
@@ -253,4 +322,34 @@ class ProductBuilder {
 		}
 		return true;
 	}
+
+    /**
+     * @param array $attributes
+     *
+     * @return string|null
+     */
+    private function prepareMap( array $attributes ) {
+        $mapObject = array();
+        $mapFromPlatformSettings = $this->AdminModel->getPlatformSettings()->getDetailsMapping();
+
+        foreach ( $attributes as $name => $value ) {
+            $cleanedName = str_replace('pa_', '', $name );
+            $mapObject[ $cleanedName ] = [
+                'name' => $name,
+                'value' => $value,
+                'label' => $cleanedName,
+            ];
+        }
+
+        $map = array_map(
+            fn( $value ) => $mapObject[ $value ] ?? null,
+            $mapFromPlatformSettings
+        );
+
+        if ( empty( $map ) ) {
+            $map = IncludesHelper::generateDefaultMapping();
+        }
+
+        return json_encode( $map );
+    }
 }

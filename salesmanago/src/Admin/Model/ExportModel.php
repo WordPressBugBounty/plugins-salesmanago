@@ -60,10 +60,10 @@ class ExportModel {
 	protected $statuses              = 'wc-completed';
 	protected $exportAs              = self::PURCHASE;
 
-	public function __construct( $conf ) {
+	public function __construct( $AdminModel ) {
 		$this->db             = $GLOBALS['wpdb'];
-		$this->Configuration  = $conf;
-		$this->ProductBuilder = new ProductBuilder();
+		$this->Configuration  = $AdminModel->getConfiguration();
+		$this->ProductBuilder = new ProductBuilder( $AdminModel );
 	}
 
 

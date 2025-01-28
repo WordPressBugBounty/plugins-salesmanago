@@ -45,7 +45,7 @@ class ExportController {
 			if ( ! $this->AdminModel->getConfigurationFromDb() ) {
 				throw new Exception( 'Cannot get configuration from DB' );
 			}
-			$this->ExportModel        = new ExportModel( $this->AdminModel->getConfiguration() );
+			$this->ExportModel        = new ExportModel( $this->AdminModel );
 			$this->SMExportController = new SMExportController( $this->AdminModel->getConfiguration() );
 			$this->registerActions();
 		} catch ( \Exception $e ) {

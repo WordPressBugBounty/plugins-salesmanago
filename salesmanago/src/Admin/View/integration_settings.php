@@ -3,6 +3,7 @@
 		<h2><?php
 
 			use bhr\Frontend\Model\Helper;
+			use bhr\Admin\Controller\CronController;
 
 			_e( 'General settings', 'salesmanago' ); ?></h2>
 
@@ -28,6 +29,41 @@
 					</p>
 				</td>
 			</tr>
+
+            <tr valign="top" class="monitcode-wrapper <?php echo false ? 'hidden' : ''; ?>">
+                <th scope="row" class="titledesc">
+                    <label for="salesmanago-cron"><?php _e( 'Batch product data transfer using CRON', 'salesmanago' ); ?></label>
+                </th>
+                <?php $cronEnabled = $this->AdminModel->getPlatformSettings()->getCronEnabled(); ?>
+                <td>
+                    <input
+                            id="salesmanago-cron"
+                            type="checkbox"
+                            name="cron-active"
+                        <?php echo $this->selected(true, 'cron') ? 'checked' : '';?>
+                            value="1"
+                            onchange="salesmanagoToggleCronFrequency()"
+                    >
+                    <label for="salesmanago-cron">
+                        <span><?php _e( 'Implement the CRON mechanism and increase the performance of your e-store by transferring product data in larger batches as a background process', 'salesmanago' ); ?></span>
+                    </label>
+                    <div id="cron-select-wrapper" style="display: <?php echo $cronEnabled ? 'block' : 'none'; ?>; margin-top: 10px;">
+                        <label for="cron-frequency">
+                            <?php _e('Select CRON Frequency', 'salesmanago'); ?>
+                        </label>
+                        <?php $currentCronFrequency = $this->AdminModel->getPlatformSettings()->getCronValue(); ?>
+                        <select id="cron-frequency" name="cron-frequency">
+                            <option value="one-minute" <?php echo $currentCronFrequency === CronController::CRON_SCHEDULE_KEY_60 ? 'selected' : ''; ?>>
+                                <?php _e('1 min', 'salesmanago'); ?></option>
+                            <option value="three-minutes" <?php echo $currentCronFrequency === CronController::CRON_SCHEDULE_KEY_180 ? 'selected' : ''; ?>>
+                                <?php _e('3 min', 'salesmanago'); ?></option>
+                            <option value="five-minutes" <?php echo $currentCronFrequency === CronController::CRON_SCHEDULE_KEY_300 ? 'selected' : ''; ?>>
+                                <?php _e('5 min', 'salesmanago'); ?></option>
+                        </select>
+                    </div>
+                </td>
+            </tr>
+
 			<tr valign="top" class="monitcode-wrapper <?php echo false ? 'hidden' : ''; ?>">
 				<th scope="row" class="titledesc">
 					<label for="salesmanago-contact-cookie-ttl-active"><?php _e( 'Custom monitoring cookie lifetime', 'salesmanago' ); ?></label>

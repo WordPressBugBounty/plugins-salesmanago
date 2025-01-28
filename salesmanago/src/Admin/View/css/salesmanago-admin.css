@@ -3,6 +3,93 @@
  * included in this file.
  */
 
+/** PRODUCT CATALOG DETAILS MAPPING **/
+.details-mapping-wrapper {
+	width: 100%;
+	margin: 0 auto;
+	font-family: Arial, sans-serif;
+}
+
+.salesmanago-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin-top: 20px;
+	table-layout: fixed; /* Ensures cells take up equal width */
+}
+
+.salesmanago-table th, .salesmanago-table td {
+	text-align: left;
+	padding: 10px;
+	border-bottom: 1px solid #ddd;
+	vertical-align: top;
+}
+
+.salesmanago-table th {
+	background-color: #f7f7f7;
+	font-weight: bold;
+	border-bottom: 2px solid #ccc;
+}
+
+.attribute-select {
+	width: 90vw;
+	padding: 10px;
+	font-size: 14px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	background-color: #fff;
+}
+
+.btn-save {
+	margin-top: 20px;
+	padding: 10px 20px;
+	font-size: 16px;
+	color: #fff;
+	background-color: #0073aa;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+	display: block;
+	width: 100%; /* Full width button */
+	max-width: 200px;
+	text-align: center;
+}
+
+.btn-save:hover {
+	background-color: #005a87;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+	.attribute-select {
+		width: 90vw;
+		display: block;
+	}
+	.salesmanago-table th, .salesmanago-table td {
+		display: block;
+		width: 100%;
+	}
+
+	.salesmanago-table th {
+		background-color: transparent;
+		font-weight: bold;
+		border-bottom: none;
+		margin-top: 10px;
+	}
+
+	.salesmanago-table td {
+		padding: 10px 0;
+	}
+
+	.salesmanago-table tr {
+		margin-bottom: 15px;
+		border-bottom: 2px solid #eee;
+	}
+
+	.btn-save {
+		max-width: 100%; /* Full-width button for small screens */
+	}
+}
+
 #salesmanago .nav-tab-wrapper
 {
 	max-width: calc(100% - 80px)

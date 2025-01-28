@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 use bhr\Admin\Entity\Configuration;
 use SALESmanago\Entity\Api\V3\CatalogEntity;
 
-class ProductCatalogModel {
+class ProductCatalogModel extends AbstractModel {
 
 	/**
 	 * @var AdminModel
@@ -25,6 +25,7 @@ class ProductCatalogModel {
 	 * @param AdminModel $adminModel
 	 */
 	public function __construct( $adminModel ) {
+		parent::__construct();
 		$this->adminModel    = $adminModel;
 		$this->CatalogEntity = new CatalogEntity();
 		if ( ! function_exists( 'get_woocommerce_currency' ) ) {
@@ -87,5 +88,75 @@ class ProductCatalogModel {
 	public function setActiveCatalog( $catalog ) {
 		Configuration::getInstance()->setActiveCatalog( $catalog );
 		$this->adminModel->saveConfiguration();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAttributesFromDb() {
+		$query = "SELECT * FROM {$this->db->prefix}woocommerce_attribute_taxonomies";
+		$results = $this->db->get_results( $query, ARRAY_A );
+
+		$attributes = [];
+		foreach ( $results as $result ) {
+            $attributes[] = [
+                'name' => $result[ 'attribute_name' ],
+                'value' => '',
+                'label' => $result[ 'attribute_label' ],
+			];
+		}
+
+		return $attributes;
+	}
+
+    /**
+     * @return array
+     */
+    public function getCustomAttributesFromDb() {
+        $query = "
+            SELECT post_id, meta_value AS attributes
+            FROM {$this->db->prefix}postmeta
+            WHERE meta_key = '_product_attributes'
+            ";
+
+        $results = $this->db->get_results( $query, ARRAY_A );
+        $customAttributes = array();
+
+        foreach ( $results as $product ) {
+            $attributes = maybe_unserialize( $product[ 'attributes' ] );
+
+            if ( is_array( $attributes ) ) {
+                foreach ( $attributes as $attribute ) {
+                    if ( isset( $attribute[ 'is_taxonomy' ]) && !$attribute[ 'is_taxonomy' ]) {
+                        $customAttributes[] = [
+                            'name' => $attribute['name'],
+                            'value' => $attribute['value'],
+                            'label' => $attribute['name'],
+                        ];
+                    }
+                }
+            }
+        }
+
+        return $customAttributes;
+    }
+
+	/**
+	 * @param array $attributesArray
+	 *
+	 * @return array
+	 */
+	public function getAttributesNamesFromArray( array $attributesArray ) {
+		$attributesNames = array();
+
+		foreach ( $attributesArray as $attribute ) {
+			if ( isset( $attribute[ 'name' ] ) ) {
+				$attributesNames[] = $attribute[ 'name' ];
+			}
+		}
+
+        sort( $attributesNames );
+
+		return $attributesNames;
 	}
 }

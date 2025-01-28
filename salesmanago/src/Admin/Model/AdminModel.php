@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use bhr\Admin\Controller\CronController;
 use bhr\Admin\Controller\ReportingController;
 use bhr\Admin\Entity\MessageEntity;
 use bhr\Admin\Entity\PlatformSettings;
@@ -32,6 +33,7 @@ class AdminModel extends AbstractModel
 
 	public $Configuration;
 	public $PlatformSettings;
+	private $CronController;
 
 	public function __construct() {
 		parent::__construct();
@@ -45,6 +47,7 @@ class AdminModel extends AbstractModel
 		$this->pluginUrl        = Helper::pluginDirUrl( realpath( __DIR__ . '/../..' ) );
 		$this->Configuration    = Configuration::getInstance();
 		$this->PlatformSettings = PlatformSettings::getInstance();
+		$this->CronController    = new CronController();
 	}
 
     /**
@@ -76,6 +79,37 @@ class AdminModel extends AbstractModel
 						? $request['language-detection']
 						: 'platform'
 				);
+
+			$this->getPlatformSettings()
+				->setCronEnabled(
+					isset( $request[ 'cron-active' ] ) ? $request[ 'cron-active' ] : false
+				);
+
+			if ( $this->getPlatformSettings()->getCronEnabled() ) {
+				$cronFrequency = ( $request[ 'cron-frequency' ] ?? 0 );
+
+				switch ( $cronFrequency ) {
+					case 'one-minute':
+						$cronValue = CronController::CRON_SCHEDULE_KEY_60;
+						break;
+					case 'three-minutes':
+						$cronValue = CronController::CRON_SCHEDULE_KEY_180;
+						break;
+					case 'five-minutes':
+						$cronValue = CronController::CRON_SCHEDULE_KEY_300;
+						break;
+					default:
+						$cronValue = 0;
+				}
+
+					$this->getPlatformSettings()->setCronValue( $cronValue );
+					$this->CronController->update_cron_schedule( $cronValue );
+				} else {
+					$this->getPlatformSettings()->setCronValue( 0 );
+					$this->CronController->update_cron_schedule( '0' );
+            }
+
+
 		}
 		/* MONITCODE PAGE */
 		elseif ( $page == 'salesmanago-monit-code' ) {
@@ -174,6 +208,25 @@ class AdminModel extends AbstractModel
 					->setDoubleOptIn( isset( $request['double-opt-in'] ) ? $request['double-opt-in'] : array() );
 		}
 		return $this;
+	}
+
+    /**
+     * Create cron table if not already in database
+     *
+     * @return void
+     */
+	public function insertCronTableIfNotExist() {
+		try {
+			$cron = $this->db->get_row( $this->db->prepare( "SELECT option_value FROM {$this->db->options} WHERE option_name = %s LIMIT 1", self::CRON_CONFIGURATION ), ARRAY_A );
+
+			if ( empty( $cron ) ) {
+				$this->db->query( $this->db->prepare( "INSERT INTO {$this->db->options} (option_id, option_name, option_value) VALUES (NULL, %s, %s)", array( self::CRON_CONFIGURATION, [] ) ) );
+			}
+		} catch ( Exception $e ) {
+			MessageEntity::getInstance()->addException( $e->setCode( 501 ) );
+		} catch ( \Exception $e ) {
+			MessageEntity::getInstance()->addException( new Exception( $e->getMessage(), 501 ) );
+		}
 	}
 
 	/**
@@ -324,12 +377,15 @@ class AdminModel extends AbstractModel
 				: '3.1.0'
 			);
 
-		$PlatformSettings->getMonitCode()->setPluginSettings( isset( $settings->MonitCode ) ? $settings->MonitCode : null );
-		$PlatformSettings->getPluginWp()->setPluginSettings( isset( $settings->PluginWp ) ? $settings->PluginWp : null );
-		$PlatformSettings->getPluginWc()->setPluginSettings( isset( $settings->PluginWc ) ? $settings->PluginWc : null );
-		$PlatformSettings->getPluginCf7()->setPluginSettings( isset( $settings->PluginCf7 ) ? $settings->PluginCf7 : null );
-		$PlatformSettings->getPluginGf()->setPluginSettings( isset( $settings->PluginGf ) ? $settings->PluginGf : null );
-		$PlatformSettings->getPluginFf()->setPluginSettings( isset( $settings->PluginFf ) ? $settings->PluginFf : null );
+		$PlatformSettings->setDetailsMapping( $settings->DetailsMapping ?? array() );
+		$PlatformSettings->setCronEnabled( (bool) $settings->cronEnabled ?? false );
+		$PlatformSettings->setCronValue( $settings->cronValue ?? 0 );
+		$PlatformSettings->getMonitCode()->setPluginSettings( $settings->MonitCode ?? null );
+		$PlatformSettings->getPluginWp()->setPluginSettings( $settings->PluginWp ?? null );
+		$PlatformSettings->getPluginWc()->setPluginSettings( $settings->PluginWc ?? null );
+		$PlatformSettings->getPluginCf7()->setPluginSettings( $settings->PluginCf7 ?? null );
+		$PlatformSettings->getPluginGf()->setPluginSettings( $settings->PluginGf ?? null );
+		$PlatformSettings->getPluginFf()->setPluginSettings( $settings->PluginFf ?? null );
 	}
 
 	/**
@@ -898,4 +954,33 @@ class AdminModel extends AbstractModel
         }
         return Helper::getLocation();
     }
+
+	/**
+	 * @return array
+	 */
+	public function getAttributes() {
+		$query = "SELECT
+			ID as productId
+			FROM {$this->db->posts}
+			WHERE ( post_type = 'product' OR post_type = 'product_variation' );";
+
+		$productIds = $this->db->get_results($query, ARRAY_A);
+		$attributes = [];
+
+		foreach ( $productIds as $productId ) {
+			$product = wc_get_product( $productId[ 'productId' ] );
+			$attributes += $product->get_attributes();
+		}
+
+		$attributesLabeled = [];
+
+		foreach ($attributes as $attribute) {
+			$attributesLabeled[] = [
+				'name' => $attribute->get_name(),
+				'label' => wc_attribute_label( $attribute->get_name() )
+			];
+		}
+
+		return $attributesLabeled ?? [];
+	}
 }

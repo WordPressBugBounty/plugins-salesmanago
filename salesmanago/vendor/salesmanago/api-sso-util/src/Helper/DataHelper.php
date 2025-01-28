@@ -3,6 +3,7 @@
 
 namespace SALESmanago\Helper;
 
+use SALESmanago\Entity\Api\V3\Product\SystemDetailsInterface;
 use SALESmanago\Entity\Event\Event;
 
 class DataHelper
@@ -18,7 +19,12 @@ class DataHelper
         Event::EXT_EVENT_TYPE => 255,
         Event::DETAIL         => 255,
         Event::EXT_ID         => 255,
-        Event::SHOP_DOMAIN    => 255
+        Event::SHOP_DOMAIN    => 255,
+
+        SystemDetailsInterface::BRAND        => 255,
+        SystemDetailsInterface::MANUFACTURER => 100,
+        SystemDetailsInterface::SEASON       => 40,
+        SystemDetailsInterface::COLOR        => 40,
     );
     /**
      * Unset empty array values

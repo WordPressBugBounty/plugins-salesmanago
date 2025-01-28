@@ -60,7 +60,7 @@ class ProductServiceTest extends TestAbstractBasicV3Service
         $ProductService = new ProductService(UnionConfigurationEntity::getInstance());
 
         //test method:
-        $response = $ProductService->updateQty($Catalog, $Product->getProductId(), $Product->getQuantity());
+        $response = $ProductService->updateQty($Catalog, (int) $Product->getProductId(), (int) $Product->getQuantity());
 
         //assertions:
         $this->assertArrayNotHasKey('problems', $response);

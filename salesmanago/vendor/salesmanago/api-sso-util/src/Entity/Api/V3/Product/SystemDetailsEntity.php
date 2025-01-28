@@ -6,6 +6,7 @@ use SALESmanago\Helper\DataHelper;
 
 class SystemDetailsEntity implements SystemDetailsInterface
 {
+
     /**
      * @var string - 255 standard product details
      */
@@ -57,9 +58,9 @@ class SystemDetailsEntity implements SystemDetailsInterface
     /**
      * @inheritDoc
      */
-    public function setBrand($brand)
+    public function setBrand(?string $brand): SystemDetailsEntity
     {
-        $this->brand = $brand;
+        $this->brand = (string) $brand;
         return $this;
     }
 
@@ -74,9 +75,9 @@ class SystemDetailsEntity implements SystemDetailsInterface
     /**
      * @inheritDoc
      */
-    public function setManufacturer($manufacturer)
+    public function setManufacturer(?string $manufacturer): SystemDetailsEntity
     {
-        $this->manufacturer = $manufacturer;
+        $this->manufacturer = (string) $manufacturer;
         return $this;
     }
 
@@ -91,9 +92,9 @@ class SystemDetailsEntity implements SystemDetailsInterface
     /**
      * @inheritDoc
      */
-    public function setPopularity($popularity)
+    public function setPopularity(?int $popularity): SystemDetailsEntity
     {
-        $this->popularity = $popularity;
+        $this->popularity = (integer) $popularity;
         return $this;
     }
 
@@ -108,9 +109,9 @@ class SystemDetailsEntity implements SystemDetailsInterface
     /**
      * @inheritDoc
      */
-    public function setGender($gender)
+    public function setGender(?int $gender): SystemDetailsInterface
     {
-        $this->gender = $gender;
+        $this->gender = (integer) $gender;
         return $this;
     }
 
@@ -125,9 +126,9 @@ class SystemDetailsEntity implements SystemDetailsInterface
     /**
      * @inheritDoc
      */
-    public function setSeason($season)
+    public function setSeason(?string $season): SystemDetailsInterface
     {
-        $this->season = $season;
+        $this->season = (string) $season;
         return $this;
     }
 
@@ -142,9 +143,9 @@ class SystemDetailsEntity implements SystemDetailsInterface
     /**
      * @inheritDoc
      */
-    public function setColor($color)
+    public function setColor(?string $color): SystemDetailsInterface
     {
-        $this->color = $color;
+        $this->color = (string) $color;
         return $this;
     }
 
@@ -159,9 +160,9 @@ class SystemDetailsEntity implements SystemDetailsInterface
     /**
      * @inheritDoc
      */
-    public function setBestseller($bestseller)
+    public function setBestseller(?bool $bestseller): SystemDetailsInterface
     {
-        $this->bestseller = $bestseller;
+        $this->bestseller = (bool) $bestseller;
         return $this;
     }
 
@@ -176,26 +177,51 @@ class SystemDetailsEntity implements SystemDetailsInterface
     /**
      * @inheritDoc
      */
-    public function setNewProduct($newProduct)
+    public function setNewProduct(?bool $newProduct): SystemDetailsInterface
     {
-        $this->newProduct = $newProduct;
+        $this->newProduct = (bool) $newProduct;
         return $this;
     }
 
     /**
      * @inheritDoc
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
-        return DataHelper::filterDataArray([
-            "brand"        => $this->brand,
-            "manufacturer" => $this->manufacturer,
-            "popularity"   => $this->popularity,
-            "gender"       => $this->gender,
-            "season"       => $this->season,
-            "color"        => $this->color,
-            "bestseller"   => $this->bestseller,
-            "newProduct"   => $this->newProduct
-        ]);
+        $data = [];
+
+        if (isset($this->brand)) {
+            $data['brand'] = (string) $this->brand;
+        }
+
+        if (isset($this->manufacturer)) {
+            $data['manufacturer'] = (string) $this->manufacturer;
+        }
+
+        if (isset($this->popularity)) {
+            $data['popularity'] = $this->popularity;
+        }
+
+        if (isset($this->gender)) {
+            $data['gender'] = $this->gender;
+        }
+
+        if (isset($this->season)) {
+            $data['season'] = $this->season;
+        }
+
+        if (isset($this->color)) {
+            $data['color'] = $this->color;
+        }
+
+        if (isset($this->bestseller)) {
+            $data['bestseller'] = $this->bestseller;
+        }
+
+        if (isset($this->newProduct)) {
+            $data['newProduct'] = $this->newProduct;
+        }
+
+        return $data;
     }
 }

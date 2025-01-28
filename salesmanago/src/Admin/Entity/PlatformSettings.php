@@ -22,10 +22,13 @@ final class PlatformSettings implements \JsonSerializable
     protected $PluginGf;
     protected $PluginFf;
     protected $MonitCode;
+    protected $DetailsMapping;
 
     protected $updatedAt;
     protected $languageDetection     = 'platform';
     protected $pluginVersion         = null;
+    protected $cronEnabled = false;
+    protected $cronValue = 0;
 
     private function __construct()
     {
@@ -35,6 +38,7 @@ final class PlatformSettings implements \JsonSerializable
         $this->PluginGf  = new PluginGf();
         $this->PluginFf  = new PluginFf();
         $this->MonitCode = new MonitCode();
+        $this->DetailsMapping = [];
     }
 
     protected function __clone()
@@ -78,6 +82,18 @@ final class PlatformSettings implements \JsonSerializable
         $this->updatedAt = $updatedAt;
         return $this;
     }
+
+	/**
+	 * @return array
+	 */
+	public function getDetailsMapping() {
+		return $this->DetailsMapping;
+	}
+
+	public function setDetailsMapping( $DetailsMapping ) {
+		$this->DetailsMapping = (array) $DetailsMapping;
+		return $this;
+	}
 
     /**
      * @return PluginWp
@@ -289,6 +305,40 @@ final class PlatformSettings implements \JsonSerializable
     public function setPluginVersion($pluginVersion)
     {
         $this->pluginVersion = $pluginVersion;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCronEnabled()
+    {
+        return $this->cronEnabled;
+    }
+
+    /**
+     * @param bool $cronEnabled
+     */
+    public function setCronEnabled( bool $cronEnabled )
+    {
+        $this->cronEnabled = $cronEnabled;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCronValue()
+    {
+        return $this->cronValue;
+    }
+
+    /**
+     * @param string $cronValue
+     */
+    public function setCronValue( string $cronValue )
+    {
+        $this->cronValue = $cronValue;
         return $this;
     }
 }

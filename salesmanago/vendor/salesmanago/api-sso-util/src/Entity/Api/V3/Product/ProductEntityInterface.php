@@ -7,6 +7,8 @@ use SALESmanago\Entity\DetailsInterface;
 
 interface ProductEntityInterface extends JsonSerializable
 {
+    const DISCOUNT_PRICE = 'discountPrice';
+
     /**
      * @return ProductEntityInterface
      */
@@ -163,12 +165,16 @@ interface ProductEntityInterface extends JsonSerializable
 
     /**
      * @return mixed
+     *
+     * deprecated since 3.6.0
      */
     public function getUnitPrice();
 
     /**
      * @param mixed $unitPrice
      * @return ProductEntityInterface
+     *
+     * deprecated since 3.6.0
      */
     public function setUnitPrice($unitPrice);
 

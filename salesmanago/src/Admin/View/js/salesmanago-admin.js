@@ -21,6 +21,14 @@ function appendSalesmanagoSubmenu() {
 	salesmanagoLink.target = "_blank";
 }
 
+function salesmanagoToggleCronFrequency()
+{
+	const checkbox = document.getElementById('salesmanago-cron');
+	const dropdown = document = document.getElementById('cron-select-wrapper');
+
+	dropdown.style.display = checkbox.checked ? 'block' : 'none';
+}
+
 function salesmanagoRemoveForm(id)
 {
 	let smFormTable = document.getElementById( "salesmanago-form-" + id );

@@ -8,7 +8,7 @@ Tested up to: 6.7
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.5.0
+Stable tag: 3.6.0
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -137,6 +137,10 @@ During the online Marketing Automation course you will get answers to the follow
 - How can I receive the SALESmanago Marketing Automation Specialist Certificate?
 
 == Changelog ==
+= 3.6.0 =
+- Added support for Details Mapping in Product Catalogs
+- Added support for sending products via WordPress CRON
+- Updated API-SSO-UTIL library to 3.6.0
 = 3.5.0 =
 - Fixed method for getting main image url
 - Added sending currency ISO in detail9 for external events

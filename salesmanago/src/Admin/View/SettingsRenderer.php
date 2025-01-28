@@ -34,6 +34,26 @@ class SettingsRenderer {
 	 */
 	protected $catalogsLimitReached = false;
 
+	/**
+	 * @var array
+	 */
+	private array $customDetails;
+
+	/**
+	 * @var array
+	 */
+	private array $systemDetails;
+
+	/**
+	 * @var array
+	 */
+	private array $detailsMapping;
+
+	/**
+	 * @var array
+	 */
+	private array $attributes;
+
 	public function __construct( AdminModel $AdminModel ) {
 		$this->AdminModel = $AdminModel;
 		$ProductCatalogModel = new ProductCatalogModel( $this->AdminModel );
@@ -116,6 +136,16 @@ class SettingsRenderer {
 
 								include __DIR__ . '/product_api/create_catalog.php';
 							} else {
+								if ( isset ( $_POST [ 'attribute_mapping' ] ) ) {
+									$this->ProductCatalogController
+										->sanitizeMapping( $_POST [ 'attribute_mapping' ] )
+										->setDetailsMappingToPlatformSettings();
+								}
+								$this->customDetails = $this->ProductCatalogController->getCustomDetails();
+								$this->systemDetails = $this->ProductCatalogController->getSystemDetails();
+								$this->attributes = $this->ProductCatalogController->getAttributesNames();
+								$this->detailsMapping = $this->AdminModel->getPlatformSettings()->getDetailsMapping();
+
 								include __DIR__ . '/product_api/product_catalog.php';
 							}
                         } catch ( Exception $e ) {
@@ -252,6 +282,8 @@ class SettingsRenderer {
 	public function selected( $value, $name, $context = '' ) {
 		try {
 			switch ( $name ) {
+				case 'cron':
+					return ( $this->AdminModel->getPlatformSettings()->getCronEnabled() ? 'checked' : '' );
 				case 'contact-cookie-ttl-default':
 					$contactCookieTtl = $this->AdminModel
 											->getConfiguration()
@@ -468,5 +500,4 @@ class SettingsRenderer {
 			'admin'
 		);
 	}
-
 }

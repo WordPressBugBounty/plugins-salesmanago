@@ -3,7 +3,7 @@
  * Plugin Name: SALESmanago
  * Plugin URI:  https://www.salesmanago.com/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
  * Description: SALESmanago Marketing Automation integration for WordPress, WooCommerce, Contact Form 7, Gravity Forms
- * Version:     3.5.0
+ * Version:     3.6.0
  * Tested up to: 6.7
  * Requires PHP: 7.4
  * Author:      SALESmanago
@@ -37,6 +37,7 @@ const
 require_once __DIR__.'/vendor/autoload.php';
 
 use bhr\Admin\Admin;
+use bhr\Admin\Controller\CronController;
 use bhr\Admin\Controller\ExportController;
 use bhr\Admin\SmRestApi;
 use bhr\Frontend\Frontend;
@@ -50,6 +51,7 @@ if(is_admin() && isset($_REQUEST['action']) && strpos($_REQUEST['action'], SALES
     new Frontend();
 }
 try {
+	new CronController();
 	new SmRestApi();
 } catch ( Exception | Error $e ) {
 	error_log( $e->getMessage() );

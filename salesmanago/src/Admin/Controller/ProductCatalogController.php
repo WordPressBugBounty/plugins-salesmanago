@@ -12,6 +12,7 @@ use bhr\Admin\Entity\MessageEntity;
 use bhr\Admin\Model\AdminModel;
 use bhr\Admin\Model\Helper;
 use bhr\Admin\Model\ProductCatalogModel;
+use bhr\Includes\GlobalConstant;
 use Error;
 use Exception;
 use SALESmanago\Entity\Api\V3\CatalogEntity;
@@ -38,6 +39,37 @@ class ProductCatalogController {
 	private $error = false;
 
 	/**
+	 * @var array
+	 */
+	private $mapping;
+
+    /**
+     * @var array
+     */
+    private array $attributes;
+
+	/**
+	 * @var array|string[]
+	 */
+	private array $systemDetails = array(
+		GlobalConstant::MAP_BRAND,
+		GlobalConstant::MAP_MANUFACTURER,
+		GlobalConstant::MAP_SEASON,
+		GlobalConstant::MAP_COLOR
+	);
+
+	/**
+	 * @var array|string[]
+	 */
+	private array $customDetails = array(
+		GlobalConstant::MAP_DETAIL_1,
+		GlobalConstant::MAP_DETAIL_2,
+		GlobalConstant::MAP_DETAIL_3,
+		GlobalConstant::MAP_DETAIL_4,
+		GlobalConstant::MAP_DETAIL_5
+	);
+
+    /**
 	 * @param  ProductCatalogModel $ProductCatalogModel
 	 * @throws SmException
 	 */
@@ -242,7 +274,7 @@ class ProductCatalogController {
 			if ( ! $this->AdminModel->getConfiguration()->getActiveCatalog() || ! $this->AdminModel->getConfiguration()->getApiV3Key() ) {
 				return;
 			}
-			$ProductBuilder    = new ProductBuilder();
+			$ProductBuilder    = new ProductBuilder( $this->AdminModel );
 			$productIdentifierType = $this->AdminModel->getPlatformSettings()->getPluginWc()->getProductIdentifierType();
 
 			$ProductCollection = $ProductBuilder->add_product_to_collection( $wc_product->id, $productIdentifierType );
@@ -285,5 +317,70 @@ class ProductCatalogController {
 		$catalog_data['currency']              = ! empty( $request_data['sm-catalog-currency'] ) ? trim( $request_data['sm-catalog-currency'] ) : '';
 		$catalog_data['recommendation_frames'] = ! empty( $request_data['sm-catalog-allow-in-recommendation-frames'] ) ? (bool) $request_data['sm-catalog-allow-in-recommendation-frames'] : '';
 		return $catalog_data;
+	}
+
+	/**
+	 * @return void
+	 */
+	public function setDetailsMappingToPlatformSettings() {
+		$this->AdminModel->getPlatformSettings()->setDetailsMapping( $this->mapping );
+		$this->AdminModel->savePlatformSettings();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getAttributesNames() {
+        $attributesFromDb = $this->ProductCatalogModel->getAttributesFromDb();
+        $customAttributes = $this->ProductCatalogModel->getCustomAttributesFromDb();
+
+        $this->attributes = array_merge( $attributesFromDb, $customAttributes );
+
+        return $this->ProductCatalogModel->getAttributesNamesFromArray( $this->attributes );
+	}
+
+    /**
+     * @return array
+     */
+    public function getAttributes() {
+        return $this->attributes;
+    }
+	/**
+	 * @param array $mapping
+	 * @return ProductCatalogController
+	 */
+	public function sanitizeMapping( $mapping ) {
+		$this->mapping = array_map( 'sanitize_text_field', $mapping );
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getCustomDetails() {
+		return $this->customDetails;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getSystemDetails() {
+		return $this->systemDetails;
+	}
+
+    /**
+     * Save product to database in case CRON is enabled
+     *
+     * @param $wc_product
+     *
+     * @return void
+     */
+	public function storeProduct( $wc_product ) {
+		$data = get_option( 'salesmanago_cron', [] );
+		$data = array_filter( $data, fn ( $product ) => $product->id !== $wc_product->id );
+		$data[] = $wc_product;
+
+		update_option( 'salesmanago_cron', $data );
 	}
 }

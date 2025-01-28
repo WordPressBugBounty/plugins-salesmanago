@@ -380,4 +380,21 @@ trait Helper {
 		$apiKey     = Configuration::getInstance()->getApiKey();
 		return hash('sha256', substr(sha1($websiteUrl . $clientId), 0, 16) . substr($apiKey, (strlen($apiKey) - 8) / 2, 8));
 	}
+
+	/**
+     * @return array
+     */
+	public static function generateDefaultMapping() {
+		return array(
+			GlobalConstant::MAP_BRAND,
+			GlobalConstant::MAP_MANUFACTURER,
+			GlobalConstant::MAP_SEASON,
+			GlobalConstant::MAP_COLOR,
+			GlobalConstant::MAP_DETAIL_1,
+			GlobalConstant::MAP_DETAIL_2,
+			GlobalConstant::MAP_DETAIL_3,
+			GlobalConstant::MAP_DETAIL_4,
+			GlobalConstant::MAP_DETAIL_5,
+		);
+	}
 }

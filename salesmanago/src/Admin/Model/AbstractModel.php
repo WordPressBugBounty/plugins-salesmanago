@@ -10,6 +10,7 @@ class AbstractModel
         SETTINGS_TABLE    = 'salesmanago_settings',
         CONFIGURATION     = 'salesmanago_configuration',
         PLATFORM_SETTINGS = 'salesmanago_platform_settings',
+        CRON_CONFIGURATION = 'salesmanago_cron',
         TOKEN_EXPIRE_TIME = 2577600, //time in seconds added after token is retrieved. 29 days 20 h
         EXPORT_TAGS       = 'WP_EXPORT';
 
