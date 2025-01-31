@@ -377,7 +377,7 @@ class AdminModel extends AbstractModel
 				: '3.1.0'
 			);
 
-		$PlatformSettings->setDetailsMapping( $settings->DetailsMapping ?? array() );
+		$PlatformSettings->setDetailsMapping( $settings->DetailsMapping ?? Helper::generateDefaultMapping() );
 		$PlatformSettings->setCronEnabled( (bool) $settings->cronEnabled ?? false );
 		$PlatformSettings->setCronValue( $settings->cronValue ?? 0 );
 		$PlatformSettings->getMonitCode()->setPluginSettings( $settings->MonitCode ?? null );
@@ -532,6 +532,8 @@ class AdminModel extends AbstractModel
 		$platformSettings->MonitCode->smCustom              = false;
 		$platformSettings->MonitCode->smBanners             = false;
 		$platformSettings->MonitCode->popUpJs               = false;
+
+		$platformSettings->DetailsMapping = Helper::generateDefaultMapping();
 
 		return $platformSettings;
 	}

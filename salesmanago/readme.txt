@@ -4,11 +4,11 @@ Plugin URI:  https://support.salesmanago.com/integration-with-wordpress/
 Contributors: Benhauer Sp. z o.o.
 Tags: marketing automation, email marketing, crm, live chat, social media, lead nurturing, lead generation, personalized marketing, woocommerce, contacts, lead tracking, click tracking, visitor tracking, inbound marketing, subscription, marketing, newsletter, popup, email, contacts database, contact form, popup form
 Requires at least: 5.6
-Tested up to: 6.7
+Tested up to: 6.7.1
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.6.0
+Stable tag: 3.6.1
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -19,7 +19,7 @@ Customer Engagement Platform for impact-hungry eCommerce marketing teams.
 
 === Overview ===
 
-SALESmanago is a Customer Engagement Platform for impact-hungry eCommerce marketing teams who want to be lean yet powerful, trusted revenue growth partners for CEOs. Our AI-driven solutions have already been adopted by 2000+ mid-size businesses in 50 countries, as well as many well-known global brands such as Starbucks, Vodafone, Lacoste, KFC, New Balance and Victoria’s Secret.
+SALESmanago is a Customer Engagement Platform for impact-hungry eCommerce marketing teams who want to be lean yet powerful, trusted revenue growth partners for CEOs. Our AI-driven solutions have already been adopted by 2000+ mid-size businesses in 50 countries, as well as many well-known global brands such as Starbucks, Vodafone, Lacoste, KFC, New Balance and Victoria�s Secret.
 
 SALESmanago delivers on its promise of maximizing revenue growth and improving eCommerce KPIs by leveraging three principles: (1) Customer Intimacy to create authentic customer relationships based on Zero and First Party Data; (2) Precision Execution to provide superior Omnichannel customer experience thanks to Hyperpersonalization; and (3) Growth Intelligence merging human and AI-based guidance enabling pragmatic and faster decision making for maximum impact.
 

@@ -386,15 +386,15 @@ trait Helper {
      */
 	public static function generateDefaultMapping() {
 		return array(
-			GlobalConstant::MAP_BRAND,
-			GlobalConstant::MAP_MANUFACTURER,
-			GlobalConstant::MAP_SEASON,
-			GlobalConstant::MAP_COLOR,
-			GlobalConstant::MAP_DETAIL_1,
-			GlobalConstant::MAP_DETAIL_2,
-			GlobalConstant::MAP_DETAIL_3,
-			GlobalConstant::MAP_DETAIL_4,
-			GlobalConstant::MAP_DETAIL_5,
+			GlobalConstant::MAP_BRAND => false,
+			GlobalConstant::MAP_MANUFACTURER => false,
+			GlobalConstant::MAP_SEASON => false,
+			GlobalConstant::MAP_COLOR => false,
+			GlobalConstant::MAP_DETAIL_1 => false,
+			GlobalConstant::MAP_DETAIL_2 => false,
+			GlobalConstant::MAP_DETAIL_3 => false,
+			GlobalConstant::MAP_DETAIL_4 => false,
+			GlobalConstant::MAP_DETAIL_5 => false,
 		);
 	}
 }

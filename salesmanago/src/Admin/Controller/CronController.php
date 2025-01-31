@@ -32,8 +32,12 @@ class CronController {
      * @return void
      */
     public function schedule_salesmanago_cron( $custom_cron_schedule = null ) {
+        $recurrence = $custom_cron_schedule && is_string( $custom_cron_schedule )
+            ? $custom_cron_schedule
+            : self::CRON_SCHEDULE_KEY_60;
+
         if ( !wp_next_scheduled( 'salesmanago_cron_event' ) ) {
-            wp_schedule_event( time(), empty( $custom_cron_schedule ) ? self::CRON_SCHEDULE_KEY_60 : $custom_cron_schedule, 'salesmanago_cron_event' );
+            wp_schedule_event( time(), $recurrence, 'salesmanago_cron_event' );
         }
     }
 

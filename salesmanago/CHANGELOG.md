@@ -1,3 +1,7 @@
+# 3.6.1 released 30.01.2025
+- Fixed bug during creating CRON schedules
+- Fixed bug during creating default Mapping for Product Catalogs
+
 # 3.6.0 released 28.01.2025
 - Added support for Details Mapping in Product Catalogs
 - Added support for sending products via WordPress CRON

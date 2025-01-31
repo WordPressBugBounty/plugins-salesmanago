@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63a88fca990771fdc348d22e6ac315ad",
+    "content-hash": "ac355413344d41a3bf6f7636a995622e",
     "packages": [
         {
             "name": "salesmanago/api-sso-util",
