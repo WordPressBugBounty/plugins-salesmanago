@@ -29,6 +29,7 @@ final class PlatformSettings implements \JsonSerializable
     protected $pluginVersion         = null;
     protected $cronEnabled = false;
     protected $cronValue = 0;
+    protected $cronMethod = 'real-time';
 
     private function __construct()
     {
@@ -341,4 +342,23 @@ final class PlatformSettings implements \JsonSerializable
         $this->cronValue = $cronValue;
         return $this;
     }
+
+    /**
+     * @return string
+     */
+	public function getCronMethod()
+	{
+		return $this->cronMethod;
+	}
+
+    /**
+     * @param string $cronMethod
+     *
+     * @return $this
+     */
+	public function setCronMethod( string $cronMethod )
+	{
+		$this->cronMethod = $cronMethod;
+		return $this;
+	}
 }

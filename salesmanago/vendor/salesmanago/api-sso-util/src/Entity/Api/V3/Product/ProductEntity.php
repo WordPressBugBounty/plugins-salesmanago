@@ -430,12 +430,20 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
 
         if (!empty($customDetails)) {
             $data['customDetails'] = $customDetails->jsonSerialize();
+
+            if (empty($data['customDetails'])) {
+                unset($data['customDetails']);
+            }
         }
 
         $data = DataHelper::filterDataArray($data);
 
         if (!empty($systemDetails)) {
             $data['systemDetails'] = $systemDetails->jsonSerialize();
+
+            if (empty($data['systemDetails'])) {
+                unset($data['systemDetails']);
+            }
         }
 
         $data['setAsNull'] = $this->buildSetAsNull();

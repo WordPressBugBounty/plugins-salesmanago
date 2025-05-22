@@ -21,6 +21,78 @@ function appendSalesmanagoSubmenu() {
 	salesmanagoLink.target = "_blank";
 }
 
+/**
+ * Toggles visibility of the synchronization interval based on synchronization method
+ */
+function salesmanagoToggleSyncInterval() {
+	const syncMethodSelect = document.getElementById('cron-method');
+	const syncIntervalRow = document.getElementById('cronValue').closest('tr');
+
+	if (syncMethodSelect.value === 'real-time' || syncMethodSelect.value === 'native') {
+		syncIntervalRow.style.display = 'none';
+		// Add hidden input to set cronEnabled to false when real-time is selected
+		let hiddenInput = document.getElementById('cron-enabled-hidden');
+		if (!hiddenInput) {
+			hiddenInput = document.createElement('input');
+			hiddenInput.type = 'hidden';
+			hiddenInput.id = 'cron-enabled-hidden';
+			hiddenInput.name = 'cronEnabled';
+			hiddenInput.value = '0';
+			syncMethodSelect.parentNode.appendChild(hiddenInput);
+		}
+	} else {
+		syncIntervalRow.style.display = 'table-row';
+		// Remove hidden input if exists
+		const hiddenInput = document.getElementById('cron-enabled-hidden');
+		if (hiddenInput) {
+			hiddenInput.parentNode.removeChild(hiddenInput);
+		}
+		// Add hidden input for enabled cron
+		let enabledInput = document.getElementById('cron-enabled-enabled');
+		if (!enabledInput) {
+			enabledInput = document.createElement('input');
+			enabledInput.type = 'hidden';
+			enabledInput.id = 'cron-enabled-enabled';
+			enabledInput.name = 'cronEnabled';
+			enabledInput.value = '1';
+			syncMethodSelect.parentNode.appendChild(enabledInput);
+		}
+	}
+}
+
+// Initialize on page load and add event listener
+document.addEventListener('DOMContentLoaded', function() {
+	const syncMethodSelect = document.getElementById('cron-method');
+	if (syncMethodSelect) {
+		salesmanagoToggleSyncInterval();
+		syncMethodSelect.addEventListener('change', salesmanagoToggleSyncInterval);
+	}
+});
+
+function salesmanagoToggleCronMethodDescription() {
+	const methodSelect = document.getElementById('cron-method');
+	const selectedValue = methodSelect.value;
+
+	// Hide all descriptions
+	const descriptions = document.querySelectorAll('.cron-method-description');
+	descriptions.forEach(desc => desc.classList.remove('active'));
+
+	// Show the selected description
+	const activeDescription = document.getElementById('cron-method-description-' + selectedValue);
+	if (activeDescription) {
+		activeDescription.classList.add('active');
+	}
+}
+
+// Initialize on page load and add event listener
+document.addEventListener('DOMContentLoaded', function() {
+	const methodSelect = document.getElementById('cron-method');
+	if (methodSelect) {
+		salesmanagoToggleCronMethodDescription();
+		methodSelect.addEventListener('change', salesmanagoToggleCronMethodDescription);
+	}
+});
+
 function salesmanagoToggleCronFrequency()
 {
 	const checkbox = document.getElementById('salesmanago-cron');

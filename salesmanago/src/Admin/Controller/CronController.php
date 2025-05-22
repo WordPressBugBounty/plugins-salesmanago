@@ -15,6 +15,7 @@ use SALESmanago\Services\Api\V3\Product\ProductService;
 
 class CronController {
 
+    const CRON_SCHEDULE_KEY_0 = 'salesmanago_custom_cron_schedule_0';
     const CRON_SCHEDULE_KEY_60 = 'salesmanago_custom_cron_schedule_60';
     const CRON_SCHEDULE_KEY_180 = 'salesmanago_custom_cron_schedule_180';
     const CRON_SCHEDULE_KEY_300 = 'salesmanago_custom_cron_schedule_300';
@@ -23,6 +24,20 @@ class CronController {
         add_filter('cron_schedules', array($this, 'custom_cron_schedule'));
         add_action('wp', array($this, 'schedule_salesmanago_cron'));
         add_action('salesmanago_cron_event', array($this, 'execute'));
+        add_action('init', array($this, 'handle_cron_request'));
+    }
+
+    /**
+     * Handle CRON request
+     * https://your-domain.xx/?salesmanago_cron=run
+     *
+     * @return void
+     */
+    public function handle_cron_request() {
+        //todo - security token
+        if ( isset( $_GET[ 'salesmanago_cron' ] ) && $_GET[ 'salesmanago_cron' ] === 'run' ) {
+			do_action('salesmanago_cron_event');
+		}
     }
 
     /**
@@ -34,7 +49,12 @@ class CronController {
     public function schedule_salesmanago_cron( $custom_cron_schedule = null ) {
         $recurrence = $custom_cron_schedule && is_string( $custom_cron_schedule )
             ? $custom_cron_schedule
-            : self::CRON_SCHEDULE_KEY_60;
+            : self::CRON_SCHEDULE_KEY_0;
+
+        if ( $recurrence === self::CRON_SCHEDULE_KEY_0 ) {
+            $this->update_cron_schedule( '0' );
+            return;
+        }
 
         if ( !wp_next_scheduled( 'salesmanago_cron_event' ) ) {
             wp_schedule_event( time(), $recurrence, 'salesmanago_cron_event' );
@@ -136,12 +156,18 @@ class CronController {
         $products_collection = new ProductsCollection();
 
         foreach ( $products as $product ) {
-            $products_collection = $product_builder->add_product_to_collection( $product->id, $product_identifier_type );
+            $products_collection = $product_builder->add_product_to_collection(
+                $product->id,
+                $product_identifier_type,
+                $products_collection
+            );
 
             if ( $product->get_children() ) {
                 foreach ( $product->get_children() as $childId ) {
                     $products_collection = $product_builder->add_product_to_collection(
-                        $childId, $product_identifier_type, $products_collection
+                        $childId,
+                        $product_identifier_type,
+                        $products_collection
                     );
                 }
             }
@@ -163,7 +189,15 @@ class CronController {
     private function upsert_product_collection( ProductsCollection $product_collection, AdminModel $admin_model ) {
         $catalog = new CatalogEntity( [ 'catalogId' => $admin_model->getConfiguration()->getActiveCatalog() ] );
         $product_service = new ProductService( $admin_model->getConfiguration() );
-        $product_service->upsertProducts( $catalog, $product_collection );
+
+        if ( $product_collection->count() > 100)  {
+            $chunks = $product_collection->chunk();
+            foreach ($chunks as $chunk) {
+                $product_service->upsertProducts( $catalog, $chunk );
+            }
+        } else {
+            $product_service->upsertProducts( $catalog, $product_collection );
+        }
     }
 
     /**

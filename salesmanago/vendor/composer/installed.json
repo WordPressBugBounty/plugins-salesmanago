@@ -2,17 +2,17 @@
     "packages": [
         {
             "name": "salesmanago/api-sso-util",
-            "version": "3.6.0",
-            "version_normalized": "3.6.0.0",
+            "version": "3.8.0",
+            "version_normalized": "3.8.0.0",
             "source": {
                 "type": "git",
                 "url": "https://bitbucket.org/benhauerdev/api-sso-util.git",
-                "reference": "9b233b0125ff13e66494a7216188702dd2fb3d4c"
+                "reference": "32743152a2c9389d8cca89753a6445ec8a9d3b09"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/benhauerdev/api-sso-util/get/9b233b0125ff13e66494a7216188702dd2fb3d4c.zip",
-                "reference": "9b233b0125ff13e66494a7216188702dd2fb3d4c",
+                "url": "https://bitbucket.org/benhauerdev/api-sso-util/get/32743152a2c9389d8cca89753a6445ec8a9d3b09.zip",
+                "reference": "32743152a2c9389d8cca89753a6445ec8a9d3b09",
                 "shasum": ""
             },
             "require": {
@@ -27,7 +27,7 @@
                 "phpunit/phpunit": "^9",
                 "squizlabs/php_codesniffer": "^3.5.8"
             },
-            "time": "2024-12-12T09:00:09+00:00",
+            "time": "2025-05-06T12:01:48+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -51,7 +51,7 @@
             "description": "core api code",
             "homepage": "https://bitbucket.org/benhauerdev/api-sso-util",
             "support": {
-                "source": "https://bitbucket.org/benhauerdev/api-sso-util/src/9b233b0125ff13e66494a7216188702dd2fb3d4c/?at=3.6.0"
+                "source": "https://bitbucket.org/benhauerdev/api-sso-util/src/32743152a2c9389d8cca89753a6445ec8a9d3b09/?at=3.8.0"
             },
             "install-path": "../salesmanago/api-sso-util"
         }

@@ -197,7 +197,9 @@ class ProductBuilder {
 					continue;
 				}
 
-				$product_entity = $this->build_product_entity( $wc_product_data );
+				$deleteAction = $product['post_status'] == 'trash';
+
+				$product_entity = $this->build_product_entity( $wc_product_data, $deleteAction );
 
 				$BasicProductDetailsAdapter = new BasicProductDetailsAdapter();
 
@@ -225,7 +227,13 @@ class ProductBuilder {
 	 * @return Collection
 	 * @throws SmException SALESmanago exception.
 	 */
-	public function add_product_to_collection( $product_id, $product_identifier_type, $products_collection = null, $parentImageUrls = [] ) {
+	public function add_product_to_collection(
+        $product_id,
+        $product_identifier_type,
+        $products_collection = null,
+        $parentImageUrls = [],
+        $deleteAction = false
+    ) {
 		try {
 			if ( is_null( $products_collection ) ) {
 				$products_collection = new Collection();
@@ -233,7 +241,7 @@ class ProductBuilder {
 			if ( ! empty( $product_id ) ) {
 				$wc_product_data = $this->get_wc_product_data( $product_id, $product_identifier_type, $parentImageUrls, true );
 				if ( $this->is_product_valid( $wc_product_data ) ) {
-					$product_entity = $this->build_product_entity( $wc_product_data );
+					$product_entity = $this->build_product_entity( $wc_product_data, $deleteAction );
 
 					$BasicProductDetailsAdapter = new BasicProductDetailsAdapter();
 
@@ -259,7 +267,7 @@ class ProductBuilder {
 	 * @param array $wc_product_data WC product data.
 	 * @return ProductEntity Product entity
 	 */
-	protected function build_product_entity( $wc_product_data ) {
+	protected function build_product_entity( $wc_product_data, $deleteAction = false ) {
 		$product_entity = new ProductEntity();
 		$product_entity
 			->setProductId( $wc_product_data['productId'] )
@@ -280,6 +288,11 @@ class ProductBuilder {
 		}
 		if ( ! empty( $wc_product_data['categories'] ) ) {
 			$product_entity->setCategories( $wc_product_data['categories'] );
+		}
+		if ( $deleteAction ) {
+            $product_entity
+				->setAvailable( false )
+				->setActive( false );
 		}
 		return $product_entity;
 	}

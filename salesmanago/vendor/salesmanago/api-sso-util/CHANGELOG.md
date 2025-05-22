@@ -1,5 +1,16 @@
 SALESmanago library for integrations
 ------------------------------------
+Version 3.8.0 06.05.2025
+- Added chunk method to ProductsCollection for splitting collections into smaller parts;
+- Fixed potential error if API V3 service is not available;
+- Fixed parsing API V3 Exception code 14 message
+
+Version 3.7.1 06.03.2025
+- Fixed empty custom details and system details serialization in ProductEntity;
+
+Version 3.7.0 26.02.2025
+- Added product/updatePrice APIv3 method;
+
 Version 3.6.0 11.12.2024
 - Added setAsNull in ProductEntity, supporting details and discountPrice;
 - Fixed filtering empty data in product entity, sending empty system details still available;

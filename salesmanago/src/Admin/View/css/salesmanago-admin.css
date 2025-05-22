@@ -58,6 +58,19 @@
 	background-color: #005a87;
 }
 
+.cron-method-description {
+	margin-top: 8px;
+	padding: 8px 12px;
+	background-color: #f8f8f8;
+	border-left: 4px solid #ddd;
+	display: none;
+	text-align: left; /* Add this to ensure left alignment */
+}
+
+.cron-method-description.active {
+	display: block;
+}
+
 /* Responsive Styles */
 @media (max-width: 768px) {
 	.attribute-select {

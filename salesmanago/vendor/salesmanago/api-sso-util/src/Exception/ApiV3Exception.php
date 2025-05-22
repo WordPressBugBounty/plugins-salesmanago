@@ -204,13 +204,6 @@ class ApiV3Exception extends Exception
             $fieldType = null;
             if (10 < $code && $code < 19) {
                 $field = explode('|', $messages[$key])[0];
-                switch ($code) {
-                    case 14:
-                        $fieldWithType = $field;
-                        $field = explode(':', $fieldWithType)[0];
-                        $fieldType = explode(':', $fieldWithType)[1];
-                        break;
-                }
             }
 
             array_push($fieldArray, $field);

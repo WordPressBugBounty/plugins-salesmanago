@@ -85,10 +85,90 @@ class Admin {
 			Helper::addAction( 'woocommerce_order_status_processing', array( $this, 'wc_event_status_changed' ), 10, 1 );
 			Helper::addAction( 'woocommerce_new_product', array( $this, 'handle_wc_product' ), 10, 2 );
 			Helper::addAction( 'woocommerce_update_product', array( $this, 'handle_wc_product' ), 10, 2 );
+			Helper::addAction( 'woocommerce_before_delete_product_variation', array($this, 'delete_product_single_variation' ));
 		}
 		Helper::addAction( 'profile_update', array( $this, 'user_update' ), 10, 2 );
 		Helper::addAction( 'user_register', array( $this, 'user_create' ), 10, 2 );
 		Helper::addAction( 'admin_notices', array( $this, 'notify_about_api_v3_error' ), 10, 0 );
+
+		Helper::addAction('wp_trash_post', array($this, 'delete_product'));
+		Helper::addAction('wp_ajax_trash_post', array($this, 'delete_product'));
+		Helper::addAction('untrash_post', array($this, 'restore_product'));
+	}
+
+    /**
+     * Handle product deletion
+     *
+     * @return void
+     */
+	public function delete_product() {
+		$this->handle_product_status_change('trash', true);
+	}
+
+    /**
+     * Handle product deletion - a single variation case
+     *
+     * @return void
+     */
+    public function delete_product_single_variation( $post_id ) {
+        if ( $this->AdminModel->getPlatformSettings()->getPluginWc()->isActive() ) {
+            $product = wc_get_product( $post_id );
+            $this->ProductCatalogController->upsertProduct( $product, true );
+        };
+    }
+
+    /**
+     * Handle product restoration
+     *
+     * @return void
+     */
+	public function restore_product() {
+		$this->handle_product_status_change('untrash', false);
+	}
+
+    /**
+     * @param $action
+     * @param $is_deleted
+     * @return void
+     */
+	private function handle_product_status_change($action, $is_deleted) {
+		if (
+			!$this->AdminModel->getPlatformSettings()->getPluginWc()->isActive()
+			|| ( $_GET[ 'action' ] ?? '' ) !== $action
+		) {
+			return;
+		}
+
+		static $processed_parents = array();
+
+		//bulk action
+		if ( isset( $_GET[ 'post' ] ) && is_array( $_GET[ 'post' ] ) && ( $_GET[ 'post_type' ] ?? '' ) == 'product' ) {
+			foreach ( $_GET[ 'post' ] as $post_id ) {
+				$this->process_product( $post_id, $processed_parents, $is_deleted );
+			}
+		}
+		//single action
+		elseif ( isset( $_GET[ 'post' ] ) && !is_array( $_GET[ 'post' ] ) ) {
+			$post_id = $_GET[ 'post' ];
+			$this->process_product( $post_id, $processed_parents, $is_deleted );
+		}
+    }
+
+	private function process_product($post_id, array &$processed_parents, $is_deleted) {
+		$post = get_post( $post_id );
+		if (
+			!$post
+			|| $post->post_type !== 'product'
+			|| $post->post_parent !== 0
+			|| in_array( $post_id, $processed_parents, true )
+		) {
+			return;
+		}
+
+		$processed_parents[] = $post_id;
+		$product = wc_get_product( $post_id );
+		$this->ProductCatalogController->upsertProduct( $product, $is_deleted );
+
 	}
 
 	/**

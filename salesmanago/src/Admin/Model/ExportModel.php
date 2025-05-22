@@ -666,6 +666,7 @@ class ExportModel {
                    A.post_title as name,
                    A.post_content as description,
                    A.post_excerpt as short_description,
+                   A.post_status as post_status,
                    B.meta_value as stock_status,
                    C.meta_value as regular_price,
                    D.meta_value as sale_price,

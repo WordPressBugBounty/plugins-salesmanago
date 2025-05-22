@@ -23,7 +23,8 @@ class ProductService extends BasicService
         REQUEST_METHOD_POST   = 'POST',
         REQUEST_METHOD_GET    = 'GET',
         API_METHOD_UPSERT     = '/v3/product/upsert',
-        API_METHOD_UPDATE_QTY = '/v3/product/updateQuantity';
+        API_METHOD_UPDATE_QTY = '/v3/product/updateQuantity',
+        API_METHOD_UPDATE_PRICE = '/v3/product/updatePrice';
 
     /**
      * @var RequestService
@@ -201,6 +202,30 @@ class ProductService extends BasicService
         return $this->RequestService->request(
             self::REQUEST_METHOD_POST,
             self::API_METHOD_UPDATE_QTY,
+            $data
+        );
+    }
+
+    /**
+     * Update prices
+     *
+     * @param CatalogEntityInterface $Catalog
+     * @param  ProductsCollectionInterface $pricesToUpdate
+     * @return array
+     * @throws ApiV3Exception
+     */
+    public function updatePrices(
+        CatalogEntityInterface $Catalog,
+        ProductsCollectionInterface $pricesToUpdate
+    ): array
+    {
+        //create request body:
+        $data = $this->ProductsModel->getProductsForUpdatePrices($Catalog, $pricesToUpdate);
+
+        //do request:
+        return $this->RequestService->request(
+            self::REQUEST_METHOD_POST,
+            self::API_METHOD_UPDATE_PRICE,
             $data
         );
     }

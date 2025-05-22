@@ -57,7 +57,9 @@ class AuthService extends BasicService
             $data
         );
 
-        $this->ConfigurationBuilderModel->setApiKeyToConfiguration($this->configuration, $response);
+        if (isset($response['apiKey'])) {
+            $this->ConfigurationBuilderModel->setApiKeyToConfiguration($this->configuration, $response);
+        }
 
         return new Response([
             'status' => true,

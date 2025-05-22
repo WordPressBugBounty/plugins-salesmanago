@@ -60,16 +60,12 @@ class WcController {
      */
 	public function createUser( $userId, $oldData = null ) {
 		try {
-			// Populate new Contact Model with fields from submitted data
-			if ( $this->ContactModel->parseCustomerFromPost() ) {
-				Helper::doAction( 'salesmanago_wc_create_contact', array( 'Contact' => $this->ContactModel->get() ) );
-				return $this->TransferController->transferContact( $this->ContactModel->get() );
-			} elseif ( $this->ContactModel->parseContact( $userId, GlobalConstant::ID, $oldData ) ) {
-				Helper::doAction( 'salesmanago_wc_create_contact', array( 'Contact' => $this->ContactModel->get() ) );
-				return $this->TransferController->transferContact( $this->ContactModel->get() );
-			}
-			return false;
-
+            $isParsed = $this->ContactModel->parseCustomerFromPost()
+                || $this->ContactModel->parseContact( $userId, GlobalConstant::ID, $oldData );
+            if ( $isParsed ) {
+                Helper::doAction( 'salesmanago_wc_create_contact', array( 'Contact' => $this->ContactModel->get() ) );
+                return $this->TransferController->transferContact( $this->ContactModel->get() );
+            }
 		} catch ( \Exception $e ) {
 			error_log( print_r( $e->getMessage(), true ) );
 		}

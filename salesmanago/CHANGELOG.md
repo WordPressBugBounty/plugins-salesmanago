@@ -1,3 +1,14 @@
+# 3.7.0 released 22.05.2025
+- Fixed bug with wrong cast to bool during enabling CRON
+- Improved storeProduct() method with error handling and validation
+- Fixed issue in Product Catalog tab where WooCommerce data was being loaded even if WooCommerce was not installed
+- Fixed sending more than 100 variants to Product Catalog
+- Updated API-SSO-UTIL library to 3.8.0
+- Moved CRON settings from Integration Settings tab to Product Catalog tab
+- Added possibility to choose how products will be sent to Product Catalogs (hook, cron or wp-cron)
+- Fixed bug with changing email address in user profile
+- Handled deleting product from Woocommerce
+
 # 3.6.1 released 30.01.2025
 - Fixed bug during creating CRON schedules
 - Fixed bug during creating default Mapping for Product Catalogs

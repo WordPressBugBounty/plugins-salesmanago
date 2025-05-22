@@ -79,37 +79,6 @@ class AdminModel extends AbstractModel
 						? $request['language-detection']
 						: 'platform'
 				);
-
-			$this->getPlatformSettings()
-				->setCronEnabled(
-					isset( $request[ 'cron-active' ] ) ? $request[ 'cron-active' ] : false
-				);
-
-			if ( $this->getPlatformSettings()->getCronEnabled() ) {
-				$cronFrequency = ( $request[ 'cron-frequency' ] ?? 0 );
-
-				switch ( $cronFrequency ) {
-					case 'one-minute':
-						$cronValue = CronController::CRON_SCHEDULE_KEY_60;
-						break;
-					case 'three-minutes':
-						$cronValue = CronController::CRON_SCHEDULE_KEY_180;
-						break;
-					case 'five-minutes':
-						$cronValue = CronController::CRON_SCHEDULE_KEY_300;
-						break;
-					default:
-						$cronValue = 0;
-				}
-
-					$this->getPlatformSettings()->setCronValue( $cronValue );
-					$this->CronController->update_cron_schedule( $cronValue );
-				} else {
-					$this->getPlatformSettings()->setCronValue( 0 );
-					$this->CronController->update_cron_schedule( '0' );
-            }
-
-
 		}
 		/* MONITCODE PAGE */
 		elseif ( $page == 'salesmanago-monit-code' ) {
@@ -207,6 +176,15 @@ class AdminModel extends AbstractModel
 				->getDoubleOptIn()
 					->setDoubleOptIn( isset( $request['double-opt-in'] ) ? $request['double-opt-in'] : array() );
 		}
+
+		/* PRODUCT CATALOG PAGE */
+		elseif ( $page == 'salesmanago-product-catalog' ) {
+			$this->getPlatformSettings()
+				->setCronEnabled( $request['cronEnabled'] ?? false )
+				->setCronMethod( $request['cronMethod'] ?? 'real-time' )
+				->setCronValue( $request['cronValue'] ?? '0' );
+		}
+
 		return $this;
 	}
 
@@ -378,8 +356,9 @@ class AdminModel extends AbstractModel
 			);
 
 		$PlatformSettings->setDetailsMapping( $settings->DetailsMapping ?? Helper::generateDefaultMapping() );
-		$PlatformSettings->setCronEnabled( (bool) $settings->cronEnabled ?? false );
-		$PlatformSettings->setCronValue( $settings->cronValue ?? 0 );
+		$PlatformSettings->setCronEnabled( (bool) ($settings->cronEnabled ?? false) );
+		$PlatformSettings->setCronValue( $settings->cronValue ?? '0' );
+		$PlatformSettings->setCronMethod( $settings->cronMethod ?? 'real-time' );
 		$PlatformSettings->getMonitCode()->setPluginSettings( $settings->MonitCode ?? null );
 		$PlatformSettings->getPluginWp()->setPluginSettings( $settings->PluginWp ?? null );
 		$PlatformSettings->getPluginWc()->setPluginSettings( $settings->PluginWc ?? null );
@@ -534,6 +513,10 @@ class AdminModel extends AbstractModel
 		$platformSettings->MonitCode->popUpJs               = false;
 
 		$platformSettings->DetailsMapping = Helper::generateDefaultMapping();
+
+		$platformSettings->cronEnabled = false;
+		$platformSettings->cronMethod = 'real-time';
+		$platformSettings->cronValue = '0';
 
 		return $platformSettings;
 	}
@@ -984,5 +967,12 @@ class AdminModel extends AbstractModel
 		}
 
 		return $attributesLabeled ?? [];
+	}
+
+    /**
+     * @return CronController
+     */
+	public function getCronController() {
+		return $this->CronController;
 	}
 }

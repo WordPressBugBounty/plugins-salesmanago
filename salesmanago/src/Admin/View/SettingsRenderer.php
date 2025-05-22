@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use bhr\Admin\Controller\CronController;
 use bhr\Admin\Controller\ProductCatalogController;
 use bhr\Admin\Entity\MessageEntity;
 use bhr\Admin\Model\AdminModel;
@@ -126,6 +127,12 @@ class SettingsRenderer {
 						break;
                     case 'salesmanago-product-catalog':
                         try {
+                            $context = SUPPORTED_PLUGINS['WooCommerce'];
+                            if ( !$this->AdminModel->getInstalledPluginByName( $context ) ) {
+                                include __DIR__ . '/product_api/product_catalog.php';
+                                break;
+                            }
+
 							if ( isset( $_REQUEST['subpage'] ) && $_REQUEST['subpage'] === 'create-catalog' ) {
 								$catalogsLimit = $this->ProductCatalogController->getCatalogsLimit();
 								$catalogsAmount = count($this->ProductCatalogController->getCatalogList());
@@ -136,6 +143,9 @@ class SettingsRenderer {
 
 								include __DIR__ . '/product_api/create_catalog.php';
 							} else {
+								if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] === 'save' ) {
+									$this->handleCronSettingsSave();
+								}
 								if ( isset ( $_POST [ 'attribute_mapping' ] ) ) {
 									$this->ProductCatalogController
 										->sanitizeMapping( $_POST [ 'attribute_mapping' ] )
@@ -271,6 +281,38 @@ class SettingsRenderer {
 		}
 		// closing of main wrap #salesmanago
 		echo( '</div>' );
+	}
+
+    /**
+     * Helper function to handle saving CRON settings
+     *
+     * @return void
+     */
+	private function handleCronSettingsSave() {
+		$cronMethod = $_POST[ 'cron-method' ] ?? 'real-time';
+
+		//for real-time synchronization disable cron
+		if ( $cronMethod === 'real-time' ) {
+			$this->AdminModel->getPlatformSettings()->setCronEnabled( false );
+			$this->AdminModel->getPlatformSettings()->setCronValue( '0' );
+			$this->AdminModel->getCronController()->update_cron_schedule( '0' );
+		} else {
+            $cronValue = $_POST[ 'cronValue' ] ?? CronController::CRON_SCHEDULE_KEY_60;
+            $this->AdminModel->getPlatformSettings()->setCronEnabled( true );
+            $this->AdminModel->getPlatformSettings()->setCronValue( $cronValue );
+            $this->AdminModel->getPlatformSettings()->setCronMethod( $cronMethod );
+
+			//update wp-cron schedules only when wp-cron is selected
+			if ( $cronMethod === 'wp-cron' ) {
+				$this->AdminModel->getCronController()->update_cron_schedule( $cronValue );
+            } else {
+				//for native system cron disable schedules
+				$this->AdminModel->getCronController()->update_cron_schedule( '0' );
+				$this->AdminModel->getPlatformSettings()->setCronValue( '0' );
+			}
+		}
+
+		$this->AdminModel->savePlatformSettings();
 	}
 
 	/**

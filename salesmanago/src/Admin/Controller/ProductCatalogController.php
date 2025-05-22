@@ -269,7 +269,7 @@ class ProductCatalogController {
 	 * @param $wc_product
 	 * @return void
 	 */
-	public function upsertProduct( $wc_product ) {
+	public function upsertProduct( $wc_product, $deleteAction = false ) {
 		try {
 			if ( ! $this->AdminModel->getConfiguration()->getActiveCatalog() || ! $this->AdminModel->getConfiguration()->getApiV3Key() ) {
 				return;
@@ -277,13 +277,13 @@ class ProductCatalogController {
 			$ProductBuilder    = new ProductBuilder( $this->AdminModel );
 			$productIdentifierType = $this->AdminModel->getPlatformSettings()->getPluginWc()->getProductIdentifierType();
 
-			$ProductCollection = $ProductBuilder->add_product_to_collection( $wc_product->id, $productIdentifierType );
+			$ProductCollection = $ProductBuilder->add_product_to_collection( $wc_product->get_id(), $productIdentifierType, null, [], $deleteAction );
 			// Variable product case - simple products have no children
 			if ( $wc_product->get_children() ) {
 				$items = $ProductCollection->getItems();
 				$parentImageUrls = reset( $items )->getImageUrls();
 				foreach ( $wc_product->get_children() as $product_variation_id ) {
-					$ProductCollection = $ProductBuilder->add_product_to_collection( $product_variation_id, $productIdentifierType, $ProductCollection, $parentImageUrls );
+					$ProductCollection = $ProductBuilder->add_product_to_collection( $product_variation_id, $productIdentifierType, $ProductCollection, $parentImageUrls, $deleteAction );
 				}
 			}
 			$Catalog = new CatalogEntity(
@@ -292,7 +292,16 @@ class ProductCatalogController {
 				)
 			);
 			  $ProductService = new ProductService( $this->AdminModel->getConfiguration() );
-			  $ProductService->upsertProducts( $Catalog, $ProductCollection );
+
+              if ( $ProductCollection->count() > 100 ) {
+                  $collections = $ProductCollection->chunk();
+
+                  foreach ( $collections as $collection ) {
+                      $ProductService->upsertProducts( $Catalog, $collection );
+                  }
+              } else {
+                  $ProductService->upsertProducts( $Catalog, $ProductCollection );
+              }
 		} catch ( ApiV3Exception $api_ex ) {
 			$this->handleApiV3Exception( $api_ex );
 			// Highlight product upsert error only for reason code 10
@@ -377,10 +386,19 @@ class ProductCatalogController {
      * @return void
      */
 	public function storeProduct( $wc_product ) {
-		$data = get_option( 'salesmanago_cron', [] );
-		$data = array_filter( $data, fn ( $product ) => $product->id !== $wc_product->id );
-		$data[] = $wc_product;
+        try {
+            $data = get_option( 'salesmanago_cron', [] );
+            $data = is_array( $data ) ? $data : [];
 
-		update_option( 'salesmanago_cron', $data );
+            $data = array_filter( $data, function ( $product ) use ( $wc_product ) {
+                return isset( $product->id ) && ($product->id !== $wc_product->id);
+            });
+
+            $data[] = $wc_product;
+            update_option( 'salesmanago_cron', $data );
+        } catch ( Exception $e ) {
+            Helper::salesmanago_log( $e->getMessage(), __FILE__ );
+        }
+
 	}
 }

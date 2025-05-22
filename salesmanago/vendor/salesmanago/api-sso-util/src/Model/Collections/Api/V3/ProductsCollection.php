@@ -91,4 +91,31 @@ class ProductsCollection extends AbstractCollection implements ProductsCollectio
 
         return $answer;
     }
+
+    /**
+     * Split the collection into array of collections of the specified size
+     *
+     * @param int $size
+     * @return array
+     */
+    public function chunk(int $size = 100): array
+    {
+        $chunks = [];
+
+        if (empty($this->collection)) {
+            return $chunks;
+        }
+
+        foreach (array_chunk($this->collection, $size) as $array) {
+            $collection = new self();
+
+            foreach ($array as $item) {
+                $collection->addItem($item);
+            }
+
+            $chunks[] = $collection;
+        }
+
+        return $chunks;
+    }
 }

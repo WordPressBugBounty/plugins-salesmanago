@@ -167,4 +167,29 @@ class ProductsModel
         $this->builder = $builder;
         return $this;
     }
+
+    /**
+     * Create array with products data for update prices
+     *
+     * @param CatalogEntityInterface $Catalog
+     * @param ProductsCollectionInterface $ProductsCollection
+     * @return array
+     * @throws ApiV3Exception
+     */
+    public function getProductsForUpdatePrices(
+        CatalogEntityInterface $Catalog,
+        ProductsCollectionInterface $ProductsCollection
+    ) {
+        $catalogId = $Catalog->getId();
+        if (empty($catalogId)) {
+            throw new ApiV3Exception('Products model: catalog id is empty', 500);
+        }
+
+        $productsArray = $ProductsCollection->toSpecialArray(['productId', 'price', 'discountPrice']);
+
+        return [
+            CatalogEntityInterface::CATALOG_ID => $Catalog->getId(),
+            ProductsCollectionInterface::PRODUCTS => $productsArray
+        ];
+    }
 }

@@ -4,11 +4,11 @@ Plugin URI:  https://support.salesmanago.com/integration-with-wordpress/
 Contributors: Benhauer Sp. z o.o.
 Tags: marketing automation, email marketing, crm, live chat, social media, lead nurturing, lead generation, personalized marketing, woocommerce, contacts, lead tracking, click tracking, visitor tracking, inbound marketing, subscription, marketing, newsletter, popup, email, contacts database, contact form, popup form
 Requires at least: 5.6
-Tested up to: 6.7.1
+Tested up to: 6.8.1
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.6.1
+Stable tag: 3.7.0
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -137,6 +137,19 @@ During the online Marketing Automation course you will get answers to the follow
 - How can I receive the SALESmanago Marketing Automation Specialist Certificate?
 
 == Changelog ==
+= 3.7.0 =
+- Fixed bug with wrong cast to bool during enabling CRON
+- Improved storeProduct() method with error handling and validation
+- Fixed issue in Product Catalog tab where WooCommerce data was being loaded even if WooCommerce was not installed
+- Fixed sending more than 100 variants to Product Catalog
+- Updated API-SSO-UTIL library to 3.8.0
+- Moved CRON settings from Integration Settings tab to Product Catalog tab
+- Added possibility to choose how products will be sent to Product Catalogs (hook, cron or wp-cron)
+- Fixed bug with changing email address in user profile
+- Handled deleting product from Woocommerce
+= 3.6.1 =
+- Fixed bug during creating CRON schedules
+- Fixed bug during creating default Mapping for Product Catalogs
 = 3.6.0 =
 - Added support for Details Mapping in Product Catalogs
 - Added support for sending products via WordPress CRON

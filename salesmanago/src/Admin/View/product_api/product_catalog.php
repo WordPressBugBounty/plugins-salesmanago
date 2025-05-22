@@ -141,6 +141,47 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                             </div>
                         </div>
                     </form>
+
+                    <h3><?php _e('Product Synchronization Settings', 'salesmanago'); ?></h3>
+                    <form method="post" action="">
+                            <table class="form-table">
+                                <tr>
+                                    <th scope="row"><?php _e('Product data synchronization method', 'salesmanago'); ?></th>
+                                    <td>
+                                        <select name="cron-method" id="cron-method">
+                                            <option value="real-time" <?php selected($this->AdminModel->getPlatformSettings()->getCronMethod(), 'real-time'); ?>><?php _e('Real-time', 'salesmanago'); ?></option>
+                                            <option value="wp-cron" <?php selected($this->AdminModel->getPlatformSettings()->getCronMethod(), 'wp-cron'); ?>><?php _e('WP-CRON', 'salesmanago'); ?></option>
+                                            <option value="native" <?php selected($this->AdminModel->getPlatformSettings()->getCronMethod(), 'native'); ?>><?php _e('Custom CRON', 'salesmanago'); ?></option>
+                                        </select>
+                                        <p class="description"><?php _e('Choose how you want to synchronize your product catalog with SALESmanago', 'salesmanago'); ?></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row"><?php _e('Synchronization Interval', 'salesmanago'); ?></th>
+                                    <td>
+                                        <select name="cronValue" id="cronValue">
+                                            <option value="salesmanago_custom_cron_schedule_60" <?php selected($this->AdminModel->getPlatformSettings()->getCronValue(), 'salesmanago_custom_cron_schedule_60'); ?>><?php _e('Every minute', 'salesmanago'); ?></option>
+                                            <option value="salesmanago_custom_cron_schedule_180" <?php selected($this->AdminModel->getPlatformSettings()->getCronValue(), 'salesmanago_custom_cron_schedule_180'); ?>><?php _e('Every 3 minutes', 'salesmanago'); ?></option>
+                                            <option value="salesmanago_custom_cron_schedule_300" <?php selected($this->AdminModel->getPlatformSettings()->getCronValue(), 'salesmanago_custom_cron_schedule_300'); ?>><?php _e('Every 5 minutes', 'salesmanago'); ?></option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+                        <div id="cron-method-description-real-time" class="cron-method-description">
+		                    <?php _e('With this option, product data is transferred to SALESmanago in real time, immediately after a product is added or edited. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#2" target="_blank">For detailed information, read the Support article >></a>', 'salesmanago'); ?>
+                        </div>
+                        <div id="cron-method-description-wp-cron" class="cron-method-description">
+		                    <?php _e('IMPORTANT: This option may increase page loading times in your e-store, potentially affecting the user experience. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#4" target="_blank">For more information, read the Support article >></a>', 'salesmanago'); ?>
+                        </div>
+                        <div id="cron-method-description-native" class="cron-method-description">
+		                    <?php _e('IMPORTANT: This option requires additional configuration on your hosting platform. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#3" target="_blank">For explanations and instructions, read the Support article >></a>', 'salesmanago'); ?>
+                        </div>
+	                    <?php
+	                    include(__DIR__ . '/../partials/save.php');
+	                    ?>
+                        <input type="hidden" name="action" value="save">
+                    </form>
+
                     <h3><?php _e( 'Details mapping', 'salesmanago' ); ?></h3>
                     <div class="details-mapping-wrapper">
                         <form method="post" action="">
