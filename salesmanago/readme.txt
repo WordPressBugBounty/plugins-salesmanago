@@ -8,7 +8,7 @@ Tested up to: 6.8.1
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.7.0
+Stable tag: 3.7.1
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago

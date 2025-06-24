@@ -1,3 +1,6 @@
+# 3.7.1 released 24.06.2025
+- Added keyboard accessibility to marketing consent checkboxes to comply with European Accessibility Act
+
 # 3.7.0 released 22.05.2025
 - Fixed bug with wrong cast to bool during enabling CRON
 - Improved storeProduct() method with error handling and validation

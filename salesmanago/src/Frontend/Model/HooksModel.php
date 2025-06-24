@@ -262,12 +262,13 @@ class HooksModel {
      */
     public function appendCheckbox()
     {
-        $cssClass  = 'sm-opt-in-input';
+        $cssClass = 'sm-opt-in-input';
         $inputName = 'sm-optin-email';
+        $inputId = 'sm-optin-email-checkbox';
 
-         $label = ($this->SettingsModel->getPlatformSettings()->PluginWc->active)
-             ? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->label
-             : $this->SettingsModel->getPlatformSettings()->PluginWp->OptInInput->label;
+        $label = ($this->SettingsModel->getPlatformSettings()->PluginWc->active)
+            ? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->label
+            : $this->SettingsModel->getPlatformSettings()->PluginWp->OptInInput->label;
 
         Helper::loadPluginTextDomain('salesmanago', false, 'salesmanago/languages');
 
@@ -276,38 +277,49 @@ class HooksModel {
             ? $label
             : __('!optInInputLabel', 'salesmanago');
 
-        echo('<p class="woocommerce-FormRow form-row ' . $cssClass . '">
-            <label class="woocommerce-form__label woocommerce-form__label-for-checkbox inline ' . $cssClass . '" style="margin-left: 0">
-                <input name="' . $inputName. '" class="woocommerce-form__input woocommerce-form__input-checkbox ' . $cssClass . '" type="checkbox">
-                <span class="' . $cssClass . '">' . $displayLabel . '</span>
-            </label>
-        </p>');
+        echo '<p class="woocommerce-FormRow form-row ' . $cssClass . '">
+                <label class="woocommerce-form__label ' . $cssClass . '" for="' . $inputId . '" style="margin-left: 0; display: flex; align-items: center;">
+                    <input id="' . $inputId . '"
+                        name="' . $inputName . '"
+                        class="' . $cssClass . '"
+                        type="checkbox"
+                        style="margin-right: 8px;"
+                        aria-required="false">
+                    <span class="' . $cssClass . '">' . $displayLabel . '</span>
+                </label>
+            </p>';
     }
 
-	/**
-	 *
-	 */
-	public function appendCheckboxMobile()
-	{
-		$cssClass  = 'sm-opt-in-input';
-		$inputName = 'sm-optin-mobile';
+    /**
+     *
+     */
+    public function appendCheckboxMobile()
+    {
+        $cssClass = 'sm-opt-in-input';
+        $inputName = 'sm-optin-mobile';
+        $inputId = 'sm-optin-moblie-checkbox';
 
-		$label = ($this->SettingsModel->getPlatformSettings()->PluginWc->active)
-			? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->label
-			: $this->SettingsModel->getPlatformSettings()->PluginWp->OptInMobileInput->label;
+        $label = ($this->SettingsModel->getPlatformSettings()->PluginWc->active)
+            ? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->label
+            : $this->SettingsModel->getPlatformSettings()->PluginWp->OptInMobileInput->label;
 
-		Helper::loadPluginTextDomain('salesmanago', false, 'salesmanago/languages');
+        Helper::loadPluginTextDomain('salesmanago', false, 'salesmanago/languages');
 
-		//Get translation for input label. If there is no translation or using default language, use label declared in admin settings.
-		$displayLabel = (__('!optInMobileInputLabel', 'salesmanago') === '!optInMobileInputLabel')
-			? $label
-			: __('!optInMobileInputLabel', 'salesmanago');
+        //Get translation for input label. If there is no translation or using default language, use label declared in admin settings.
+        $displayLabel = (__('!optInMobileInputLabel', 'salesmanago') === '!optInMobileInputLabel')
+            ? $label
+            : __('!optInMobileInputLabel', 'salesmanago');
 
-		echo('<p class="woocommerce-FormRow form-row ' . $cssClass . '">
-            <label class="woocommerce-form__label woocommerce-form__label-for-checkbox inline ' . $cssClass . '" style="margin-left: 0">
-                <input name="' . $inputName. '" class="woocommerce-form__input woocommerce-form__input-checkbox ' . $cssClass . '" type="checkbox">
-                <span class="' . $cssClass . '">' . $displayLabel . '</span>
-            </label>
-        </p>');
-	}
+        echo '<p class="woocommerce-FormRow form-row ' . $cssClass . '">
+                <label class="woocommerce-form__label ' . $cssClass . '" for="' . $inputId . '" style="margin-left: 0; display: flex; align-items: center;">
+                    <input id="' . $inputId . '"
+                        name="' . $inputName . '"
+                        class="' . $cssClass . '"
+                        type="checkbox"
+                        style="margin-right: 8px;"
+                        aria-required="false">
+                    <span class="' . $cssClass . '">' . $displayLabel . '</span>
+                </label>
+            </p>';
+    }
 }
