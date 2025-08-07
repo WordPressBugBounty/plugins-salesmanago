@@ -1,24 +1,22 @@
 /* jshint esversion: 6 */
-document.addEventListener( 'DOMContentLoaded', appendSalesmanagoSubmenu, false );
-function appendSalesmanagoSubmenu() {
-	let smMenu = document.getElementById( 'adminmenu' );
-	if ( ! smMenu) {
-		return;
-	}
-	let salesmanagoMenu = smMenu.getElementsByClassName( 'toplevel_page_salesmanago' )[0];
-	if ( ! salesmanagoMenu) {
-		return;
-	}
-	let salesmanagoSubmenu = salesmanagoMenu.getElementsByClassName( 'wp-submenu' )[0];
-	if ( ! salesmanagoSubmenu) {
-		return;
-	}
-	let salesmanagoLink = salesmanagoSubmenu.lastChild.children[0];
-	if ( ! salesmanagoLink) {
-		return;
-	}
-	salesmanagoLink.href   = "https://www.salesmanago.com/login.htm?utm_source=integration&utm_medium=wordpress&utm_content=left_menu";
-	salesmanagoLink.target = "_blank";
+document.addEventListener( 'DOMContentLoaded', appendSalesmanagoSubmenu('https://leadoo.com', 'https://leadoo.com?utm_source=integration&utm_medium=wordpress&utm_content=left_menu'), false );
+document.addEventListener( 'DOMContentLoaded', appendSalesmanagoSubmenu('https://salesmanago.com', 'https://salesmanago.com?utm_source=integration&utm_medium=wordpress&utm_content=left_menu'), false );
+
+function appendSalesmanagoSubmenu(pageSlug, newUrl) {
+	document.addEventListener('DOMContentLoaded', () => {
+		const smMenu = document.getElementById('adminmenu');
+		if (!smMenu) return;
+
+		const mainItem = smMenu.querySelector('.toplevel_page_salesmanago-and-leadoo');
+		if (!mainItem) return;
+
+		const submenuLink = mainItem.querySelector(`.wp-submenu a[href*="${pageSlug}"]`);
+
+		if (!submenuLink) return;
+
+		submenuLink.href   = newUrl;
+		submenuLink.target = '_blank';
+	});
 }
 
 /**

@@ -4,70 +4,134 @@ Plugin URI:  https://support.salesmanago.com/integration-with-wordpress/
 Contributors: Benhauer Sp. z o.o.
 Tags: marketing automation, email marketing, crm, live chat, social media, lead nurturing, lead generation, personalized marketing, woocommerce, contacts, lead tracking, click tracking, visitor tracking, inbound marketing, subscription, marketing, newsletter, popup, email, contacts database, contact form, popup form
 Requires at least: 5.6
-Tested up to: 6.8.1
+Tested up to: 6.8.2
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.7.1
+Stable tag: 3.8.0
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
 Domain Path: /languages
 Requires PHP: 7.4
 
-Customer Engagement Platform for impact-hungry eCommerce marketing teams.
+AI-powered Customer Engagement Platform for impact-hungry eCommerce marketing teams
+
 
 === Overview ===
 
-SALESmanago is a Customer Engagement Platform for impact-hungry eCommerce marketing teams who want to be lean yet powerful, trusted revenue growth partners for CEOs. Our AI-driven solutions have already been adopted by 2000+ mid-size businesses in 50 countries, as well as many well-known global brands such as Starbucks, Vodafone, Lacoste, KFC, New Balance and Victoria�s Secret.
+SALESmanago is a European SaaS company offering a powerful, feature-rich Customer Engagement Platform built for digitally-fueled eCommerce marketing teams. Trusted by 2,000 mid-size businesses across Europe—including Victoria’s Secret, iSpot, Orbico, Vobis, Porta, Savicki, Pitbull, Würth, Vox, 4F—SALESmanago helps brands acquire, convert, and engage customers with deep, AI-powered personalisation and orchestrated customer journeys.
 
-SALESmanago delivers on its promise of maximizing revenue growth and improving eCommerce KPIs by leveraging three principles: (1) Customer Intimacy to create authentic customer relationships based on Zero and First Party Data; (2) Precision Execution to provide superior Omnichannel customer experience thanks to Hyperpersonalization; and (3) Growth Intelligence merging human and AI-based guidance enabling pragmatic and faster decision making for maximum impact.
+Following the acquisition of Leadoo, SALESmanago has strengthened its platform with personalisation and conversational marketing capabilities, further enhancing how B2C and B2B brands engage and convert their audiences. Central to this is the unique [SALESmanago Growth Framework](https://www.salesmanago.com/info/growth-framework.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace), empowering eCommerce marketers to drive revenue growth more efficiently and intelligently.
 
-More information: [www.salesmanago.com](https://www.salesmanago.com?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-
-**Main System Features:**
-
-- [Customer Data Platform](https://www.salesmanago.com/marketing-automation/customer_data_platform.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Customer Preference Center](https://www.salesmanago.com/marketing-automation/customer-preference-center.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Hyper Segmentation Center](https://www.salesmanago.com/marketing-automation/hyper-segmentation-center.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Deep Behavioural Profiling](https://www.salesmanago.com/info/deep-behavioural-profiling.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Dynamic segments](https://www.salesmanago.com/info/dynamic-segments.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [RFM Automation](https://www.salesmanago.com/info/rfm-automation.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Data Exchange](https://www.salesmanago.com/info/data-exchange.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [AI Predictive Analytics](https://www.salesmanago.com/marketing-automation/predictive-analytics.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Machine Learning & AI recommendations](https://www.salesmanago.com/info/machine-learning-and-ai-recommendations.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Marketing Automation](https://www.salesmanago.com/marketing-automation/marketing_automation.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Website Automation](https://www.salesmanago.com/info/website-automation.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Marketing Insights](https://www.salesmanago.com/marketing-automation/marketing-insights.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Command Center](https://www.salesmanago.com/marketing-automation/command-center.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [A/B/X Testing & Optimization](https://www.salesmanago.com/marketing-automation/abx_testing.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Email Marketing](https://www.salesmanago.com/marketing-automation/email_marketing.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Dynamic Web Push](https://www.salesmanago.com/marketing-automation/web_push_and_rich_web_push_notifications.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Mobile Marketing](https://www.salesmanago.com/marketing-automation/mobile_marketing_automation.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Social Media](https://www.salesmanago.com/marketing-automation/social_media.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Advertising Networks & DMP](https://www.salesmanago.com/marketing-automation/advertising_networks.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Website Personalization](https://www.salesmanago.com/marketing-automation/dynamic_content_on_your_website.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Live Chat](https://www.salesmanago.com/marketing-automation/live_chat.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Chat Bot](https://www.salesmanago.com/info/chat-bot.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Social proof](https://www.salesmanago.com/marketing-automation/social-proof.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Loyalty Program](https://www.salesmanago.com/marketing-automation/loyalty-program.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Lead Generation](https://www.salesmanago.com/marketing-automation/lead_generation.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Search Engine Turbocharger](https://www.salesmanago.com/marketing-automation/ai-search-engine.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Cinderella AI. Visual Product Search and Recommendations](https://www.salesmanago.com/marketing-automation/cinderella-ai.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Voice Commerce](https://www.salesmanago.com/marketing-automation/voice-commerce.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
-- [Personal Shopping Inbox](https://www.salesmanago.com/marketing-automation/personal-shopping-inbox.htm?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace)
+More information on: [www.salesmanago.com](http://www.salesmanago.com?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
 
 
-[youtube https://www.youtube.com/watch?v=lck1UGNFtjY]
+=== SALESmanago Platform & Modules ===
+
+[Platform Overview](https://www.salesmanago.com/info/platform-overview.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
+[Audiences](https://www.salesmanago.com/info/audiences.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
+[Channels](https://www.salesmanago.com/info/channels.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
+[Website Experience](https://www.salesmanago.com/info/website-experience.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
+[Recommendations](https://www.salesmanago.com/info/recommendations.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
+[Conversational Marketing](https://www.salesmanago.com/info/conversational-marketing.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
+
 
 == Screenshots ==
 
-screenshot-1.png
-screenshot-2.png
-screenshot-3.png
-screenshot-4.png
-screenshot-5.png
-screenshot-6.png
+screenshot-06_08_2025_1.png
+screenshot-06_08_2025_2.png
+screenshot-06_08_2025_3.png
+screenshot-06_08_2025_4.png
+screenshot-06_08_2025_5.png
+
+SALESmanago has been fully integrated with Leadoo—our partner company to drive conversational marketing. Watch the integration video [here](https://www.youtube.com/watch?v=lSNp3d75Qaw).
+
+[youtube https://www.youtube.com/watch?v=lSNp3d75Qaw]
+
+
+=== FAQs ===
+
+= What is SALESmanago generally used for? =
+
+Connect your site or store with SALESmanago in minutes—launch personalised campaigns, capture leads, recover abandoned carts, serve real-time product suggestions, and automate marketing flows—all without coding.
+
+This is what SALESmanago covers:
+
+- Create actionable 360-degree customer profiles from multiple data sources
+- Segment contacts based on behavioural, demographic, and transactional data for precisely targeted campaigns
+- Execute high-impact email campaigns that captivate, engage, and convert prospects and customers
+- Optimise email communication with A/B testing to improve campaign results
+- Use lead generation tools to drive customer acquisition and subscriber growth
+- Personalise website experiences with targeted pop-ups and landing pages to increase onsite engagement
+- Improve conversion rates and recover lost revenue with abandoned shopping cart communications
+- Re-engage returning visitors with recently viewed product recommendations to drive conversions
+- First-party data collection tools help improve customer profiles, enhance personalisation, and ensure compliance
+- Increase digital advertising effectiveness with ad audience segmentation based on customer profile data
+- Analyse transactional data to identify high-value customer segments
+- Use visitor website behaviour insights to drive engagement, including personalised web push notifications
+- Increase customer LTV with Loyalty Program for segmentation, gamification and rewards
+- Optimise social media audience targeting to increase engagement and reach
+- Use real time data for dynamic segmentation to increase relevance and engagement
+- Reach customers in real time with 2-way SMS to drive immediate action, engagement, and deliver timely messages
+- Use Web Push to reach known and anonymous visitors and drive real-time engagement
+- Automate personalised emails for birthdays, anniversaries, and other events to drive engagement, loyalty and retention
+- Orchestrate and automate omnichannel communication
+- Send instant, personalised offers and updates via messaging apps to drive immediate engagement and boost conversions
+- Increase engagement on mobile devices with targeted messaging on your application
+- Boost website conversion with optimised product recommendations
+- Accelerate customer conversion with Social Proof
+- Engage with your website visitors in real-time through Live Chat and 2-way SMS to drive immediate support and sales
+- Enhance engagement with customisable website banners
+- Boost engagement and conversions with real-time website notifications
+- Automate personalised website experiences to boost relevance and drive conversions
+- Deliver tailored and automated website experiences for visitors
+- Increase sales and create urgency with multi-channel price drop notifications
+- Recover missed revenue with multi-channel back-in-stock notifications to drive purchases
+- Create tailored recommendation scenarios based on your product, transactional, and behavioural data
+- Engage visitors with an easy-to-setup wishlist to drive conversions and retention
+- Enhance the shopping experience and boost sales with AI-powered recommendations
+- Tailor product recommendations and deliver personalised experiences with custom scripts to drive engagement
+- Customise product recommendations with advanced filters to deliver more relevant offers
+
+and much more…
+
+= Do I need a developer to use the SALESmanago WordPress plugin? =
+
+Not at all, there is no coding needed. It installs like any WordPress plugin and gives you access to powerful tools—pop-ups, chatbots, product recommendations, behaviour tracking, etc.—all usable from your SALESmanago dashboard. Just like top plugins in its class.
+
+= How quickly will I see results? =
+
+Immediately. Once active, the plugin starts tracking site activity—then you can trigger automations, launch pop-ups, recover carts or push product suggestions. Most users see engagement lift within a month.
+
+= How does the SALESmanago WordPress plugin boost lead generation? =
+
+Use customised pop-ups, chatbots, and embedded forms to collect emails and zero-party data. Tags and consents sync automatically with SALESmanago, so you can launch welcome flows and nurture campaigns instantly.
+
+= Can I personalise website content easily? =
+
+Absolutely. The plugin integrates with SALESmanago’s website personalisation tools so you can dynamically display banners, messages, or suggested products to different visitor segments—no tech needed.
+
+= Does SALESmanago integrate with any other eCommerce platforms? =
+
+Yes, SALESmanago integrates easily with following e-commerce platforms:
+Magento, PrestaShop, Shopify, BigCommerce, Shoper, VTEX, OpenCart, Shopware
+But Also
+IdoSell, Atomstore, ClickShop, LogiCommerce, Exebo and Selly.
+
+Find out further integration options [here](https://support.salesmanago.com/integrations-3/)
+
+= Does SALESmanago offer guides, tutorials and/or customer support? =
+
+Of course. Every client gets assigned a dedicated Customer Success Manager who supports the strategic development of their projects.
+
+In addition, SALESmanago offers the following types of support:
+
+- SALESmanago Customer Support: Available 24/7 for technical, integration & configuration questions, via [support@salesmanago.com](support@salesmanago.com)
+- Direct Customer Support: Via phone +48 533 600 808
+- Live Chat support (via the website)
+- SALESmanago Community: Best practices, training sessions, tips & tricks via the (SALESmanago Customer Excellence Academy)[https://cx-academy.salesmanago.com/?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace]
+
 
 === Installation ===
 
@@ -76,67 +140,17 @@ screenshot-6.png
 3. Register or log into your SALESmanago account and follow the next steps.
 4. From this moment, each user who will fill in the login or registration form, will be added to your SALESmanago account as a monitored contact with a relevant tag (Tags register user, Tags login user).
 
-=== Frequently Asked Questions ===
-
-= What is SALESmanago generally used for? =
-
-SALESmanago is generally used for the following purposes:
-
-- Monitoring code integration.
-
-- Adding and deleting contacts with details.
-
-- Adding and deleting tags.
-
-- Management of external events.
-
-- Management of coupons.
-
-- Contact activity export.
-
-- Management of contacts list.
-
-- Sending emails.
-
-- Management of users tasks.
-
-- Management of automation rules.
-
-- Monitoring AJAX/JavaScript events.
-
-- Sending external events through JavaScript.
-
-= Does SALESmanago integrate with any other apps? =
-
-Yes, SALESmanago integrates with the following apps:
-
-Ecommerce:
-   Magento, PrestaShop, IAI-Shop, Shoper, Atomstore, ClickShop, Ebexo, and Selly.
-
-CRM and ERP:
-SugarCRM, LiveSpace CRM, ZohoCRM, Bitrix24.
-
-Social Media:
-   Facebook, Facebook Custom Audiences, and Twitter.
-
-Supporting tools:
-   Zapier.com, Landingi.com, Startquestion.com, Survicate, and Inteliwise Live chat
-
-Communication:
-   Smsapi.pl, SerwerSMS.pl, Materna Communications, Tide software, Sit mobile, ViaNett, MailChimp, Redlink, Advanced Telecom, Euro-SMS, IMOBIS, Labyrtintti, GSMS, Sales traffic, Sinhro, Voice.com, SMS sendroimp, Esendex, Publi, Text Marketer, Spryng, Modica, InfoBIP, Twilio, Comapi, and Eurocom.
-
-= Does SALESmanago offer guides, tutorials and/or customer support? =
-
-Each of customers gets dedicated specialized support from our Marketing Automation specialists that helps in designing the processes and proactively helping in the implementation. SALESmanago is proud to play a part in your marketing and working with you to achieve your desired business goals.
-
-Another great option is [SALESmanago e-learning platform](http://elearning.salesmanago.com/)
-
-During the online Marketing Automation course you will get answers to the following questions:
-- What is Marketing Automation?
-- How can I use the knowledge of Marketing Automation in practice?
-- How can I receive the SALESmanago Marketing Automation Specialist Certificate?
 
 == Changelog ==
+= 3.8.0 =
+- Added combine Leadoo and SALESmanago features to the plugin
+- Added Leadoo integration to the plugin
+- Added Discover SALESmanago to Leadoo view
+- Added reporting for Leadoo
+- Changed discover view
+- Fixed compatibility of purchase events with WordPress 6.8.2
+= 3.7.1 =
+- Added keyboard accessibility to marketing consent checkboxes to comply with European Accessibility Act
 = 3.7.0 =
 - Fixed bug with wrong cast to bool during enabling CRON
 - Improved storeProduct() method with error handling and validation
@@ -345,4 +359,3 @@ During the online Marketing Automation course you will get answers to the follow
 = 2.0.0 =
  - redesign of the plugin
  - adding single sign-on module
-

@@ -1,4 +1,4 @@
-    <form  method="post">
+    <form method="post">
         <?php wp_nonce_field( 'salesmanago-nonce', 'salesmanago-nonce-name' ); ?>
         <input type="hidden" name="action" value="login" />
         <table class="form-table" role="presentation">

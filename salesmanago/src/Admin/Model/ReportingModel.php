@@ -14,7 +14,7 @@ use SALESmanago\Exception\Exception;
 class ReportingModel
 {
     const
-        REPORTING_ENDPOINT  = "https://survey.salesmanago.com/",
+        REPORTING_ENDPOINT  = "https://survey.salesmanago.com",
         PLATFORM            = 'platform',
         PLATFORM_NAME       = 'WORDPRESS',
         PLUGIN_VERSION      = 'pluginVersion';

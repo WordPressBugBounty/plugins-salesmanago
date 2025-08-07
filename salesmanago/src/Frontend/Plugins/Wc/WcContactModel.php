@@ -102,53 +102,104 @@ class WcContactModel extends AbstractContactModel {
 		return $this->Contact;
 	}
 
+
+    /**
+     * @param $orderId
+     * @return Contact|null
+     */
+    public function parseCustomer( $orderId ) {
+        /* email */
+        $email = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_EMAIL, GlobalConstant::SINGLE_VALUE );
+        if ( empty( $email ) ) {
+            return null;
+        }
+        $this->Contact->setEmail( $email );
+
+        /* name */
+        $name = trim(
+            Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_F_NAME, GlobalConstant::SINGLE_VALUE ) . ' ' .
+            Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_L_NAME, GlobalConstant::SINGLE_VALUE )
+        );
+        $this->Contact->setName( ! empty( $name ) ? $name : '' );
+
+        /* phone */
+        $phone = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_PHONE, GlobalConstant::SINGLE_VALUE );
+        $this->Contact->setPhone( ! empty( $phone ) ? $phone : '' );
+
+        /* company */
+        $company = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_COMPANY, GlobalConstant::SINGLE_VALUE );
+        $this->Contact->setCompany( ! empty( $company ) ? $company : '' );
+
+        /* streetAddress */
+        $streetAddress = trim(
+            Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_ADDRESS_1, GlobalConstant::SINGLE_VALUE ) . ' ' .
+            Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_ADDRESS_2, GlobalConstant::SINGLE_VALUE )
+        );
+        $this->Address->setStreetAddress( ! empty( $streetAddress ) ? $streetAddress : '' );
+
+        /* zipCode */
+        $zipCode = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_POSTCODE, GlobalConstant::SINGLE_VALUE );
+        $this->Address->setZipCode( ! empty( $zipCode ) ? $zipCode : '' );
+
+        /* city */
+        $city = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_CITY, GlobalConstant::SINGLE_VALUE );
+        $this->Address->setCity( ! empty( $city ) ? $city : '' );
+
+        /* country */
+        $country = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_COUNTRY, GlobalConstant::SINGLE_VALUE );
+        $this->Address->setCountry( ! empty( $country ) ? $country : '' );
+
+        $this->Contact->setAddress( $this->Address );
+
+        /* options */
+        $this->setLanguage();
+        if ( Helper::preventMultipleDoubleOptInMails() ) {
+            $this->setOptInStatuses();
+        }
+
+        return $this->Contact;
+    }
+
 	/**
+     * Parses customer data from an order ID.
+     *
 	 * @param $orderId
 	 * @return Contact|null
 	 */
-	public function parseCustomer( $orderId ) {
-		/* email */
-		$email = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_EMAIL, GlobalConstant::SINGLE_VALUE );
-		if ( empty( $email ) ) {
-			return null;
-		}
-		$this->Contact->setEmail( $email );
+	public function parseCustomerFromOrder( $order ) {
+        $user_id = $order->get_user_id();
+        if ($user_id) {
+            $user = $order->get_user();
+            $email = $user->user_email;
+            $first_name = $user->first_name;
+            $last_name = $user->last_name;
+        } else {
+            $email = $order->get_billing_email();
+            $first_name = $order->get_billing_first_name();
+            $last_name = $order->get_billing_last_name();
+        }
 
-		/* name */
-		$name = trim(
-			Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_F_NAME, GlobalConstant::SINGLE_VALUE ) . ' ' .
-			Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_L_NAME, GlobalConstant::SINGLE_VALUE )
-		);
-		$this->Contact->setName( ! empty( $name ) ? $name : '' );
+        $phone    = $order->get_billing_phone();
+        $company  = $order->get_billing_company();
+        $address  = $order->get_billing_address_1() . ' ' . $order->get_billing_address_2();
+        $zipCode  = $order->get_billing_postcode();
+        $city     = $order->get_billing_city();
+        $country  = $order->get_billing_country();
 
-		/* phone */
-		$phone = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_PHONE, GlobalConstant::SINGLE_VALUE );
-		$this->Contact->setPhone( ! empty( $phone ) ? $phone : '' );
+        $name = trim($first_name . ' ' . $last_name);
 
-		/* company */
-		$company = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_COMPANY, GlobalConstant::SINGLE_VALUE );
-		$this->Contact->setCompany( ! empty( $company ) ? $company : '' );
-
-		/* streetAddress */
-		$streetAddress = trim(
-			Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_ADDRESS_1, GlobalConstant::SINGLE_VALUE ) . ' ' .
-			Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_ADDRESS_2, GlobalConstant::SINGLE_VALUE )
-		);
-		$this->Address->setStreetAddress( ! empty( $streetAddress ) ? $streetAddress : '' );
-
-		/* zipCode */
-		$zipCode = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_POSTCODE, GlobalConstant::SINGLE_VALUE );
-		$this->Address->setZipCode( ! empty( $zipCode ) ? $zipCode : '' );
-
-		/* city */
-		$city = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_CITY, GlobalConstant::SINGLE_VALUE );
-		$this->Address->setCity( ! empty( $city ) ? $city : '' );
-
-		/* country */
-		$country = Helper::getPostMetaData( $orderId, GlobalConstant::P_NO_ACC_COUNTRY, GlobalConstant::SINGLE_VALUE );
-		$this->Address->setCountry( ! empty( $country ) ? $country : '' );
-
-		$this->Contact->setAddress( $this->Address );
+        $this->Contact
+            ->setEmail( $email )
+            ->setName( $name )
+            ->setPhone( ! empty( $phone ) ? $phone : '' )
+            ->setCompany( ! empty( $company ) ? $company : '' )
+            ->setAddress(
+                $this->Address
+                    ->setStreetAddress(!empty($address) ? $address : '')
+                    ->setZipCode(!empty($zipCode) ? $zipCode : '')
+                    ->setCity(!empty($city) ? $city : '')
+                    ->setCountry(!empty($country) ? $country : '')
+            );
 
 		/* options */
 		$this->setLanguage();

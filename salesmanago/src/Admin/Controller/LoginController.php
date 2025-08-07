@@ -68,6 +68,8 @@ class LoginController
                 error_log($e->getMessage());
             }
             MessageEntity::getInstance()->addMessage(__('Logged in.', 'salesmanago'), 'success', 701);
+            //redirect after success login:
+            header('Location: admin.php?page=salesmanago-integration-settings');
         } elseif (!empty($Response)) {
             MessageEntity::getInstance()->addMessage($Response->getMessage(), 'error', 105);
         }
@@ -98,10 +100,10 @@ class LoginController
             unset($_COOKIE['sm_logged_in']);
         } catch (\Exception $e) {
             MessageEntity::getInstance()->addException(new Exception($e->getMessage(), 151));
-            header('Location: admin.php?page=' . SALESMANAGO . '&message=logout-error');
+            header('Location: admin.php?page=' . SALESMANAGO_AND_LEADOO . '-main' . '&message=logout-error');
             return;
         }
-        header('Location: admin.php?page=' . SALESMANAGO . '&message=logout');
+        header('Location: admin.php?page=' . SALESMANAGO_AND_LEADOO . '-main' . '&message=logout');
     }
 
     /**

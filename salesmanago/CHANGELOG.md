@@ -1,3 +1,11 @@
+# 3.8.0 released 07.08.2025
+- Added combine Leadoo and SALESmanago features to the plugin
+- Added Leadoo integration to the plugin
+- Added Discover SALESmanago to Leadoo view
+- Added reporting for Leadoo
+- Changed discover view
+- Fixed compatibility of purchase events with WordPress 6.8.2
+
 # 3.7.1 released 24.06.2025
 - Added keyboard accessibility to marketing consent checkboxes to comply with European Accessibility Act
 

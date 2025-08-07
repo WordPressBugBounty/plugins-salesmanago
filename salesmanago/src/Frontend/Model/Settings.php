@@ -27,6 +27,7 @@ class Settings extends AbstractModel
         try {
             //Get Configuration frm DB and set to library
             $configurationJson = $this->getConfigurationFromDB();
+
             if(!$configurationJson) {
                 return false;
             }
@@ -50,7 +51,8 @@ class Settings extends AbstractModel
                     : $config->cookieTtl)
                 ->setIgnoredDomains($config->ignoredDomains)
                 ->setLocation($config->location)
-                ->setSmApp($config->smApp ?? null);
+                ->setSmApp($config->smApp ?? null)
+                ->setLeadooScript($config->leadooScript ?? "");
         } catch (\Exception $e) {
             error_log($e->getMessage());
         }
@@ -91,6 +93,7 @@ class Settings extends AbstractModel
         if ($configurationJson == null || empty($configurationJson) || $configurationJson == '{}') {
             return false;
         }
+
         return $configurationJson['option_value'];
     }
 
@@ -106,6 +109,7 @@ class Settings extends AbstractModel
         if ($platformSettingsJson == null || empty($platformSettingsJson) || $platformSettingsJson == '{}') {
             return false;
         }
+
         return $platformSettingsJson['option_value'];
     }
 
@@ -142,9 +146,6 @@ class Settings extends AbstractModel
     }
 
 
-    /**
-     *
-     */
     private function setIsUserAuthorized()
     {
         if(isset($this->Configuration)) {
@@ -173,7 +174,6 @@ class Settings extends AbstractModel
     {
         return $this->activePlugins;
     }
-
 
     /**
      * @return string|null

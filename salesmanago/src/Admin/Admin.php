@@ -29,7 +29,13 @@ class Admin {
 	 * Setup plugin for admin panel.
 	 */
 	public function __construct() {
-		$is_salesmanago_view = ( isset( $_REQUEST['page'] ) && strpos( sanitize_key( $_REQUEST['page'] ), SALESMANAGO ) !== false );
+		$is_salesmanago_view = (
+            isset( $_REQUEST['page'] )
+            && (
+                strpos( sanitize_key( $_REQUEST['page'] ), SALESMANAGO ) !== false
+                || strpos( sanitize_key( $_REQUEST['page'] ), LEADOO ) !== false
+            )
+        );
 
 		try {
 			Helper::loadPluginTextDomain( 'salesmanago', false, 'salesmanago/languages' );

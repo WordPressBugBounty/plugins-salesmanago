@@ -16,7 +16,10 @@ use bhr\Admin\Entity\Plugins\Wc;
 use Error;
 use SALESmanago\Entity\AbstractEntity;
 use bhr\Admin\Entity\Configuration;
+use SALESmanago\Entity\UnionConfigurationEntity;
 use SALESmanago\Exception\Exception;
+use SALESmanago\Model\Report\ReportModel;
+use SALESmanago\Services\Report\ReportService;
 use stdClass;
 
 class AdminModel extends AbstractModel
@@ -55,7 +58,7 @@ class AdminModel extends AbstractModel
 	 * @return $this|false
 	 */
 	public function parseSettingsFromRequest( $request ) {
-		if (empty( $request['page'] )) {
+        if (empty( $request['page'] )) {
 			return false;
 		}
 		$page = $request['page'];
@@ -185,8 +188,93 @@ class AdminModel extends AbstractModel
 				->setCronValue( $request['cronValue'] ?? '0' );
 		}
 
+        /* LEADOO SETTINGS PAGE */
+        elseif ($page == 'leadoo' ) {
+            $leadooScriptFromConfig = $this->getConfiguration()->getLeadooScript();
+            $leadooScriptFromView = $request['leadoo_script'] ?? '';
+
+            $isEmptyLeadooScriptFromConfig = empty($leadooScriptFromConfig);
+            $isEmptyLeadooScriptFromView = empty($leadooScriptFromView);
+
+            if ($isEmptyLeadooScriptFromConfig && !$isEmptyLeadooScriptFromView) {
+                $this->report(ReportModel::ACT_LOGIN);
+            }
+
+            if (!$isEmptyLeadooScriptFromConfig && $isEmptyLeadooScriptFromView) {
+                $this->report(ReportModel::ACT_LOGOUT);
+            }
+
+            $this->getConfiguration()
+                ->setLeadooScript($leadooScriptFromView);
+        }
+
 		return $this;
 	}
+
+    /**
+     * Report user action to SALESmanago reporting service via reporting 2.0
+     *
+     * @param string $act - action type
+     */
+    public function report(string $act = ReportModel::ACT_UNKNOWN)
+    {
+        try {
+            $conf = UnionConfigurationEntity::getInstance();
+
+            $plugin_data = get_plugin_data( WP_PLUGIN_DIR . '/salesmanago/salesmanago.php' );
+            //this mark event as leadoo integration in location:
+            $version = 'wordpress_leadoo_' . $plugin_data['Version'];
+
+            $ownerFromConfig = $this->getConfiguration()->getOwner();
+            $email = $this->generateEmailFromSiteUrl();
+
+            if (!empty($ownerFromConfig)) {
+                $email = $ownerFromConfig;
+            }
+
+            $conf
+                ->setActiveReporting(true)
+                ->setPlatformName('WORDPRESS_LEADOO')
+                ->setEndpoint('salesmanago.com')
+                ->setOwner( $email )
+                ->setPlatformVersion(get_bloginfo('version'))
+                ->setVersionOfIntegration($version)
+                ->setPlatformDomain(get_site_url());
+
+                ReportService::getInstance($conf)->reportAction($act);
+        } catch ( \Exception | Error $e ) {
+            error_log( $e->getMessage() . ' ' . $e->getFile() . ':' . $e->getLine() );
+        }
+    }
+
+    /**
+     * Generate email address based on site URL
+     * used for leadoo reporting
+     *
+     * @return string
+     */
+    public function generateEmailFromSiteUrl()
+    {
+        try {
+            $siteUrl = get_site_url();
+
+            $host = parse_url($siteUrl, PHP_URL_HOST);
+
+            if (!$host) {
+                $host = preg_replace('#^https?://#', '', $siteUrl);
+                $host = preg_replace('#[:/].*$#', '', $host);
+            }
+
+            $host = preg_replace('/[^a-zA-Z0-9\-\.]/', '.', $host);
+            $host = preg_replace('/\.{2,}/', '.', $host);
+            $host = trim($host, '.');
+            return $host. '@noreply-salesmanago.com';
+        } catch (\Exception $e) {
+            error_log( $e->getMessage() . ' ' . $e->getFile() . ':' . $e->getLine() );
+            return 'noreply@salesmanago.com';
+        }
+    }
+
 
     /**
      * Create cron table if not already in database
@@ -264,7 +352,9 @@ class AdminModel extends AbstractModel
             ->setApiV3Endpoint( isset ( $conf->apiV3Endpoint) ? $conf->apiV3Endpoint : 'https://api.salesmanago.com' )
             ->setCatalogs( isset ( $conf->Catalogs) ? $conf->Catalogs : '' )
             ->setActiveCatalog( isset ( $conf->activeCatalog ) ? $conf->activeCatalog : '' )
+            ->setLeadooScript( isset( $conf->leadooScript ) ? $conf->leadooScript : '' )
 			->setisNewApiError( $conf->isNewApiError ?? false );
+
 	}
 
 	/**
@@ -705,7 +795,7 @@ class AdminModel extends AbstractModel
 	 * @return string
 	 */
 	public static function getIconBase64() {
-		return 'data:image/svg+xml;base64,' . 'PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+PHN2ZyB4bWxuczpkYz0iaHR0cDovL3B1cmwub3JnL2RjL2VsZW1lbnRzLzEuMS8iIHhtbG5zOmNjPSJodHRwOi8vY3JlYXRpdmVjb21tb25zLm9yZy9ucyMiIHhtbG5zOnJkZj0iaHR0cDovL3d3dy53My5vcmcvMTk5OS8wMi8yMi1yZGYtc3ludGF4LW5zIyIgeG1sbnM6c3ZnPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczpzb2RpcG9kaT0iaHR0cDovL3NvZGlwb2RpLnNvdXJjZWZvcmdlLm5ldC9EVEQvc29kaXBvZGktMC5kdGQiIHhtbG5zOmlua3NjYXBlPSJodHRwOi8vd3d3Lmlua3NjYXBlLm9yZy9uYW1lc3BhY2VzL2lua3NjYXBlIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCAxNi45MzMzMzMgMTYuOTMzMzM0IiB2ZXJzaW9uPSIxLjEiIGlkPSJzdmc0MDE5IiBzb2RpcG9kaTpkb2NuYW1lPSJpY29uLnN2ZyIgaW5rc2NhcGU6dmVyc2lvbj0iMS4wLjEgKDA3NjdmODMwMmEsIDIwMjAtMTAtMTcpIj4gPHNvZGlwb2RpOm5hbWVkdmlldyBwYWdlY29sb3I9IiNmZmZmZmYiIGJvcmRlcmNvbG9yPSIjNjY2NjY2IiBib3JkZXJvcGFjaXR5PSIxIiBvYmplY3R0b2xlcmFuY2U9IjEwIiBncmlkdG9sZXJhbmNlPSIxMCIgZ3VpZGV0b2xlcmFuY2U9IjEwIiBpbmtzY2FwZTpwYWdlb3BhY2l0eT0iMCIgaW5rc2NhcGU6cGFnZXNoYWRvdz0iMiIgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxODQ4IiBpbmtzY2FwZTp3aW5kb3ctaGVpZ2h0PSIxMDE2IiBpZD0ibmFtZWR2aWV3NDE2MCIgc2hvd2dyaWQ9ImZhbHNlIiBpbmtzY2FwZTp6b29tPSI1LjI1NzgxMjUiIGlua3NjYXBlOmN4PSItMTYuNjgxNDU3IiBpbmtzY2FwZTpjeT0iNTAuOTA5MDIyIiBpbmtzY2FwZTp3aW5kb3cteD0iNzIiIGlua3NjYXBlOndpbmRvdy15PSIyNyIgaW5rc2NhcGU6d2luZG93LW1heGltaXplZD0iMSIgaW5rc2NhcGU6Y3VycmVudC1sYXllcj0ic3ZnNDAxOSIgLz4gPGRlZnMgaWQ9ImRlZnM0MDEzIiAvPiA8bWV0YWRhdGEgaWQ9Im1ldGFkYXRhNDAxNiI+IDxyZGY6UkRGPiA8Y2M6V29yayByZGY6YWJvdXQ9IiI+IDxkYzpmb3JtYXQ+aW1hZ2Uvc3ZnK3htbDwvZGM6Zm9ybWF0PiA8ZGM6dHlwZSByZGY6cmVzb3VyY2U9Imh0dHA6Ly9wdXJsLm9yZy9kYy9kY21pdHlwZS9TdGlsbEltYWdlIiAvPiA8ZGM6dGl0bGUgLz4gPC9jYzpXb3JrPiA8L3JkZjpSREY+IDwvbWV0YWRhdGE+IDxwYXRoIGlkPSJwYXRoNDE2MiIgc3R5bGU9ImZpbGw6IzllYTJhOTtzdHJva2Utd2lkdGg6MS45MDM2MTtzdHJva2UtZGFzaGFycmF5OjEuOTAzNjEsIDUuNzEwODMiIGQ9Ik0gMzIgMCBBIDMyLjAwMDAwMiAzMi4wMDAwMDIgMCAwIDAgMCAzMiBBIDMyLjAwMDAwMiAzMi4wMDAwMDIgMCAwIDAgMzIgNjQgQSAzMi4wMDAwMDIgMzIuMDAwMDAyIDAgMCAwIDY0IDMyIEEgMzIuMDAwMDAyIDMyLjAwMDAwMiAwIDAgMCAzMiAwIHogTSA0Ny41MjE0ODQgOC4yNTM5MDYyIEMgNDcuNTc4MjUzIDguMjUzOTA2MiA0Ny41OTk2MDkgMTQuMTYwMzUgNDcuNTk5NjA5IDI3Ljg0NTcwMyBDIDQ3LjU5OTYwOSA0Ni40MTI2ODIgNDcuNTk0NjcyIDQ3LjQ0NjggNDcuNDcwNzAzIDQ3LjU1NjY0MSBDIDQ3LjM5OTUzNSA0Ny42MjA3NDEgNDcuMDc1NDgyIDQ3Ljg1MDY4IDQ2Ljc1IDQ4LjA3MDMxMiBDIDQ2LjQyNDc3MiA0OC4yODk4MjcgNDUuMDEyMTUzIDQ5LjI2MjkzNSA0My42MTEzMjggNTAuMjMyNDIyIEMgNDIuMjEwNDQ2IDUxLjIwMTkzMSA0MC44ODE1NjYgNTIuMTIyODcxIDQwLjY1ODIwMyA1Mi4yNzczNDQgQyA0MC40MzQ0OTMgNTIuNDMxNyA0MC4yMTA5MTIgNTIuNTU4NTk0IDQwLjE2MDE1NiA1Mi41NTg1OTQgQyA0MC4wODY5MDkgNTIuNTU4NyA0MC4wNjgzNTkgNDguNTg4MzcgNDAuMDY4MzU5IDMyLjk1NzAzMSBMIDQwLjA2ODM1OSAxMy4zNTU0NjkgTCA0MC41ODM5ODQgMTMuMDAxOTUzIEMgNDAuODY4MDkxIDEyLjgwNzAzMiA0MS4zMTUyMTEgMTIuNDk3MjM2IDQxLjU3NjE3MiAxMi4zMTQ0NTMgQyA0MS44MzcwMzUgMTIuMTMxNTY2IDQyLjI2ODg3MyAxMS44MzMxMjEgNDIuNTM3MTA5IDExLjY1MDM5MSBDIDQyLjgwNTUzMSAxMS40Njc1MDMgNDMuMTkwMjM0IDExLjIwMDc3IDQzLjM5MDYyNSAxMS4wNTg1OTQgQyA0My41OTEwNTMgMTAuOTE2MjYxIDQzLjk2MzYyMSAxMC42NTc2NDMgNDQuMjE4NzUgMTAuNDgyNDIyIEMgNDQuNDc0MDk1IDEwLjMwNzEyNCA0NS4zMDUxNzMgOS43MzIxNzEzIDQ2LjA2NDQ1MyA5LjIwNzAzMTIgQyA0Ni44MjM2ODUgOC42ODE4NjUxIDQ3LjQ3ODYyNSA4LjI1MzkwNjIgNDcuNTIxNDg0IDguMjUzOTA2MiB6IE0gMzQuNDE3OTY5IDE3LjI4OTA2MiBDIDM0LjUxODcwMSAxNy4yNDg3NjkgMzQuNTMwNjA1IDE4LjgzNzM5NiAzNC41MjkyOTcgMzIuMzM1OTM4IEMgMzQuNTI4NzIxIDQwLjYzNTQwNSAzNC41MDI0ODQgNDcuNDYwNzM2IDM0LjQ3MjY1NiA0Ny41MDM5MDYgQyAzNC40NDEyNDggNDcuNTQ4NjU2IDMzLjg4NjQwMiA0Ny45NDQ0OTEgMzMuMjM2MzI4IDQ4LjM4NjcxOSBDIDMyLjU4NjQ2NCA0OC44Mjg2ODUgMzEuODE0Njc5IDQ5LjM1NzM3NCAzMS41MjE0ODQgNDkuNTYyNSBDIDMxLjIyODQ3MyA0OS43Njc4OCAzMC43MTMzMTkgNTAuMTI1MjkxIDMwLjM3Njk1MyA1MC4zNTc0MjIgQyAzMC4wNDA1MzQgNTAuNTg5NDg1IDI5LjE5MDE5NiA1MS4xODExNSAyOC40ODYzMjggNTEuNjY5OTIyIEMgMjcuNzgyNDYxIDUyLjE1ODY0MSAyNy4xNzU4NTEgNTIuNTU4NTk0IDI3LjEzODY3MiA1Mi41NTg1OTQgQyAyNy4wOTgzNzggNTIuNTU4NTk0IDI3LjA3MDMxMyA0Ni41Njg4OTIgMjcuMDcwMzEyIDM3LjQzNTU0NyBMIDI3LjA3MjI2NiAzNy40MzU1NDcgTCAyNy4wNzIyNjYgMjIuMzEyNSBMIDI4LjY0MDYyNSAyMS4yMzI0MjIgQyAyOS41MDM3MDEgMjAuNjM3NzkgMzAuNDQyMzE1IDE5Ljk4OTM4MyAzMC43MjY1NjIgMTkuNzkyOTY5IEMgMzIuOTkwNzc5IDE4LjIyODMwMiAzNC4zMjI2IDE3LjMyNTcxOSAzNC40MTc5NjkgMTcuMjg5MDYyIHogTSAyMS4zOTg0MzggMjYuMjY5NTMxIEMgMjEuNDI5ODQ1IDI2LjI2OTUzMSAyMS40NjA5MzggMzAuOTk2MjY5IDIxLjQ2MDkzOCAzNi43NzM0MzggTCAyMS40NjA5MzggNDcuMjc3MzQ0IEwgMjEuMTExMzI4IDQ3LjUxMzY3MiBDIDIwLjYxOTIzMyA0Ny44NDY5NTEgMTkuNTMzMjYxIDQ4LjU5ODgxMyAxNy4wNzgxMjUgNTAuMzA0Njg4IEMgMTMuOTcwMTY3IDUyLjQ2NDE0MyAxNC4wMDYzODMgNTIuNDQyMjExIDE0LjAwNTg1OSA1Mi4yNDIxODggTCAxNC4wMDE5NTMgNTIuMjQyMTg4IEMgMTQuMDAxNzE4IDUyLjE1MTQwMyAxNC4wMDAzNjcgNDcuNDA5MjA2IDE0IDQxLjcwMzEyNSBDIDEzLjk5OTc2NSAzMi4zNzgwNSAxNC4wMTM0NTIgMzEuMzIwMzExIDE0LjExNTIzNCAzMS4yNTM5MDYgQyAxNC4yMzA2MiAzMS4xNzk2MDEgMTcuMjM1MDY5IDI5LjEwOTMwOCAxNy45ODgyODEgMjguNTgzOTg0IEMgMTguMjEwOTM3IDI4LjQyODgzMSAxOC44NTg0MjkgMjcuOTgyOTE1IDE5LjQyNzczNCAyNy41OTM3NSBDIDE5Ljk5Njg1NiAyNy4yMDQ1NTggMjAuNjYwMTI1IDI2Ljc0NzM1NCAyMC45MDAzOTEgMjYuNTc4MTI1IEMgMjEuMTQxMTAxIDI2LjQwOTEwNSAyMS4zNjQ4MTcgMjYuMjY5NTMxIDIxLjM5ODQzOCAyNi4yNjk1MzEgeiAiIHRyYW5zZm9ybT0ic2NhbGUoMC4yNjQ1ODMzNCkiIC8+PC9zdmc+';
+		return 'data:image/svg+xml;base64,' . 'iVBORw0KGgoAAAANSUhEUgAAACoAAAAkCAYAAAD/yagrAAACSUlEQVR4Xu2WvUoDQRSF8yh5ADsb7WzURgvRxkLQJqCFjWCTQjFNhKCVQoiVhdglqKWyWiqKdqJ1kgfIC4x7ZnM316MSvczKIn4wZDN7uefs/NyZgnOuGLfIhecxbsVCKPoJsyJiPTOcOTSsZ4YTh4b1zHDi0LCeGU78EzrdLnd9gPXMcOLvslvbd+XtHe7+AOuZ4cTD6PV6/ndkdCy/Ro9PTt36xqZ/zqXRTidZi1Mzc26ltOafc2f07v7BjU9M+udcGy1v7XhT4E8bDUDT4c7AvUwOjILoW0arcc0E84tLfueDqdk59/zyqkMzZajRdn/HA6mh/PwbDDWaF/6NhiZTo1jHzbMLd1BvuNb5xZe3LcRhkyLuKrrm157MjEIQJxrKmG6H9aM0BgZxC+OY6bii8EdlYhR3AxGF2eXSqq/BA7MNb3IhLnfSh/eI02Z1ZYHRKP0XCBFErdVimFr0tePR0ialNgOUQ5kJPfowWozbU9oTABHChQaHAqZRDMMIDItJrF28Q4w0HDB4J1dKwEe/mTSjS45XtMvoxhu9jQ3LJsHvYAkkIwbziJMmHyLHNWA9M2lGN5h6GNXoDYYYrGWY4Y0jIypHN2A9M0rHT3kyYg0/fRghGJKRlHWq+8rbFW8M8eWtiv8gxAisZ0b59Oh1qBtGUq9XXQ2kwSQ+VsN6Zt5l7QMj1dqeHyX8sriAQwExMvqfXXhYzwwnDg3rmeHEoWE9M5w4NKxnhhOHhvXMcOLQsJ4Zl8GdQdFiPTMuuTO0WCEAOHuLb4s1mZAG4ffuAAAAAElFTkSuQmCC';
 	}
 
 	/**

@@ -3,9 +3,9 @@
 	<?php
 		$tabsList = array(
 			'integrations settings' => array(
-				'name'      => 'salesmanago',
+				'name'      => 'salesmanago-integration-settings',
 				'available' => true,
-				'active'    => $this->active( 'salesmanago' ),
+				'active'    => $this->active( 'salesmanago-integration-settings' ),
 				'label'     => __( 'Integration settings', 'salesmanago' ),
 			),
 			'monitoring code'       => array(
@@ -67,6 +67,12 @@
                 'available' => true,
                 'active'    => $this->active( 'salesmanago-about' ),
                 'label'     => __('About', 'salesmanago'),
+            ),
+            'leadoo'                 => array(
+                'name'      => 'salesmanago-discover-leadoo',
+                'available' => true,
+                'active'    => $this->active( 'salesmanago-discover-leadoo' ),
+                'label'     => __('Discover Leadoo', 'salesmanago'),
             )
 		);
 

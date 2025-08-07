@@ -146,14 +146,27 @@ class WcController {
 				/* Silence is golden */
 			}
 
+            // Populate Contact Model with fields from submitted data:
 			$order = is_int( $order ) ? wc_get_order( $order ) : $order;
 
-			// Populate Contact Model with fields from submitted data
-			if ( ! $this->ContactModel->parseCustomerFromPost() ) {
-				if ( ! $this->ContactModel->parseCustomer( $order->get_id() ) ) {
-                    return false;
-				}
-			}
+            //duplication prevention:
+            if (!empty($_SESSION['lastOrder'])
+                && $_SESSION['lastOrder'] == EventModel::EVENT_TYPE_PURCHASE . ':' . $order->get_id()
+            ) {
+                return false;
+            }
+
+            if (!$this->ContactModel->parseCustomerFromPost()) {
+                if ( version_compare( get_bloginfo('version'), '6.8.2', '>=' ) ) {
+                    if (!$this->ContactModel->parseCustomerFromOrder($order)) {
+                        return false;
+                    }
+                } else {
+                    if (!$this->ContactModel->parseCustomer($order->get_id())) {
+                        return false;
+                    }
+                }
+            }
 
 			$order->get_user()
 				? $this->ContactModel->setTagsFromConfig( ContactModel::TAGS_PURCHASE )
@@ -184,7 +197,13 @@ class WcController {
 					'Event'   => $this->EventModel->get(),
 				)
 			);
-			return $this->TransferController->transferBoth( $this->ContactModel->get(), $this->EventModel->get() );
+
+			$response = $this->TransferController->transferBoth( $this->ContactModel->get(), $this->EventModel->get() );
+
+            //variable to check duplications
+            $_SESSION['lastOrder'] = EventModel::EVENT_TYPE_PURCHASE . ':' . $order->get_id();
+
+            return $response;
 		} catch ( \Exception $e ) {
 			error_log( print_r( $e->getMessage(), true ) );
 		}

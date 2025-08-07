@@ -20,11 +20,9 @@ use SALESmanago\Services\UserAccountService;
 
 class SettingsController
 {
-
 	public $SettingsRenderer;
 	private $AdminModel;
 	protected $UserModel;
-
 
 	public function __construct( AdminModel $AdminModel ) {
 		$this->AdminModel = $AdminModel;
@@ -36,7 +34,7 @@ class SettingsController
 	}
 
 	/**
-	 *
+	 * Include settings view
 	 */
 	public function includeSettingsView() {
 		$this->AdminModel->setInstalledPlugins();
@@ -48,45 +46,51 @@ class SettingsController
 	 *
 	 */
 	public function registerMenuPages() {
-		// General menu position (the one with icon)
         Helper::addMenuPage(
-			__( 'General settings of SALESmanago integration', 'salesmanago' ),
-			__( 'SALESmanago', 'salesmanago' ),
+            __( 'General settings of SALESmanago&Leadoo integration', 'salesmanago' ),
+            __( 'SALESmanago & Leadoo', 'salesmanago' ),
+            SALESMANAGO_AND_LEADOO,
+            SALESMANAGO_AND_LEADOO,
+            array( $this, 'includeSettingsView' ),
+            plugins_url( '../View/img/icon2.svg', __FILE__ ),
+            55
+        );
+
+        Helper::addSubmenuPage(
+            SALESMANAGO_AND_LEADOO,
+            __( 'General settings of SALESmanago&Leadoo integration', 'salesmanago' ),
+            __( 'Integrations', 'salesmanago' ),
             SALESMANAGO,
-			SALESMANAGO,
-			array( $this, 'includeSettingsView' ),
-			$this->AdminModel->getIconBase64(),
-			55
-		);
+            SALESMANAGO_AND_LEADOO . '-main',
+            array( $this, 'includeSettingsView' )
+        );
 
 		// First submenu position (this will open as default)
-		if ( $this->AdminModel->getUserLogged() ) {
-			// If user logged - show Integration Settings
-			Helper::addSubmenuPage(
-                SALESMANAGO,
-				__( 'Manage SM integration settings', 'salesmanago' ),
-				__( 'Integration settings', 'salesmanago' ),
-                SALESMANAGO,
-				SALESMANAGO,
-				array( $this, 'includeSettingsView' )
-			);
-		} else {
-			// Otherwise - show login screen
-			Helper::addSubmenuPage(
-                SALESMANAGO,
-				__( 'Login to SALESmanago account', 'salesmanago' ),
-				__( 'Login', 'salesmanago' ),
-                SALESMANAGO,
-				SALESMANAGO,
-				array( $this, 'includeSettingsView' )
-			);
-		}
+        // If user logged - show Integration Settings
+        Helper::addSubmenuPage(
+            $this->AdminModel->getUserLogged() ? SALESMANAGO_AND_LEADOO : null,
+            __( 'Manage SM integration settings', 'salesmanago' ),
+            __( 'Integration settings', 'salesmanago' ),
+            SALESMANAGO,
+            SALESMANAGO . '-integration-settings',
+            array( $this, 'includeSettingsView' )
+        );
+
+        // Otherwise - show login screen
+        Helper::addSubmenuPage(
+            !$this->AdminModel->getUserLogged() ? SALESMANAGO_AND_LEADOO : null,
+            __( 'Login to SALESmanago account', 'salesmanago' ),
+            __( 'SALESmanago', 'salesmanago' ),
+            SALESMANAGO,
+            SALESMANAGO . '-login',
+            array( $this, 'includeSettingsView' ),
+        );
 
 		// Other tabs
 		// monitcode
 		if ( $this->AdminModel->isTabAvailable( 'salesmanago-monit-code' ) ) {
 			Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
 				__( 'Monitoring code features', 'salesmanago' ),
 				__( 'Monitoring code', 'salesmanago' ),
                 SALESMANAGO,
@@ -98,7 +102,7 @@ class SettingsController
 		// Export
 		if ( $this->AdminModel->isTabAvailable( 'salesmanago-export' ) ) {
 			Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
 				__( 'Export contacts and events', 'salesmanago' ),
 				__( 'Export', 'salesmanago' ),
                 SALESMANAGO,
@@ -110,7 +114,7 @@ class SettingsController
         //Product catalog
         if ( $this->AdminModel->isTabAvailable( 'salesmanago-product-catalog' ) ) {
             Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
                 __( 'Manage product catalog', 'salesmanago' ),
                 __( 'Product catalog', 'salesmanago' ),
                 SALESMANAGO,
@@ -122,7 +126,7 @@ class SettingsController
 		// Plugins
 		if ( $this->AdminModel->isTabAvailable( 'salesmanago-plugins' ) ) {
 			Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
 				__( 'Manage integrations with plugins', 'salesmanago' ),
 				__( 'Plugins', 'salesmanago' ),
                 SALESMANAGO,
@@ -133,7 +137,7 @@ class SettingsController
 		// Plugins - WordPress
 		if ( $this->AdminModel->isTabAvailable( 'salesmanago-plugin-wp' ) ) {
 			Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
 				__( 'Manage WordPress integration', 'salesmanago' ),
 				__( 'WordPress', 'salesmanago' ),
                 SALESMANAGO,
@@ -144,7 +148,7 @@ class SettingsController
 		// Plugins - WooCommerce
 		if ( $this->AdminModel->isTabAvailable( 'salesmanago-plugin-wc' ) ) {
 			Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
 				__( 'Manage WooCommerce integration', 'salesmanago' ),
 				__( 'WooCommerce', 'salesmanago' ),
                 SALESMANAGO,
@@ -155,7 +159,7 @@ class SettingsController
 		// Plugins - Contact Form 7
 		if ( $this->AdminModel->isTabAvailable( 'salesmanago-plugin-cf7' ) ) {
 			Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
 				__( 'Manage Contact Form 7 integration', 'salesmanago' ),
 				__( 'Contact Form 7', 'salesmanago' ),
                 SALESMANAGO,
@@ -166,7 +170,7 @@ class SettingsController
 		// Plugins - Gravity Forms
 		if ( $this->AdminModel->isTabAvailable( 'salesmanago-plugin-gf' ) ) {
 			Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
 				__( 'Manage Gravity Forms integration', 'salesmanago' ),
 				__( 'Gravity Forms', 'salesmanago' ),
                 SALESMANAGO,
@@ -177,7 +181,7 @@ class SettingsController
 		// Plugins - Fluent Forms
 		if ( $this->AdminModel->isTabAvailable( 'salesmanago-plugin-ff' ) ) {
 			Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
 				__( 'Manage Fluent Forms integration', 'salesmanago' ),
 				__( 'Fluent Forms', 'salesmanago' ),
                 SALESMANAGO,
@@ -188,7 +192,7 @@ class SettingsController
 
         if ($this->AdminModel->isTabAvailable("salesmanago-about")) {
             Helper::addSubmenuPage(
-                SALESMANAGO,
+                SALESMANAGO_AND_LEADOO,
                 __('Get system information', 'salesmanago'),
                 __('About', 'salesmanago'),
                 SALESMANAGO,
@@ -197,14 +201,73 @@ class SettingsController
             );
         }
 
+        Helper::addSubmenuPage(
+        //if not logged in salesmanago integration:
+            (isset($_GET['page'])
+                && $this->AdminModel->getUserLogged()
+                && preg_match('/^salesmanago-(?!and-leadoo-main$).+/', $_GET['page'])
+            )
+                ? SALESMANAGO_AND_LEADOO
+                : null,
+            __( 'Discover Leadoo', 'salesmanago' ),
+            __( 'Discover Leadoo', 'salesmanago' ),
+            SALESMANAGO,
+            SALESMANAGO . '-discover-leadoo',
+            array( $this, 'includeSettingsView' )
+        );
+
+        Helper::addSubmenuPage(
+            SALESMANAGO_AND_LEADOO,
+            __( 'General settings of Leadoo integration', 'salesmanago' ),
+            __( 'Leadoo', 'salesmanago' ),
+            SALESMANAGO,
+            LEADOO,
+            array( $this, 'includeSettingsView' )
+        );
+
+        //Added to select Discover SALESmanago submenu:
+        add_filter( 'submenu_file', function( $submenu_file ) {
+            // only on our plugin's top‐level
+            if ( isset( $_GET['page'] ) && $_GET['page'] === 'leadoo' ) {
+                // if action=discover, highlight that submenu slug
+                if ( isset( $_GET['action'] ) && $_GET['action'] === 'discover' ) {
+                    return 'leadoo&action=discover';
+                }
+                // otherwise fall back to your “main” submenu slug
+                return 'leadoo';
+            }
+            return $submenu_file;
+        });
+
+        Helper::addSubmenuPage(
+            //if not logged in salesmanago integration:
+            isset($_GET['page']) && (
+                ($_GET['page'] === 'leadoo')
+                || $_GET['page'] === 'salesmanago-discover-salesmanago'
+            ) ? SALESMANAGO_AND_LEADOO
+                : null,
+            __( 'Discover SALESmanago', 'salesmanago' ),
+            __( 'Discover SALESmanago', 'salesmanago' ),
+            SALESMANAGO,
+            LEADOO . '&action=discover',
+            array( $this, 'includeSettingsView' )
+        );
+
 		Helper::addSubmenuPage(
-            SALESMANAGO,
+            SALESMANAGO_AND_LEADOO,
 			__( 'Manage integrations with plugins', 'salesmanago' ),
-			__( 'SALESmanago.com', 'salesmanago' ),
+			__( 'salesmanago.com', 'salesmanago' ),
             SALESMANAGO,
-			SALESMANAGO . '-go-to-app',
-			array( $this, 'includeSettingsView' )
+			'https://salesmanago.com/'
 		);
+
+        Helper::addSubmenuPage(
+            SALESMANAGO_AND_LEADOO,
+            __( 'Manage integrations with plugins', 'salesmanago' ),
+            __( 'leadoo.com', 'salesmanago' ),
+            SALESMANAGO,
+            'https://leadoo.com/'
+        );
 	}
 
 	/**
@@ -241,7 +304,7 @@ class SettingsController
 				case 'refreshCatalogList':
 					$this->refreshCatalogs();
 					break;
-				case 'save':
+                case 'save':
 					$this->AdminModel->parseSettingsFromRequest( $_REQUEST );
 					$this->AdminModel->saveConfiguration();
 					$this->AdminModel->savePlatformSettings();
@@ -298,8 +361,9 @@ class SettingsController
 
 	}
 
-	/**
-	 * @return array
+    /**
+     * @return array
+     * @throws Exception
      */
 	public function refreshOwnerList() {
 		$UserAccountService = new UserAccountService( $this->AdminModel->Configuration );

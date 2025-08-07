@@ -39,6 +39,11 @@ class Configuration extends \SALESmanago\Entity\Configuration implements UnionCo
 	protected $isNewApiError = false;
 
     /**
+     * @var string
+     */
+    protected $leadooScript = '';
+
+    /**
      * @return string|null
      */
     public function getApiV3Key()
@@ -119,6 +124,22 @@ class Configuration extends \SALESmanago\Entity\Configuration implements UnionCo
 	public function isNewApiError() {
 		return $this->isNewApiError;
 	}
+
+    /**
+     * @param string $script
+     * @return Configuration
+     */
+    public function setLeadooScript($script) {
+        $this->leadooScript = $script;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLeadooScript() {
+        return $this->leadooScript;
+    }
 
 	/**
 	 * @param  bool  $isNewApiError

@@ -65,13 +65,43 @@ class SettingsRenderer {
 	 *
 	 */
 	public function getSettingsView() {
-		try {
+        try {
 			$page       = $this->AdminModel->getPage();
 			$userLogged = $this->AdminModel->getUserLogged();
 		} catch ( Exception $e ) {
 			MessageEntity::getInstance()
 				->addException( new Exception( $e->getMessage(), $e->getCode() == 0 ? 602 : $e->getCode() ) );
 		}
+
+        switch ( $page ) {
+            case 'salesmanago-and-leadoo-main':
+                $pageInSmLink = 'salesmanago-integration-settings';
+                if (!$userLogged) {
+                    $pageInSmLink = 'salesmanago-login';
+                }
+                include __DIR__ . '/salesmanago_and_leadoo.php';
+                return;
+            case 'leadoo':
+                try {
+                    $data = $this->AdminModel->getAboutInfo();
+                    $logs = $this->AdminModel->getErrorLog();
+                    $api_v3_logs = $this->AdminModel->getErrorLog( true );
+                    $is_new_api_v3_error = $this->AdminModel->getConfiguration()->isNewApiError();
+
+                    $pageInSmLink = 'salesmanago-integration-settings';
+                    if (!$userLogged) {
+                        $pageInSmLink = 'salesmanago-login';
+                    }
+
+                    include __DIR__ . '/leadoo.php';
+                } catch ( Exception $e ) {
+                    MessageEntity::getInstance()
+                        ->setMessagesAfterView( true )
+                        ->addException( new Exception( $e->getMessage(), $e->getCode() == 0 ? 680 : $e->getCode() ) );
+                }
+                return;
+        }
+
 		echo( '<div class="wrap" id="salesmanago">' );
 		echo( '
         <a href="https://salesmanago.com/login.htm?&utm_source=integration&utm_medium=wordpress&utm_content=logo" target="_blank">
@@ -83,28 +113,16 @@ class SettingsRenderer {
 			return;
 		}
 		try {
+            switch ( $page ) {
+                case 'salesmanago-login':
+                    include __DIR__ . '/login_form.php';
+                    return;
+            }
+
 			/* User logged */
 			if ( $userLogged ) {
 				include __DIR__ . '/partials/navbar.php';
 				switch ( $page ) {
-					case 'salesmanago':
-						try {
-							include __DIR__ . '/integration_settings.php';
-						} catch ( Exception $e ) {
-							MessageEntity::getInstance()
-								->setMessagesAfterView( true )
-								->addException( new Exception( $e->getMessage(), $e->getCode() == 0 ? 610 : $e->getCode() ) );
-						}
-						break;
-					case 'salesmanago-login':
-						try {
-							include __DIR__ . '/login_form.php';
-						} catch ( Exception $e ) {
-							MessageEntity::getInstance()
-								->setMessagesAfterView( true )
-								->addException( new Exception( $e->getMessage(), $e->getCode() == 0 ? 110 : $e->getCode() ) );
-						}
-						break;
 					case 'salesmanago-monit-code':
 						try {
 							$context = 'monitcode';
@@ -253,23 +271,19 @@ class SettingsRenderer {
                                  ->addException( new Exception( $e->getMessage(), $e->getCode() == 0 ? 680 : $e->getCode() ) );
                         }
                         break;
+                    case 'salesmanago-discover-leadoo':
+                        try {
+                            include __DIR__ . '/salesmanago-discover-leadoo.php';
+                        } catch ( Exception $e ) {
+                            MessageEntity::getInstance()
+                                ->setMessagesAfterView( true )
+                                ->addException( new Exception( $e->getMessage(), $e->getCode() == 0 ? 690 : $e->getCode() ) );
+                        }
+                        break;
                     default:
 						include __DIR__ . '/integration_settings.php';
 						break;
 				}
-
-				/* User not logged */
-			} else {
-				if ( $page == 'salesmanago' ) {
-					include __DIR__ . '/login_form.php';
-					return;
-				}
-			}
-
-			/* Always available */
-			if ( $page == 'salesmanago-go-to-app' ) {
-				include __DIR__ . '/go_to_app.php';
-				return;
 			}
 		} catch ( Exception $e ) {
 			MessageEntity::getInstance()
@@ -542,4 +556,11 @@ class SettingsRenderer {
 			'admin'
 		);
 	}
+
+    /**
+     * @return string
+     */
+    public function showLeadooScript() {
+        return $this->AdminModel->getConfiguration()->getLeadooScript();
+    }
 }

@@ -3,7 +3,7 @@
  * Plugin Name: SALESmanago
  * Plugin URI:  https://www.salesmanago.com/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
  * Description: SALESmanago Marketing Automation integration for WordPress, WooCommerce, Contact Form 7, Gravity Forms
- * Version:     3.7.1
+ * Version:     3.8.0
  * Tested up to: 6.8.1
  * Requires PHP: 7.4
  * Author:      SALESmanago
@@ -32,6 +32,8 @@ define('SM_VERSION', json_decode(file_get_contents(dirname(__FILE__) . '/compose
 
 const
     SALESMANAGO = 'salesmanago',
+    SALESMANAGO_AND_LEADOO = 'salesmanago-and-leadoo',
+    LEADOO = 'leadoo',
     SALESMANAGO_OWNER = 'salesmanago_refresh';
 
 require_once __DIR__.'/vendor/autoload.php';

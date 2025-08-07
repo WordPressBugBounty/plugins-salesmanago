@@ -67,11 +67,18 @@ class HooksModel {
 
             /* Purchase Hook */
             $purchaseHook = $this->SettingsModel->getPlatformSettings()->PluginWc->purchaseHook;
-            if(!empty($purchaseHook)) {
-                Helper::addAction($purchaseHook, array($this, 'initWc'));
-            } else {
+
+            if ( version_compare( get_bloginfo('version'), '6.8.2', '>=' ) ) {
+                //only this hook works in WP 6.8.2+:
                 Helper::addAction('woocommerce_order_status_changed', array($this, 'initWc'));
+            } else {
+                if(!empty($purchaseHook)) {
+                    Helper::addAction($purchaseHook, array($this, 'initWc'));
+                } else {
+                    Helper::addAction('woocommerce_order_status_changed', array($this, 'initWc'));
+                }
             }
+
             /* Opt-in input Hooks */
             if($this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->mode === 'append') {
                 Helper::addAction('woocommerce_register_form', array($this, 'appendCheckbox'),14);
@@ -108,7 +115,7 @@ class HooksModel {
     }
 
     /**
-     *
+     * @return void
      */
     public function addMonitoringCode()
     {
@@ -127,7 +134,16 @@ class HooksModel {
     }
 
     /**
+     * @return void
+     */
+    public function addLeadooCode()
+    {
+        print $this->SettingsModel->getConfiguration()->getLeadooScript();
+    }
+
+    /**
      * @param $data
+     * @return bool
      */
     public function initWp($data)
     {
@@ -168,6 +184,7 @@ class HooksModel {
         }
 
         $currentHook = Helper::currentFilter();
+
         switch ($currentHook) {
             case 'woocommerce_order_status_cancelled':
             case 'woocommerce_order_status_refunded':
@@ -190,9 +207,6 @@ class HooksModel {
             case 'woocommerce_cart_item_removed':
                 $WcController->addToCart();
                 break;
-            case 'woocommerce_order_status_changed':
-                $WcController->purchase($data);
-                break;
             default:
                 $WcController->purchase($data);
                 break;
@@ -200,9 +214,10 @@ class HooksModel {
         return true;
     }
 
-	/**
-	 * @param $data
-	 */
+    /**
+     * @param $data
+     * @return bool
+     */
 	public function initCf7( $data ) {
 		try {
 			$TransferController = new TransferController(
@@ -262,13 +277,12 @@ class HooksModel {
      */
     public function appendCheckbox()
     {
-        $cssClass = 'sm-opt-in-input';
+        $cssClass  = 'sm-opt-in-input';
         $inputName = 'sm-optin-email';
-        $inputId = 'sm-optin-email-checkbox';
 
-        $label = ($this->SettingsModel->getPlatformSettings()->PluginWc->active)
-            ? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->label
-            : $this->SettingsModel->getPlatformSettings()->PluginWp->OptInInput->label;
+         $label = ($this->SettingsModel->getPlatformSettings()->PluginWc->active)
+             ? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->label
+             : $this->SettingsModel->getPlatformSettings()->PluginWp->OptInInput->label;
 
         Helper::loadPluginTextDomain('salesmanago', false, 'salesmanago/languages');
 
@@ -277,49 +291,38 @@ class HooksModel {
             ? $label
             : __('!optInInputLabel', 'salesmanago');
 
-        echo '<p class="woocommerce-FormRow form-row ' . $cssClass . '">
-                <label class="woocommerce-form__label ' . $cssClass . '" for="' . $inputId . '" style="margin-left: 0; display: flex; align-items: center;">
-                    <input id="' . $inputId . '"
-                        name="' . $inputName . '"
-                        class="' . $cssClass . '"
-                        type="checkbox"
-                        style="margin-right: 8px;"
-                        aria-required="false">
-                    <span class="' . $cssClass . '">' . $displayLabel . '</span>
-                </label>
-            </p>';
+        echo('<p class="woocommerce-FormRow form-row ' . $cssClass . '">
+            <label class="woocommerce-form__label woocommerce-form__label-for-checkbox inline ' . $cssClass . '" style="margin-left: 0">
+                <input name="' . $inputName. '" class="woocommerce-form__input woocommerce-form__input-checkbox ' . $cssClass . '" type="checkbox">
+                <span class="' . $cssClass . '">' . $displayLabel . '</span>
+            </label>
+        </p>');
     }
 
-    /**
-     *
-     */
-    public function appendCheckboxMobile()
-    {
-        $cssClass = 'sm-opt-in-input';
-        $inputName = 'sm-optin-mobile';
-        $inputId = 'sm-optin-moblie-checkbox';
+	/**
+	 *
+	 */
+	public function appendCheckboxMobile()
+	{
+		$cssClass  = 'sm-opt-in-input';
+		$inputName = 'sm-optin-mobile';
 
-        $label = ($this->SettingsModel->getPlatformSettings()->PluginWc->active)
-            ? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->label
-            : $this->SettingsModel->getPlatformSettings()->PluginWp->OptInMobileInput->label;
+		$label = ($this->SettingsModel->getPlatformSettings()->PluginWc->active)
+			? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->label
+			: $this->SettingsModel->getPlatformSettings()->PluginWp->OptInMobileInput->label;
 
-        Helper::loadPluginTextDomain('salesmanago', false, 'salesmanago/languages');
+		Helper::loadPluginTextDomain('salesmanago', false, 'salesmanago/languages');
 
-        //Get translation for input label. If there is no translation or using default language, use label declared in admin settings.
-        $displayLabel = (__('!optInMobileInputLabel', 'salesmanago') === '!optInMobileInputLabel')
-            ? $label
-            : __('!optInMobileInputLabel', 'salesmanago');
+		//Get translation for input label. If there is no translation or using default language, use label declared in admin settings.
+		$displayLabel = (__('!optInMobileInputLabel', 'salesmanago') === '!optInMobileInputLabel')
+			? $label
+			: __('!optInMobileInputLabel', 'salesmanago');
 
-        echo '<p class="woocommerce-FormRow form-row ' . $cssClass . '">
-                <label class="woocommerce-form__label ' . $cssClass . '" for="' . $inputId . '" style="margin-left: 0; display: flex; align-items: center;">
-                    <input id="' . $inputId . '"
-                        name="' . $inputName . '"
-                        class="' . $cssClass . '"
-                        type="checkbox"
-                        style="margin-right: 8px;"
-                        aria-required="false">
-                    <span class="' . $cssClass . '">' . $displayLabel . '</span>
-                </label>
-            </p>';
-    }
+		echo('<p class="woocommerce-FormRow form-row ' . $cssClass . '">
+            <label class="woocommerce-form__label woocommerce-form__label-for-checkbox inline ' . $cssClass . '" style="margin-left: 0">
+                <input name="' . $inputName. '" class="woocommerce-form__input woocommerce-form__input-checkbox ' . $cssClass . '" type="checkbox">
+                <span class="' . $cssClass . '">' . $displayLabel . '</span>
+            </label>
+        </p>');
+	}
 }
