@@ -1,4 +1,4 @@
-=== SALESmanago ===
+=== SALESmanago & Leadoo ===
 
 Plugin URI:  https://support.salesmanago.com/integration-with-wordpress/
 Contributors: Benhauer Sp. z o.o.
@@ -8,7 +8,7 @@ Tested up to: 6.8.2
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.8.0
+Stable tag: 3.8.1
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -17,17 +17,17 @@ Requires PHP: 7.4
 
 AI-powered Customer Engagement Platform for impact-hungry eCommerce marketing teams
 
-
 === Overview ===
 
 SALESmanago is a European SaaS company offering a powerful, feature-rich Customer Engagement Platform built for digitally-fueled eCommerce marketing teams. Trusted by 2,000 mid-size businesses across Europe—including Victoria’s Secret, iSpot, Orbico, Vobis, Porta, Savicki, Pitbull, Würth, Vox, 4F—SALESmanago helps brands acquire, convert, and engage customers with deep, AI-powered personalisation and orchestrated customer journeys.
-
 Following the acquisition of Leadoo, SALESmanago has strengthened its platform with personalisation and conversational marketing capabilities, further enhancing how B2C and B2B brands engage and convert their audiences. Central to this is the unique [SALESmanago Growth Framework](https://www.salesmanago.com/info/growth-framework.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace), empowering eCommerce marketers to drive revenue growth more efficiently and intelligently.
-
 More information on: [www.salesmanago.com](http://www.salesmanago.com?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
 
 
-=== SALESmanago Platform & Modules ===
+https://www.youtube.com/embed/lSNp3d75Qaw
+
+
+== SALESmanago Platform & Modules ==
 
 [Platform Overview](https://www.salesmanago.com/info/platform-overview.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
 [Audiences](https://www.salesmanago.com/info/audiences.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
@@ -39,25 +39,20 @@ More information on: [www.salesmanago.com](http://www.salesmanago.com?utm_source
 
 == Screenshots ==
 
-screenshot-06_08_2025_1.png
-screenshot-06_08_2025_2.png
-screenshot-06_08_2025_3.png
-screenshot-06_08_2025_4.png
-screenshot-06_08_2025_5.png
-
+screenshot-1.png
+screenshot-2.png
+screenshot-3.png
+screenshot-4.png
+screenshot-5.png
 SALESmanago has been fully integrated with Leadoo—our partner company to drive conversational marketing. Watch the integration video [here](https://www.youtube.com/watch?v=lSNp3d75Qaw).
 
-[youtube https://www.youtube.com/watch?v=lSNp3d75Qaw]
 
 
-=== FAQs ===
+=== Frequently Asked Questions ===
 
 = What is SALESmanago generally used for? =
-
 Connect your site or store with SALESmanago in minutes—launch personalised campaigns, capture leads, recover abandoned carts, serve real-time product suggestions, and automate marketing flows—all without coding.
-
 This is what SALESmanago covers:
-
 - Create actionable 360-degree customer profiles from multiple data sources
 - Segment contacts based on behavioural, demographic, and transactional data for precisely targeted campaigns
 - Execute high-impact email campaigns that captivate, engage, and convert prospects and customers
@@ -93,48 +88,44 @@ This is what SALESmanago covers:
 - Enhance the shopping experience and boost sales with AI-powered recommendations
 - Tailor product recommendations and deliver personalised experiences with custom scripts to drive engagement
 - Customise product recommendations with advanced filters to deliver more relevant offers
-
 and much more…
 
 = Do I need a developer to use the SALESmanago WordPress plugin? =
-
 Not at all, there is no coding needed. It installs like any WordPress plugin and gives you access to powerful tools—pop-ups, chatbots, product recommendations, behaviour tracking, etc.—all usable from your SALESmanago dashboard. Just like top plugins in its class.
 
 = How quickly will I see results? =
-
 Immediately. Once active, the plugin starts tracking site activity—then you can trigger automations, launch pop-ups, recover carts or push product suggestions. Most users see engagement lift within a month.
 
 = How does the SALESmanago WordPress plugin boost lead generation? =
-
 Use customised pop-ups, chatbots, and embedded forms to collect emails and zero-party data. Tags and consents sync automatically with SALESmanago, so you can launch welcome flows and nurture campaigns instantly.
 
 = Can I personalise website content easily? =
-
 Absolutely. The plugin integrates with SALESmanago’s website personalisation tools so you can dynamically display banners, messages, or suggested products to different visitor segments—no tech needed.
 
 = Does SALESmanago integrate with any other eCommerce platforms? =
-
 Yes, SALESmanago integrates easily with following e-commerce platforms:
 Magento, PrestaShop, Shopify, BigCommerce, Shoper, VTEX, OpenCart, Shopware
 But Also
 IdoSell, Atomstore, ClickShop, LogiCommerce, Exebo and Selly.
-
 Find out further integration options [here](https://support.salesmanago.com/integrations-3/)
 
 = Does SALESmanago offer guides, tutorials and/or customer support? =
-
 Of course. Every client gets assigned a dedicated Customer Success Manager who supports the strategic development of their projects.
-
 In addition, SALESmanago offers the following types of support:
-
 - SALESmanago Customer Support: Available 24/7 for technical, integration & configuration questions, via [support@salesmanago.com](support@salesmanago.com)
 - Direct Customer Support: Via phone +48 533 600 808
 - Live Chat support (via the website)
-- SALESmanago Community: Best practices, training sessions, tips & tricks via the (SALESmanago Customer Excellence Academy)[https://cx-academy.salesmanago.com/?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace]
+- SALESmanago Community: Best practices, training sessions, tips & tricks via the [SALESmanago Customer Excellence Academy](https://cx-academy.salesmanago.com/?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
+
+
+
+== Personal Data Processing Information ==
+The data controller is Benhauer sp. z o.o. (SALESmanago). We process your data to provide our services — where applicable, under the relevant Terms of Service — and, based on our legitimate interest, to improve the platform, for statistical and analytical purposes, and for the establishment, exercise or defence of legal claims.
+You have the right to access, correct, delete your data, limit how we use it, object to processing, and file a complaint with a data protection authority.
+Full details are available [here](https://www.salesmanago.com/info/information-obligation.htm).
 
 
 === Installation ===
-
 1. In WordPress administration panel navigate to Plugins and then select "Add new". Find SALESmanago Marketing Automation and click Install Now.
 2. Open the Plugins section in WordPress adminstration panel and then go to Installed plugins. Click Activate next to SALESmanago Marketing Automation.
 3. Register or log into your SALESmanago account and follow the next steps.
