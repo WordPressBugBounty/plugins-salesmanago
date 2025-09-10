@@ -133,6 +133,8 @@ Full details are available [here](https://www.salesmanago.com/info/information-o
 
 
 == Changelog ==
+= 3.8.1 =
+- Fixed bug with Leadoo script loading
 = 3.8.0 =
 - Added combine Leadoo and SALESmanago features to the plugin
 - Added Leadoo integration to the plugin
