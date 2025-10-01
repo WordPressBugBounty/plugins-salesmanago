@@ -98,6 +98,7 @@ final class MessageEntity
 
             400 => __('Unknown error while connecting to SALESmanago with Guzzle Client', 'salesmanago'),
             401 => __('Specified endpoint cannot be resolved. On SALESmanago panel go to Settings -> Integration and check your endpoint in API access tab.', 'salesmanago'),
+            403 => __('Not authorized. Please refresh the view', 'salesmanago'),
 
             500 => __('Unknown error on settings read/write', 'salesmanago'),
             501 => __('Error while reading Configuration from DB', 'salesmanago'),

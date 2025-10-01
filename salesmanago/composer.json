@@ -1,7 +1,7 @@
 {
     "name": "salesmanago/wordpress",
     "description": "Wordpress marketing automation extension",
-    "version": "3.8.0",
+    "version": "3.8.2",
     "require": {
         "php": ">=7.4",
         "salesmanago/api-sso-util": "3.8.0",
@@ -17,6 +17,11 @@
         "psr-4": {
             "bhr\\" : "src/",
             "tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

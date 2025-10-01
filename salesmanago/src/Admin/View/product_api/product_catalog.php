@@ -118,6 +118,11 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                                 </div>
                             <input type="hidden" name="name" value="SALESmanago">
                             <input type="hidden" name="action" value="setActiveCatalog">
+                            <?php
+                            if ( function_exists( 'wp_nonce_field' ) ) {
+                                wp_nonce_field( 'setActiveCatalog', 'sm_nonce' );
+                            }
+                            ?>
                             </div>
                             <?php add_thickbox(); ?>
                             <a href="#TB_inline?&width=350&height=220&inlineId=sm-modal-warning-disconnect-catalog" class="thickbox" id="sm-anchor-open-warning-modal"></a>
@@ -180,6 +185,11 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
 	                    include(__DIR__ . '/../partials/save.php');
 	                    ?>
                         <input type="hidden" name="action" value="save">
+                        <?php
+                        if ( function_exists( 'wp_nonce_field' ) ) {
+                            wp_nonce_field( 'save', 'sm_nonce' );
+                        }
+                        ?>
                     </form>
 
                     <h3><?php _e( 'Details mapping', 'salesmanago' ); ?></h3>
@@ -257,6 +267,12 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                                     </tbody>
                                 </table>
                             </div>
+                            <?php
+                            if ( function_exists( 'wp_nonce_field' ) ) {
+                                wp_nonce_field( 'save', 'sm_nonce' );
+                            }
+                            ?>
+                            <input type="hidden" name="action" value="save">
 
                             <p>
                                 <button type="submit" name="save_mapping" class="button button-primary"><?php echo esc_html( __( 'Save Mapping', 'salesmanago' ) ); ?></button>
@@ -312,6 +328,12 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                         </div>
                         </div>
                         <form onsubmit="return salesmanagoLaunchProductExport( event )" method="post" id="salesmanago-export-products">
+                            <?php
+                            if ( function_exists( 'wp_nonce_field' ) ) {
+                                wp_nonce_field( 'salesmanago_export_products', 'sm_nonce' );
+                            }
+                            ?>
+
                             <input
                                 type="submit"
                                 class="button button-primary sm-btn-top-margin"

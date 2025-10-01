@@ -11,3 +11,8 @@
 
 <input type="hidden" name="name" value="SALESmanago">
 <input type="hidden" name="action" value="save">
+<?php
+    if ( function_exists( 'wp_nonce_field' ) ) {
+        wp_nonce_field( 'save', 'sm_nonce' );
+    }
+?>

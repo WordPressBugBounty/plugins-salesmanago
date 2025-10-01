@@ -190,7 +190,7 @@ class AdminModel extends AbstractModel
 
         /* LEADOO SETTINGS PAGE */
         elseif ($page == 'leadoo' ) {
-            $leadooScriptFromConfig = ($this->getConfiguration()->getConfiguration())
+            $leadooScriptFromConfig = ($this->getConfiguration())
                 ? $this->getConfiguration()->getLeadooScript()
                 : '';
             $leadooScriptFromView = $request['leadoo_script'] ?? '';

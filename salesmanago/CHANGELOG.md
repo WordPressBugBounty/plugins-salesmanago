@@ -1,3 +1,6 @@
+# 3.8.2 released 30.09.2025
+- Fixed: CVE-2025-57979, CVE-2025-57983
+
 # 3.8.1 released 25.08.2025
 - Fixed bug with Leadoo script loading
 

@@ -17,6 +17,7 @@ use bhr\Admin\Controller\ReportingController;
 use Error;
 use SALESmanago\Exception\Exception;
 use SALESmanago\Services\UserAccountService;
+use bhr\Includes\SecureHelper;
 
 class SettingsController
 {
@@ -288,7 +289,11 @@ class SettingsController
      * @return void
      */
 	public function route() {
-		if ( ! empty( $_REQUEST['action'] ) ) {
+        if ( ! empty( $_REQUEST['action'] ) ) {
+            if ( ! SecureHelper::validate_nonce( $_REQUEST['sm_nonce'] ?? '', $_REQUEST['action'] )) {
+                return;
+            }
+
 			switch ( $_REQUEST['action'] ) {
 				case 'login':
 					$LoginController = new LoginController( $this->AdminModel );

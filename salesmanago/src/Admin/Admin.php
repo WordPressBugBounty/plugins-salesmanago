@@ -262,6 +262,17 @@ class Admin {
 				SM_VERSION,
 				true
 			);
+			// Localize security data (nonce, ajax URL) for admin JS:
+			if ( function_exists( 'wp_localize_script' ) && function_exists( 'wp_create_nonce' ) ) {
+				wp_localize_script(
+					'salesmanago',
+					'salesmanagoSec',
+					array(
+						'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+						'nonce'   => wp_create_nonce( 'salesmanago_admin' )
+					)
+				);
+			}
 		} catch ( Exception $e ) {
 			MessageEntity::getInstance()->addException( new SmException( $e->getMessage(), 603 ) );
 		}
@@ -273,6 +284,13 @@ class Admin {
 	 * @return void
 	 */
 	public function refresh_owners() {
+		// CSRF and capability checks
+		if ( function_exists( 'check_ajax_referer' ) ) {
+			check_ajax_referer( 'salesmanago_admin', 'sm_nonce' );
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
+		}
 		echo $this->AdminModel->buildOptions( $this->SettingsController->refreshOwnerList() );
 		wp_die();
 	}
@@ -283,6 +301,12 @@ class Admin {
 	 * @return void
 	 */
 	public function generate_sw_js() {
+		if ( function_exists( 'check_ajax_referer' ) ) {
+            check_ajax_referer( 'salesmanago_admin', 'sm_nonce' );
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
+		}
 		echo $this->AdminModel->generateSwJs();
 		wp_die();
 	}
@@ -293,6 +317,13 @@ class Admin {
 	 * @return void
 	 */
 	public function refresh_product_catalogs() {
+		// CSRF and capability checks
+		if ( function_exists( 'check_ajax_referer' ) ) {
+			check_ajax_referer( 'salesmanago_admin', 'sm_nonce' );
+		}
+		if ( ! current_user_can( 'manage_options' ) ) {
+			wp_send_json_error( array( 'message' => 'forbidden' ), 403 );
+		}
 		echo $this->AdminModel->return_catalogs_to_view( $this->SettingsController->refreshCatalogs() );
 		wp_die();
 	}

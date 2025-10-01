@@ -133,6 +133,11 @@
 	            <?php _e( 'CREATE', 'salesmanago' ) ?>
                 <span class="dashicons dashicons-arrow-right-alt salesmanago-arrow-icon"></span>
             </button>
+            <?php
+            if ( function_exists( 'wp_nonce_field' ) ) {
+                wp_nonce_field( 'addProductCatalog', 'sm_nonce' );
+            }
+            ?>
             <input type="hidden" name="name" value="SALESmanago">
             <input type="hidden" name="action" value="addProductCatalog">
         </form>

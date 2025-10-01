@@ -85,7 +85,7 @@
 			}
 		}
 
-		echo '<form action="admin.php" method="POST">' . wp_nonce_field( 'salesmanago-nonce', 'salesmanago-nonce-name' )
+		echo '<form action="admin.php" method="POST">' . wp_nonce_field( 'logout', 'sm_nonce' )
 			. '<input type="hidden" name="action" value="logout" />'
 			. '<input type="hidden" name="page" value="salesmanago" />'
 			. '<input type="submit" name="submit" id="submit" class="button button-primary button-logout" value="' . __( 'Log out', 'salesmanago' ) . '"></form>';

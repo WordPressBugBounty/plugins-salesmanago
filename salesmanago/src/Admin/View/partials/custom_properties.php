@@ -15,7 +15,7 @@
     ?>
     <tr valign="top">
         <th scope="row">
-            <label for="salesmanago-custom-properties-<?php echo ($key+1) ?>"><?php echo(__('Custom detail', 'salesmanago')." ".($key+1)); ?></label>
+            <label for="salesmanago-custom-properties-<?php echo ($key+1) ?>"><?php echo(__('Custom detail', 'salesmanago') . " " .($key+1)); ?></label>
         </th>
         <td>
             <input type="text" id="salesmanago-custom-properties-<?php echo ($key+1) ?>" name="custom-properties[]" value="<?php

@@ -46,7 +46,7 @@ class LeadooHooksModel
     public function addLeadooCode()
     {
         print ($this->SettingsModel->getConfiguration())
-            ? $this->SettingsModel->getConfiguration()->getLeadooScript()
+            ? stripslashes($this->SettingsModel->getConfiguration()->getLeadooScript())
             : '';
     }
 }

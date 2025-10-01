@@ -8,7 +8,7 @@ Tested up to: 6.8.2
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.8.1
+Stable tag: 3.8.2
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -133,8 +133,8 @@ Full details are available [here](https://www.salesmanago.com/info/information-o
 
 
 == Changelog ==
-= 3.8.1 =
-- Fixed bug with Leadoo script loading
+= 3.8.2 =
+- Fixed: CVE-2025-57979, CVE-2025-57983
 = 3.8.0 =
 - Added combine Leadoo and SALESmanago features to the plugin
 - Added Leadoo integration to the plugin

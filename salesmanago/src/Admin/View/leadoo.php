@@ -52,23 +52,24 @@
                     </ul>
                 </div>
                 <div class="tutorial-images">
-                    <img src="<?php echo plugin_dir_url(__FILE__).'img/leadoo_img_1.png'; ?>" alt="">
-                    <img src="<?php echo plugin_dir_url(__FILE__).'img/leadoo_img_2.png'; ?>" alt="">
+                    <img src="<?php echo plugin_dir_url(__FILE__) . 'img/leadoo_img_1.png'; ?>" alt="">
+                    <img src="<?php echo plugin_dir_url(__FILE__) . 'img/leadoo_img_2.png'; ?>" alt="">
                 </div>
             </div>
         </div>
         <form method="post" action="<?= admin_url('admin.php?page=' . $_GET['page']) . '&success=1' ?>">
-            <?php
-            settings_fields('leadoo_header_scripts');
-            do_settings_sections('leadoo_header_scripts');
-            ?>
             <h2 class="section-title"><?php _e('Header Scripts:', 'salesmanago'); ?></h2>
-            <textarea name="leadoo_script" class="large-text code" rows="8"><?= esc_textarea($this->showLeadooScript()) ?></textarea>
+            <textarea name="leadoo_script" class="large-text code" rows="8"><?= stripslashes(esc_textarea($this->showLeadooScript())) ?></textarea>
             <p class="description">
                 <?php _e('These script will be printed in the ', 'salesmanago'); ?>
                 <code>&lt;head&gt;</code>
                 <?php _e('section.', 'salesmanago'); ?>
             </p>
+            <?php
+            if ( function_exists( 'wp_nonce_field' ) ) {
+                wp_nonce_field( 'save', 'sm_nonce' );
+            }
+            ?>
             <input type="hidden" name="action" value="save">
             <?php submit_button(__('Save script','salesmanago')); ?>
         </form>

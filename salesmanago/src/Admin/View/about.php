@@ -31,6 +31,11 @@ use bhr\Admin\Entity\MessageEntity;
                    id="sm-btn-acknowledge-api-errors"
                    value="<?php _e( 'NOTICED!', 'salesmanago' ) ?>">
             <input type="hidden" name="name" value="SALESmanago">
+            <?php
+            if ( function_exists( 'wp_nonce_field' ) ) {
+                wp_nonce_field( 'acknowledgeProductApiError', 'sm_nonce' );
+            }
+            ?>
             <input type="hidden" name="action" value="acknowledgeProductApiError">
     </form>
     <?php else:

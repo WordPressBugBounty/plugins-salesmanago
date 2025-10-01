@@ -193,6 +193,11 @@ function salesmanagoExportCount(type)
 	let smFormData = new FormData();
 	let smData = '';
 
+	// Append security nonce if available
+	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
+		smFormData.append('sm_nonce', window.salesmanagoSec.nonce);
+	}
+
 	salesmanagoUpdateCountDiv(type, '')
 	if (type === 'contacts') {
 		smFormData.append('action', 'salesmanago_export_count_contacts');
@@ -249,7 +254,12 @@ function salesmanagoPrepareExport(callback)
 	let smNonce   = window.salesmanago.exportNonce;
 	let smXhttp    = new XMLHttpRequest();
 	let smFormData = new FormData();
-	smFormData.append( 'nonce', smNonce );
+	// Prefer localized admin nonce
+	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
+		smFormData.append('sm_nonce', window.salesmanagoSec.nonce);
+	} else if (smNonce) {
+		smFormData.append('sm_nonce', smNonce);
+	}
 	let smData = '';
 	if (smType === 'contacts') {
 		smFormData.append( 'action', 'salesmanago_export_count_contacts' );
@@ -334,6 +344,11 @@ function salesmanagoExportPackage()
 		smFormData.append( 'action', 'salesmanago_export_events' );
 	} else {
 		console.log( 'wrong ' + smType );
+	}
+	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
+		smFormData.append('sm_nonce', window.salesmanagoSec.nonce);
+	} else if (smNonce) {
+		smFormData.append('sm_nonce', smNonce);
 	}
 	smFormData.append( 'data', btoa( window.localStorage.getItem( 'salesmanagoExport' ), true ) );
 	smXhttp.onreadystatechange = function () {
@@ -515,6 +530,11 @@ function salesmanagoExportProducts( callback )
 			}
 		)
 	);
+
+	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
+		smFormData.append('sm_nonce', window.salesmanagoSec.nonce);
+	}
+
 	smFormData.append( 'action', 'salesmanago_export_products' );
 	smFormData.append( 'data', smData );
 	smXhttp.onreadystatechange = function () {
@@ -537,6 +557,11 @@ function salesmanagoExportProductPackage()
 	var smFormData = new FormData();
 
 	smFormData.append( 'action', 'salesmanago_export_products' );
+
+	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
+		smFormData.append('sm_nonce', window.salesmanagoSec.nonce);
+	}
+
 	smFormData.append( 'data', btoa( window.localStorage.getItem( 'salesmanagoProductExport' ), true ) );
 	smXhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
@@ -764,6 +789,9 @@ function salesmanagoRefreshOwnerList()
 
 	let smData = new FormData();
 	smData.append( 'action', 'salesmanago_refresh_owners' );
+	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
+		smData.append('sm_nonce', window.salesmanagoSec.nonce);
+	}
 
 	let smXhttp                = new XMLHttpRequest();
 	smXhttp.onreadystatechange = function () {
@@ -803,6 +831,9 @@ function salesmanagoTestFunctionToGenerateSwJs()
 	let smTestContent = document.getElementById( 'salesmanago-generate-sw-js-test-content' );
 	let smData        = new FormData();
 	smData.append( 'action', 'salesmanago_generate_swjs' );
+	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
+		smData.append('sm_nonce', window.salesmanagoSec.nonce);
+	}
 
 	let smXhttp                = new XMLHttpRequest();
 	smXhttp.onreadystatechange = function () {
@@ -908,6 +939,9 @@ function salesmanagoRefreshCatalogList() {
 
 	let smData = new FormData();
 	smData.append( 'action', 'salesmanago_refresh_catalogs' );
+	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
+		smData.append('sm_nonce', window.salesmanagoSec.nonce);
+	}
 	let smXhttp                = new XMLHttpRequest();
 	smXhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200 && this.responseText !== 'ERR') {

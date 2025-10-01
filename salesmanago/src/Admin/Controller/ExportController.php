@@ -10,6 +10,7 @@ use bhr\Admin\Model\AdminModel;
 use bhr\Admin\Model\ExportModel;
 use bhr\Admin\Model\Helper;
 use bhr\Includes\Helper as IncludesHelper;
+use bhr\Includes\SecureHelper;
 use SALESmanago\Entity\Api\V3\CatalogEntity;
 use SALESmanago\Exception\ApiV3Exception;
 use SALESmanago\Exception\Exception;
@@ -56,7 +57,7 @@ class ExportController {
 	}
 
 	/**
-	 *
+	 * Register AJAX actions
 	 */
 	private function registerActions() {
 		Helper::addAction( 'wp_ajax_salesmanago_export_count_contacts', array( $this, 'countContacts' ), 5 );
@@ -73,6 +74,8 @@ class ExportController {
 	 */
 	public function countContacts() {
 		try {
+            SecureHelper::validate_ajax_nonce( 'salesmanago_export_count_contacts' );
+
 			$this->ExportModel->parseArgs();
 			$this->ExportModel->setExportType( self::CONTACTS );
 
@@ -97,6 +100,8 @@ class ExportController {
 	 */
 	public function countEvents() {
 		try {
+            SecureHelper::validate_ajax_nonce( 'salesmanago_export_count_events' );
+
 			$this->ExportModel->parseArgs();
 			$this->ExportModel->setExportType( self::EVENTS );
 
@@ -115,6 +120,8 @@ class ExportController {
 	 *
 	 */
 	public function exportContacts() {
+        SecureHelper::validate_ajax_nonce( 'salesmanago_count_contacts' );
+
 		$this->ExportModel->parseArgs();
 		if ( $this->ExportModel->getPackageCount() ) {
 			try {
@@ -173,6 +180,8 @@ class ExportController {
 	 *
 	 */
 	public function exportEvents() {
+        SecureHelper::validate_ajax_nonce( 'salesmanago_export_events' );
+
 		$this->ExportModel->parseArgs();
 		if ( $this->ExportModel->getPackageCount() ) {
 			try {
@@ -222,6 +231,8 @@ class ExportController {
 	 * Handle export products request
 	 */
 	public function exportProducts() {
+        SecureHelper::validate_ajax_nonce( 'salesmanago_export_products' );
+
 		if ( ! $this->AdminModel->getConfiguration()->getApiV3Key() ) {
 			$this->ExportModel->buildProductExportResponseForExpiredApiKey();
 		}
@@ -256,4 +267,7 @@ class ExportController {
 				}
 			}
 		} finally {
-			$this->ExportModel->buildProductExportResponse(); } } }
+			$this->ExportModel->buildProductExportResponse();
+        }
+    }
+}
