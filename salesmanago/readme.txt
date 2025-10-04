@@ -134,7 +134,7 @@ Full details are available [here](https://www.salesmanago.com/info/information-o
 
 == Changelog ==
 = 3.8.2 =
-- Fixed: CVE-2025-57979, CVE-2025-57983
+- Fixed: CVE-2025-57971, CVE-2025-57970
 = 3.8.0 =
 - Added combine Leadoo and SALESmanago features to the plugin
 - Added Leadoo integration to the plugin
