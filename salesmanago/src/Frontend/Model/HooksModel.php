@@ -68,15 +68,10 @@ class HooksModel {
             /* Purchase Hook */
             $purchaseHook = $this->SettingsModel->getPlatformSettings()->PluginWc->purchaseHook;
 
-            if ( version_compare( get_bloginfo('version'), '6.8.2', '>=' ) ) {
-                //only this hook works in WP 6.8.2+:
-                Helper::addAction('woocommerce_order_status_changed', array($this, 'initWc'));
+            if (!empty($purchaseHook)) {
+                Helper::addAction($purchaseHook, array($this, 'initWc'));
             } else {
-                if(!empty($purchaseHook)) {
-                    Helper::addAction($purchaseHook, array($this, 'initWc'));
-                } else {
-                    Helper::addAction('woocommerce_order_status_changed', array($this, 'initWc'));
-                }
+                Helper::addAction('woocommerce_order_status_changed', array($this, 'initWc'));
             }
 
             /* Opt-in input Hooks */

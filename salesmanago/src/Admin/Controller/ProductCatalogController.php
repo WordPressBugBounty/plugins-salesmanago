@@ -282,8 +282,20 @@ class ProductCatalogController {
 			if ( $wc_product->get_children() ) {
 				$items = $ProductCollection->getItems();
 				$parentImageUrls = reset( $items )->getImageUrls();
+				$parentTermsForCategories = [];
+				if ( isset( $items['productId'] ) ) {
+					$terms = get_the_terms( $items['productId'], 'product_cat' );
+					$parentTermsForCategories = is_array( $terms ) ? $terms : [];
+				}
 				foreach ( $wc_product->get_children() as $product_variation_id ) {
-					$ProductCollection = $ProductBuilder->add_product_to_collection( $product_variation_id, $productIdentifierType, $ProductCollection, $parentImageUrls, $deleteAction );
+					$ProductCollection = $ProductBuilder->add_product_to_collection(
+						$product_variation_id,
+						$productIdentifierType,
+						$ProductCollection,
+						$parentImageUrls,
+						$deleteAction,
+						$parentTermsForCategories
+					);
 				}
 			}
 			$Catalog = new CatalogEntity(
@@ -337,6 +349,8 @@ class ProductCatalogController {
 	}
 
 	/**
+	 * @deprecated since 3.9.0
+	 *
 	 * @return array
 	 */
 	public function getAttributesNames() {
@@ -348,11 +362,61 @@ class ProductCatalogController {
         return $this->ProductCatalogModel->getAttributesNamesFromArray( $this->attributes );
 	}
 
+	/**
+	 * Get all mapping labels to render in product catalog settings
+	 *
+	 * @return array
+	 */
+	public function getDetailMappingLabelsToRender() {
+		return array_merge(
+			$this->getAttributes(),
+			$this->getProductCategoriesSettings()
+		);
+	}
+
+	/**
+	 * Get product category settings
+	 *
+	 * @return array
+	 */
+	public function getProductCategoriesSettings(): array {
+		return [
+			[
+				'name' => 'Main categories IDs',
+				'value' => '',
+				'label' => 'Main categories IDs',
+				'id' => '0',
+				'type' => 'category'
+			],
+			[
+				'name' => 'All categories IDs',
+				'value' => '',
+				'label' => 'All categories IDs',
+				'id' => '1',
+				'type' => 'category'
+			]
+		];
+	}
+
     /**
+     * Get product attributes
+     *
      * @return array
      */
     public function getAttributes() {
-        return $this->attributes;
+	    $attributesFromDb = $this->ProductCatalogModel->getAttributesFromDb();
+
+	    $customAttributes = [
+			[
+			    'name' => 'Custom attributes',
+			    'value' => '',
+			    'label' => 'Custom attributes',
+			    'id' => '0',
+			    'type' => 'custom attribute'
+	        ]
+	    ];
+
+	    return array_merge( $attributesFromDb, $customAttributes );
     }
 	/**
 	 * @param array $mapping
@@ -360,6 +424,33 @@ class ProductCatalogController {
 	 */
 	public function sanitizeMapping( $mapping ) {
 		$this->mapping = array_map( 'sanitize_text_field', $mapping );
+
+		return $this;
+	}
+
+	public function getMapping() {
+		return $this->mapping;
+	}
+
+	/**
+	 * Rebuild mapping from DB
+	 *
+	 * @return ProductCatalogController
+	 */
+	public function rebuildMapping() {
+		$rebuilt = array();
+
+		foreach ($this->mapping as $field => $json) {
+			if (!$json) {
+				$rebuilt[$field] = null;
+				continue;
+			}
+
+			$decoded = json_decode(stripslashes($json), true);
+			$rebuilt[$field] = $decoded;
+		}
+
+		$this->mapping = $rebuilt;
 
 		return $this;
 	}

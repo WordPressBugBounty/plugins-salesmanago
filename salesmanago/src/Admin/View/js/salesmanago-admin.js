@@ -99,6 +99,17 @@ function salesmanagoToggleCronFrequency()
 	dropdown.style.display = checkbox.checked ? 'block' : 'none';
 }
 
+document.addEventListener('DOMContentLoaded', function() {
+    const copyBtn = document.getElementById('sm-copy-token');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function() {
+            const tokenSpan = document.getElementById('sm-cron-token');
+            const token = tokenSpan.getAttribute('data-token');
+            navigator.clipboard.writeText(token);
+        });
+    }
+});
+
 function salesmanagoRemoveForm(id)
 {
 	let smFormTable = document.getElementById( "salesmanago-form-" + id );

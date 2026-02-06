@@ -397,4 +397,17 @@ trait Helper {
 			GlobalConstant::MAP_DETAIL_5 => false,
 		);
 	}
+
+	/**
+	 * @return bool
+	 */
+	public static function isAdminRequest() {
+		if ( isset ( $_SERVER['HTTP_REFERER'] ) ) {
+			$referer = $_SERVER['HTTP_REFERER'];
+			$admin_url = admin_url();
+			return strpos($referer, $admin_url) === 0;
+		}
+
+		return true;
+	}
 }

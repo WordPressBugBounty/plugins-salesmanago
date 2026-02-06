@@ -1,3 +1,10 @@
+# 3.9.1 released 08.12.2025
+- Added security token to prevent running unauthorized CRON jobs
+
+# 3.9.0 released 13.11.2025
+- Added support for AJAX carts
+- Added product categories to Product Catalog Details Mapping
+
 # 3.8.2 released 30.09.2025
 - Fixed: CVE-2025-57971, CVE-2025-57970
 

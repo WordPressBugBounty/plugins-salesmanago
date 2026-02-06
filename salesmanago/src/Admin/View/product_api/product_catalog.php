@@ -179,7 +179,30 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
 		                    <?php _e('IMPORTANT: This option may increase page loading times in your e-store, potentially affecting the user experience. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#4" target="_blank">For more information, read the Support article >></a>', 'salesmanago'); ?>
                         </div>
                         <div id="cron-method-description-native" class="cron-method-description">
-		                    <?php _e('IMPORTANT: This option requires additional configuration on your hosting platform. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#3" target="_blank">For explanations and instructions, read the Support article >></a>', 'salesmanago'); ?>
+                            <?php _e('IMPORTANT: This option requires additional configuration on your hosting platform. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#3" target="_blank">For explanations and instructions, read the Support article >></a>', 'salesmanago'); ?>
+
+                            <div class="salesmanago-cron-token-box">
+                                <p>
+                                    <?php _e('Use this URL in your server cron job:', 'salesmanago'); ?><br>
+                                    <code id="sm-cron-url-text"><?php echo esc_url(home_url('/?salesmanago_cron=run&token=***')); ?></code>
+                                </p>
+                                <strong><?php _e('Cron Token:', 'salesmanago'); ?></strong><br>
+
+                                <span id="sm-cron-token" data-token="<?php echo esc_attr($this->cronTokenFull); ?>">
+                                    <?php echo esc_html($this->cronTokenMasked); ?>
+                                </span>
+
+                                <div>
+                                    <button type="button" id="sm-copy-token" class="button button-secondary"><?php _e('Copy Token', 'salesmanago'); ?></button>
+                                    <form method="post" action="">
+                                        <?php wp_nonce_field('salesmanago_regenerate_token_nonce'); ?>
+                                        <input type="hidden" name="action" value="regenerate_cron_token">
+                                        <button type="submit" class="button button-secondary">
+                                            <?php _e('Regenerate Token', 'salesmanago'); ?>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
 	                    <?php
 	                    include(__DIR__ . '/../partials/save.php');
@@ -209,18 +232,31 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-
-                                    foreach ( $this->systemDetails as $field ) :?>
+                                    <?php foreach ($this->systemDetails as $field) : ?>
                                         <tr>
-                                            <td><?php echo esc_html( $field ); ?></td>
+                                            <td><?php echo esc_html($field); ?></td>
                                             <td>
-                                                <select name="attribute_mapping[<?php echo esc_attr( $field ); ?>]" class="attribute-select">
-                                                    <option value=""><?php echo esc_html( __( 'None', 'salesmanago' ) ); ?></option>
-                                                    <?php foreach ( $this->attributes as $attribute ) : ?>
-                                                        <option value="<?php echo esc_attr( $attribute ); ?>"
-                                                            <?php echo isset( $this->detailsMapping[ $field ] ) && $this->detailsMapping[ $field ] == $attribute ? 'selected' : ''; ?>>
-                                                            <?php echo esc_html( $attribute ); ?>
+                                                <select name="attribute_mapping[<?php echo esc_attr($field); ?>]" class="attribute-select">
+                                                    <option value=""><?php echo esc_html(__('None', 'salesmanago')); ?></option>
+
+                                                    <?php foreach ($this->detailMappingLabelsToRender as $mappingLabel) :
+                                                        $selected = $this->detailsMapping[$field] ?? null;
+
+                                                        $isSelected = $selected &&
+                                                                      ($selected['type'] ?? '') === ($mappingLabel['type'] ?? '') &&
+                                                                      ($selected['id'] ?? '') == ($mappingLabel['id'] ?? '') &&
+                                                                      ($selected['value'] ?? '') === ($mappingLabel['value'] ?? '');
+                                                        ?>
+                                                        <option value="<?php echo esc_attr(json_encode($mappingLabel)); ?>" <?php echo $isSelected ? 'selected' : ''; ?>>
+                                                            <?php
+                                                            echo esc_html(
+                                                                    $mappingLabel['label'] .
+                                                                    ($mappingLabel['type'] === 'attribute'
+                                                                            ? " [{$mappingLabel['type']}, ID: {$mappingLabel['id']}]"
+                                                                            : ''
+                                                                    )
+                                                            );
+                                                            ?>
                                                         </option>
                                                     <?php endforeach; ?>
                                                 </select>
@@ -245,19 +281,32 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php
-
-                                    foreach ( $this->customDetails as $field ) :
+                                    <?php foreach ( $this->customDetails as $field ) :
                                         ?>
                                         <tr>
                                             <td><?php echo esc_html( $field ); ?></td>
                                             <td>
-                                                <select name="attribute_mapping[<?php echo esc_attr( $field ); ?>]" class="attribute-select">
-                                                    <option value=""><?php echo esc_html( __( 'None', 'salesmanago' ) ); ?></option>
-                                                    <?php foreach ( $this->attributes as $attribute ) : ?>
-                                                        <option value="<?php echo esc_attr( $attribute ); ?>"
-                                                            <?php echo isset( $this->detailsMapping[ $field ] ) && $this->detailsMapping[ $field ] == $attribute ? 'selected' : ''; ?>>
-                                                            <?php echo esc_html( $attribute ); ?>
+                                                <select name="attribute_mapping[<?php echo esc_attr($field); ?>]" class="attribute-select">
+                                                    <option value=""><?php echo esc_html(__('None', 'salesmanago')); ?></option>
+
+                                                    <?php foreach ($this->detailMappingLabelsToRender as $mappingLabel) :
+                                                        $selected = $this->detailsMapping[$field] ?? null;
+
+                                                        $isSelected = $selected &&
+                                                                      ($selected['type'] ?? '') === ($mappingLabel['type'] ?? '') &&
+                                                                      ($selected['id'] ?? '') == ($mappingLabel['id'] ?? '') &&
+                                                                      ($selected['value'] ?? '') === ($mappingLabel['value'] ?? '');
+                                                        ?>
+                                                        <option value="<?php echo esc_attr(json_encode($mappingLabel)); ?>" <?php echo $isSelected ? 'selected' : ''; ?>>
+                                                            <?php
+                                                            echo esc_html(
+                                                                    $mappingLabel['label'] .
+                                                                    ($mappingLabel['type'] === 'attribute'
+                                                                            ? " [{$mappingLabel['type']}, ID: {$mappingLabel['id']}]"
+                                                                            : ''
+                                                                    )
+                                                            );
+                                                            ?>
                                                         </option>
                                                     <?php endforeach; ?>
                                                 </select>

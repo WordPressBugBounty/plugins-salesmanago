@@ -3,8 +3,8 @@
  * Plugin Name: SALESmanago & Leadoo
  * Plugin URI:  https://www.salesmanago.com/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
  * Description: SALESmanago Marketing Automation integration for WordPress, WooCommerce, Contact Form 7, Gravity Forms
- * Version:     3.8.2
- * Tested up to: 6.8.1
+ * Version:     3.9.1
+ * Tested up to: 6.8.3
  * Requires PHP: 7.4
  * Author:      SALESmanago
  * Author URI:  https://www.salesmanago.com/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
@@ -43,16 +43,18 @@ use bhr\Admin\Controller\CronController;
 use bhr\Admin\Controller\ExportController;
 use bhr\Admin\SmRestApi;
 use bhr\Frontend\Frontend;
+use bhr\Admin\Model\Helper;
 
 function main_salesmanago() {
-    /* Note: Fluent Forms requests use admin context however we want to use frontend context to process the submitted forms */
-    if(is_admin() && isset($_REQUEST['action']) && strpos($_REQUEST['action'], SALESMANAGO . '_export') !== false) {
-        new ExportController();
-    } elseif(is_admin() && (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'fluentform_submit')) {
-        new Admin();
-    } elseif(!is_admin() || (!empty($_REQUEST['action']) && $_REQUEST['action'] === 'fluentform_submit')) {
-        new Frontend();
-    }
+	if(is_admin() && isset($_REQUEST['action']) && strpos($_REQUEST['action'], SALESMANAGO . '_export') !== false) {
+		new ExportController();
+	} elseif(defined('DOING_AJAX') && DOING_AJAX && !Helper::isAdminRequest()) {
+		new Frontend();
+	} elseif(is_admin() && (empty($_REQUEST['action']) || $_REQUEST['action'] !== 'fluentform_submit')) {
+		new Admin();
+	} elseif(!is_admin() || (!empty($_REQUEST['action']) && $_REQUEST['action'] === 'fluentform_submit')) {
+		new Frontend();
+	}
     try {
         new CronController();
         new SmRestApi();
@@ -62,7 +64,7 @@ function main_salesmanago() {
 
 }
 
-add_action('init', 'main_salesmanago');
+add_action('plugins_loaded', 'main_salesmanago');
 
 
 

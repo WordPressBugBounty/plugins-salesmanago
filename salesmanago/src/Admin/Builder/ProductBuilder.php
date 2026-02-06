@@ -77,8 +77,8 @@ class ProductBuilder {
 			$wc_product_data['price']         = $wc_product->get_regular_price() ?: $wc_product->get_price();
 			$wc_product_data['discountPrice'] = $wc_product->get_sale_price() ?: $wc_product->get_price();
 			$wc_product_data['attributes']    = $wc_product->is_type('variation')
-				? $wc_product->get_attributes()
-				: $this->getAttributesFromOptions($wc_product->get_attributes());
+				? $this->getAttributesForVariation( $wc_product )
+				: $this->getAttributesForMainProduct( $wc_product->get_attributes() );
 			$wc_prod_categories = get_the_terms( $product_id, 'product_cat' );
 			if ( ! $wc_prod_categories && $wc_product->get_parent_id() ) {
 				$wc_prod_categories = get_the_terms( $wc_product->get_parent_id(), 'product_cat' );
@@ -124,34 +124,76 @@ class ProductBuilder {
 		}
 	}
 
+	/**
+	 * @param $wc_product
+	 *
+	 * @return array
+	 */
+	private function getAttributesForVariation( $wc_product ) {
+		$result = array();
+
+		$parentAttributes = ( wc_get_product( $wc_product->get_parent_id() ) )->get_attributes();
+		$attributes = $wc_product->get_attributes();
+
+		foreach ( $attributes as $taxonomy => $slug ) {
+			if ( taxonomy_exists( $taxonomy ) ) {
+				$term = get_term_by( 'slug', $slug, $taxonomy );
+
+				if ( $term && isset($parentAttributes[$taxonomy]) ) {
+					$result[] = [
+						'name' => $taxonomy,
+						'value' => $term->name,
+						'id' => $parentAttributes[$taxonomy]->get_id(),
+						'type' => 'attribute'
+					];
+				}
+			} else {
+				$result[] = [
+					'name' => $taxonomy,
+					'value' => $slug,
+					'id' => 0,
+					'type' => 'custom attribute'
+				];
+			}
+		}
+
+		return $result;
+	}
+
     /**
      * @param array $attributes
      *
      * @return array
      */
-    private function getAttributesFromOptions( array $attributes ) {
+    private function getAttributesForMainProduct( array $attributes ) {
         $result = array();
 
         foreach ($attributes as $key => $object ) {
             if ( is_object( $object ) && property_exists( $object, 'data' ) ) {
                 $data = $object->get_data();
                 if ( isset( $data[ 'options' ] ) ) {
-                    $names = array();
-
                     foreach ( $data[ 'options' ] as $optionId ) {
                         if ( $data[ 'id' ] > 0) {
                             // if id > 0 then there is no attribute name in array, we need to fetch it from terms
                             $term = get_term( $optionId );
                             if ( $term && !is_wp_error( $term ) ) {
-                                $names[] = $term->name;
+                                $result[] = [
+                                    'name' => $term->taxonomy,
+                                    'value' => $term->name,
+                                    'id' => $data['id'],
+                                    'type' => 'attribute'
+                                ];
                             }
                         } else {
                             // else this is custom attribute so we have its name in array
-                            $names[] = $optionId;
+	                        $result[] = [
+                                    'name' => $data['name'],
+                                    'value' => $optionId,
+                                    'id' => 0,
+                                    'type' => 'custom attribute'
+                                ];
                         }
                     }
-
-                    $result[ $data[ 'name' ] ] = implode( ', ', $names );
                 }
             }
         }
@@ -169,6 +211,7 @@ class ProductBuilder {
 	 */
 	public function add_products_to_collection( $products, $product_identifier_type ) {
 		try {
+			$parentTermsForCategories = [];
 			$parentImageUrls = [];
 			$childrens = [];
 
@@ -185,6 +228,7 @@ class ProductBuilder {
 				if ($wc_product->is_type('variable') && !empty($wc_product->get_children())) {
 					$childrens = $wc_product->get_children();
 					$parentImageUrls = $wc_product->get_gallery_image_ids();
+					$parentTermsForCategories = get_the_terms( $product['productId'], 'product_cat' );
 				}
 
 				if (in_array($product['productId'], $childrens)) {
@@ -205,7 +249,7 @@ class ProductBuilder {
 
 				$smProduct = ( new ProductEntityBuilder() )->build (
 					$product_entity,
-					$this->prepareMap( $wc_product_data[ 'attributes' ] ),
+					$this->prepareMap( $wc_product_data, $parentTermsForCategories ),
 					$BasicProductDetailsAdapter,
 					$wc_product_data
 				);
@@ -224,6 +268,9 @@ class ProductBuilder {
 	 * @param  string $product_id  Product ID.
 	 * @param  string  $product_identifier_type  Product identifier type.
 	 * @param  null|Collection $products_collection Product collection.
+	 * @param  null|array $parentImageUrls Parent Image Urls
+	 * @param  bool $deleteAction is Product being deleted
+	 * @param  array $parentTermsForCategories Parent WP Terms for categories
 	 * @return Collection
 	 * @throws SmException SALESmanago exception.
 	 */
@@ -232,7 +279,8 @@ class ProductBuilder {
         $product_identifier_type,
         $products_collection = null,
         $parentImageUrls = [],
-        $deleteAction = false
+        $deleteAction = false,
+        $parentTermsForCategories = []
     ) {
 		try {
 			if ( is_null( $products_collection ) ) {
@@ -247,7 +295,7 @@ class ProductBuilder {
 
 					$smProduct = ( new ProductEntityBuilder() )->build (
 						$product_entity,
-						$this->prepareMap( $wc_product_data['attributes'] ),
+						$this->prepareMap( $wc_product_data, $parentTermsForCategories ),
 						$BasicProductDetailsAdapter,
 						$wc_product_data
 					);
@@ -337,27 +385,44 @@ class ProductBuilder {
 	}
 
     /**
-     * @param array $attributes
+     * @param array $wc_product_data
+     * @param array $parentTermsForCategories
      *
-     * @return string|null
+     * @return string
      */
-    private function prepareMap( array $attributes ) {
-        $mapObject = array();
+    private function prepareMap( array $wc_product_data, ?array $parentTermsForCategories ) {
+        $map = array();
         $mapFromPlatformSettings = $this->AdminModel->getPlatformSettings()->getDetailsMapping();
+        $categories = $this->prepareCategories($wc_product_data['productId'], $parentTermsForCategories);
+        $attributes = $wc_product_data['attributes'];
 
-        foreach ( $attributes as $name => $value ) {
-            $cleanedName = str_replace('pa_', '', $name );
-            $mapObject[ $cleanedName ] = [
-                'name' => $name,
-                'value' => $value,
-                'label' => $cleanedName,
-            ];
-        }
+        $attributesAndCategories = array_merge($attributes, $categories);
 
-        $map = array_map(
-            fn( $value ) => $mapObject[ $value ] ?? null,
-            $mapFromPlatformSettings
-        );
+	    foreach ($mapFromPlatformSettings as $mapKey => $mapItem) {
+			if ( !is_array( $mapItem ) || !isset( $mapItem['type'], $mapItem['id'], $mapItem['label'] ) ) {
+				continue;
+			}
+            $matchingValues = [];
+
+            foreach ($attributesAndCategories as $entity) {
+				// if all categories set in mapping we want to allow both main category and category tree
+                if ( $entity['type'] === $mapItem['type']
+                     && ( $entity['id'] === (int)$mapItem['id']
+		                || ( $entity['type'] === 'category' && (int) $mapItem['id'] === 1 )
+                     )
+                ) {
+					if ( !empty( $entity['value'] ) ) {
+						$matchingValues[] = $entity['value'];
+					}
+                }
+            }
+
+            $map[$mapKey] = [
+                'name'  => $mapItem['label'],
+                'value' => implode(', ', $matchingValues),
+                'label' => $mapItem['label'],
+	            ];
+	    }
 
         if ( empty( $map ) ) {
             $map = IncludesHelper::generateDefaultMapping();
@@ -365,4 +430,76 @@ class ProductBuilder {
 
         return json_encode( $map );
     }
+
+	/** Get categories from WP terms
+	 *
+	 * @param $productId
+	 * @param array $parentTermsForCategories
+	 *
+	 * @return array
+	 */
+	private function prepareCategories( $productId, ?array $parentTermsForCategories )
+	{
+		$terms = get_the_terms( $productId, 'product_cat' );
+
+		if ( empty( $terms ) ) {
+			$terms = $parentTermsForCategories;
+		}
+
+		if ( is_wp_error( $terms ) ) {
+			return array();
+		}
+
+		$categories = array();
+
+		$termLookup = [];
+		foreach ($terms as $term) {
+			$termLookup[$term->term_id] = $term;
+		}
+
+		foreach ($terms as $term) {
+			// top level
+			if ($term->parent === 0) {
+				$fullPath = (string) $term->term_id;
+				$categories[$fullPath] = [
+					'name'  => $fullPath,
+					'value' => $fullPath,
+					'id'    => 0,
+					'type'  => 'category',
+				];
+				continue;
+			}
+
+			// include longest tree
+			$ids = [$term->term_id];
+			$parentId = $term->parent;
+
+			while ($parentId && isset($termLookup[$parentId])) {
+				array_unshift($ids, $parentId);
+				$parentId = $termLookup[$parentId]->parent;
+			}
+
+			$fullPath = implode('/', $ids);
+
+			// check if lowest level
+			$lowest = true;
+			foreach ($terms as $t) {
+				if ($t->parent === $term->term_id) {
+					$lowest = false;
+					break;
+				}
+			}
+
+			if ($lowest) {
+				$categories[$fullPath] = [
+					'name'  => $fullPath,
+					'value' => $fullPath,
+					'id'    => 1,
+					'type'  => 'category',
+				];
+			}
+		}
+
+		return array_values($categories);
+	}
 }

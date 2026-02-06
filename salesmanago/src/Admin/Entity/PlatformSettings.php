@@ -88,6 +88,12 @@ final class PlatformSettings implements \JsonSerializable
 	 * @return array
 	 */
 	public function getDetailsMapping() {
+		foreach ($this->DetailsMapping as $field => $attr) {
+			if (!is_array($attr)) {
+				$this->DetailsMapping[$field] = (array) $attr;
+			}
+		}
+
 		return $this->DetailsMapping;
 	}
 

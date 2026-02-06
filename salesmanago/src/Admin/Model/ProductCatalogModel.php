@@ -103,6 +103,8 @@ class ProductCatalogModel extends AbstractModel {
                 'name' => $result[ 'attribute_name' ],
                 'value' => '',
                 'label' => $result[ 'attribute_label' ],
+	            'id' => $result[ 'attribute_id' ],
+	            'type' => 'attribute'
 			];
 		}
 
@@ -110,6 +112,8 @@ class ProductCatalogModel extends AbstractModel {
 	}
 
     /**
+     * @deprecated since 3.9.0
+     *
      * @return array
      */
     public function getCustomAttributesFromDb() {
@@ -142,6 +146,8 @@ class ProductCatalogModel extends AbstractModel {
     }
 
 	/**
+	 * @deprecated since 3.9.0
+	 *
 	 * @param array $attributesArray
 	 *
 	 * @return array

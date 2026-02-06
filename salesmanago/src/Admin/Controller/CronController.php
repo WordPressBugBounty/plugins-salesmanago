@@ -19,6 +19,7 @@ class CronController {
     const CRON_SCHEDULE_KEY_60 = 'salesmanago_custom_cron_schedule_60';
     const CRON_SCHEDULE_KEY_180 = 'salesmanago_custom_cron_schedule_180';
     const CRON_SCHEDULE_KEY_300 = 'salesmanago_custom_cron_schedule_300';
+    const CRON_TOKEN_OPTION_KEY = 'salesmanago_cron_security_token';
 
     public function __construct() {
         add_filter('cron_schedules', array($this, 'custom_cron_schedule'));
@@ -28,16 +29,63 @@ class CronController {
     }
 
     /**
-     * Handle CRON request
-     * https://your-domain.xx/?salesmanago_cron=run
+     * Handle CRON request and validate a security token
+     * https://your-domain.xx/?salesmanago_cron=run&token=your_token
      *
      * @return void
      */
     public function handle_cron_request() {
-        //todo - security token
-        if ( isset( $_GET[ 'salesmanago_cron' ] ) && $_GET[ 'salesmanago_cron' ] === 'run' ) {
-			do_action('salesmanago_cron_event');
-		}
+        if ( ! isset( $_GET['salesmanago_cron'] ) || $_GET['salesmanago_cron'] !== 'run' ) {
+            return;
+        }
+
+        $request_token = isset( $_GET['token'] ) ? sanitize_text_field( wp_unslash( $_GET['token'] ) ) : '';
+        $stored_token = $this->get_cron_security_token();
+
+        if ( ! hash_equals( $stored_token, $request_token ) ) {
+            status_header( 404 );
+            exit();
+        }
+
+        do_action( 'salesmanago_cron_event' );
+        status_header( 200 );
+        exit();
+    }
+
+    /**
+     * Retrieves the cron security token from the database or generates a new one if it doesn't exist.
+     *
+     * @return string
+     */
+    private function get_cron_security_token() {
+        $token = get_option( self::CRON_TOKEN_OPTION_KEY );
+
+        if ( empty( $token ) ) {
+            try {
+                $token = bin2hex( random_bytes( 32 ) );
+            } catch ( \Exception $e ) {
+                $token = wp_generate_password( 64, true, false );
+            }
+            update_option( self::CRON_TOKEN_OPTION_KEY, $token );
+        }
+
+        return $token;
+    }
+    
+    /**
+    * Gets the cron security token, optionally masked for display purposes.
+    *
+    * @param bool masked
+    * @return string
+    */
+    public function get_cron_token( bool $masked = true ) {
+        $token = $this->get_cron_security_token();
+        
+        if ( $masked ) {
+            return str_repeat('*', max(0, strlen($token) - 6)) . substr($token, -6);
+        }
+        
+        return $token;
     }
 
     /**

@@ -55,6 +55,21 @@ class SettingsRenderer {
 	 */
 	private array $attributes;
 
+	/**
+	 * @var array
+	 */
+	private array $detailMappingLabelsToRender;
+
+	/**
+	 * @var string
+	 */
+	private string $cronTokenMasked;
+
+	/**
+	 * @var string
+	 */
+	private string $cronTokenFull;
+
 	public function __construct( AdminModel $AdminModel ) {
 		$this->AdminModel = $AdminModel;
 		$ProductCatalogModel = new ProductCatalogModel( $this->AdminModel );
@@ -164,15 +179,29 @@ class SettingsRenderer {
 								if ( isset( $_POST[ 'action' ] ) && $_POST[ 'action' ] === 'save' ) {
 									$this->handleCronSettingsSave();
 								}
+
+								$this->detailMappingLabelsToRender = $this->ProductCatalogController->getDetailMappingLabelsToRender();
+
 								if ( isset ( $_POST [ 'attribute_mapping' ] ) ) {
 									$this->ProductCatalogController
 										->sanitizeMapping( $_POST [ 'attribute_mapping' ] )
+										->rebuildMapping()
 										->setDetailsMappingToPlatformSettings();
 								}
+
 								$this->customDetails = $this->ProductCatalogController->getCustomDetails();
 								$this->systemDetails = $this->ProductCatalogController->getSystemDetails();
-								$this->attributes = $this->ProductCatalogController->getAttributesNames();
 								$this->detailsMapping = $this->AdminModel->getPlatformSettings()->getDetailsMapping();
+
+								if (isset($_POST['action'])
+								    && $_POST['action'] === 'regenerate_cron_token'
+								    && isset($_POST['_wpnonce'])
+								    && wp_verify_nonce($_POST['_wpnonce'], 'salesmanago_regenerate_token_nonce')) {
+									delete_option(CronController::CRON_TOKEN_OPTION_KEY);
+								}
+
+								$this->cronTokenMasked = $this->AdminModel->getCronController()->get_cron_token(true);
+								$this->cronTokenFull = $this->AdminModel->getCronController()->get_cron_token(false);
 
 								include __DIR__ . '/product_api/product_catalog.php';
 							}
