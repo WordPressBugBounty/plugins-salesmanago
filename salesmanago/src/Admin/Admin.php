@@ -20,6 +20,8 @@ use SALESmanago\Exception\Exception as SmException;
 
 class Admin {
 
+	use IncludesHelper;
+
 	protected $SettingsController;
 	protected $AdminModel;
 	protected $AdminActionController;
@@ -183,7 +185,7 @@ class Admin {
 	 * @return void
 	 */
 	public function load_sm_plugin_last() {
-		IncludesHelper::loadSMPluginLast();
+		self::loadSMPluginLast();
 	}
 
 	/**

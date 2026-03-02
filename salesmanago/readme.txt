@@ -8,7 +8,7 @@ Tested up to: 6.8.3
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.9.1
+Stable tag: 3.10.0
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -117,6 +117,9 @@ In addition, SALESmanago offers the following types of support:
 - Live Chat support (via the website)
 - SALESmanago Community: Best practices, training sessions, tips & tricks via the [SALESmanago Customer Excellence Academy](https://cx-academy.salesmanago.com/?utm_source=product&utm_medium=wpplugin&utm_campaign=marketplace)
 
+= Where do I report security bugs found in this plugin? =
+Please report security bugs found in the source code of the SALESmanago & Leadoo plugin through the [Patchstack Vulnerability Disclosure  Program](https://patchstack.com/database/vdp/0f90534d-5b4a-453e-95bc-4619eafdd8b5). The Patchstack team will assist you with verification, CVE assignment, and notify the developers of this plugin.
+
 
 
 == Personal Data Processing Information ==
@@ -133,6 +136,9 @@ Full details are available [here](https://www.salesmanago.com/info/information-o
 
 
 == Changelog ==
+= 3.10.0 =
+- Added a question to the FAQ regarding security
+- Tiered Pricing plugin support added
 = 3.9.1 =
 - Added security token to prevent running unauthorized CRON jobs
 = 3.9.0 =

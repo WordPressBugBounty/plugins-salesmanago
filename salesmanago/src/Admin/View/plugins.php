@@ -57,6 +57,23 @@
             </tr>
             <?php endforeach; ?>
 
+        <?php if ( class_exists('TierPricingTable\PriceManager') ) : ?>
+            <tr valign="top">
+                <th scope="row" class="titledesc">
+                    <label for="salesmanago-tier-pricing"><?php _e('Capture Tiered Pricing prices', 'salesmanago') ?></label>
+                </th>
+                <td>
+                    <input type="checkbox" name="tier-pricing" <?php $this->selected('true', 'tier-pricing', SUPPORTED_PLUGINS['WooCommerce']) ?> value="1" id="salesmanago-tier-pricing">
+                    <label for="salesmanago-tier-pricing">
+                        <span><?php _e('Use prices from Tier Pricing Table plugin', 'salesmanago') ?></span>
+                        <p class="description">
+                            <?php _e('Enable this option to capture product prices from the Tier Pricing Table plugin instead of default WooCommerce prices', 'salesmanago') ?>
+                        </p>
+                    </label>
+                </td>
+            </tr>
+        <?php endif; ?>
+
             </tbody>
         </table>
 

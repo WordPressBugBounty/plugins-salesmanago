@@ -1,3 +1,9 @@
+# 3.10.0 released 25.02.2026
+- Added a question to the FAQ regarding security
+- Tiered Pricing plugin support added
+- Fixed nested html form in product catalog settings
+- Fixed deprecated calls in PHP 8.2+
+
 # 3.9.1 released 08.12.2025
 - Added security token to prevent running unauthorized CRON jobs
 

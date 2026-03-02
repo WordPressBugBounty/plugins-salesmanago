@@ -528,6 +528,14 @@ class SettingsRenderer {
 							? 'checked'
 							: '';
 					break;
+				case 'tier-pricing':
+					echo ( $this->AdminModel
+						->getPlatformSettings()
+						->getPluginByName( $context )
+						->isTierPricing() )
+							? 'checked'
+							: '';
+					break;
 				case 'properties-type':
 					return ( $this->AdminModel
 						->getPlatformSettings()

@@ -194,20 +194,18 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
 
                                 <div>
                                     <button type="button" id="sm-copy-token" class="button button-secondary"><?php _e('Copy Token', 'salesmanago'); ?></button>
-                                    <form method="post" action="">
-                                        <?php wp_nonce_field('salesmanago_regenerate_token_nonce'); ?>
-                                        <input type="hidden" name="action" value="regenerate_cron_token">
-                                        <button type="submit" class="button button-secondary">
-                                            <?php _e('Regenerate Token', 'salesmanago'); ?>
-                                        </button>
-                                    </form>
+                                    <?php wp_nonce_field('salesmanago_regenerate_token_nonce'); ?>
+                                    <button type="submit" class="button button-secondary" name="action" value="regenerate_cron_token">
+                                        <?php _e('Regenerate Token', 'salesmanago'); ?>
+                                    </button>
                                 </div>
                             </div>
                         </div>
-	                    <?php
-	                    include(__DIR__ . '/../partials/save.php');
-	                    ?>
-                        <input type="hidden" name="action" value="save">
+	                    <p class="submit">
+                            <button type="submit" name="action" value="save" class="button button-primary">
+                                <?php _e('Save', 'salesmanago');?>
+                            </button>
+                        </p>
                         <?php
                         if ( function_exists( 'wp_nonce_field' ) ) {
                             wp_nonce_field( 'save', 'sm_nonce' );

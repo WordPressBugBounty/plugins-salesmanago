@@ -12,6 +12,7 @@ use bhr\Frontend\Model\Helper;
 
 use SALESmanago\Entity\Event\Event;
 use SALESmanago\Exception\Exception;
+use TierPricingTable\PriceManager;
 
 class WcEventModel extends AbstractModel {
 
@@ -28,6 +29,7 @@ class WcEventModel extends AbstractModel {
 	protected $Event;
 	protected $productIdentifierType = Wc::DEFAULT_PRODUCT_IDENTIFIER_TYPE;
 	protected $languageDetection     = Wc::DEFAULT_LANGUAGE_DETECTION;
+	protected $tierPricing           = false;
 
 	public function __construct( $PlatformSettings ) {
 		parent::__construct();
@@ -37,6 +39,16 @@ class WcEventModel extends AbstractModel {
 		}
         if ( isset( $PlatformSettings->languageDetection ) ) {
             $this->languageDetection = $PlatformSettings->languageDetection;
+        }
+        if ( isset( $PlatformSettings->PluginWc ) ) {
+            $checkboxEnabled = false;
+            if ( method_exists( $PlatformSettings->PluginWc, 'isTierPricing' ) ) {
+                $checkboxEnabled = $PlatformSettings->PluginWc->isTierPricing();
+            } elseif ( isset( $PlatformSettings->PluginWc->tierPricing ) ) {
+                $checkboxEnabled = (bool) $PlatformSettings->PluginWc->tierPricing;
+            }
+            $classExists = class_exists('TierPricingTable\PriceManager');
+            $this->tierPricing = $checkboxEnabled && $classExists;
         }
 
 		$this->Event = new Event();
@@ -119,7 +131,16 @@ class WcEventModel extends AbstractModel {
 
 			$smProductArray[] = Helper::getSmEventDetailsFromWcProduct( $WcProduct );
 			$quantities[]     = $item['quantity'];
-			$cartTotalPrice  += (float) ( $item['quantity'] * $smProductArray[ $i ]->getUnitPrice() );
+
+			$unitPrice = $smProductArray[ $i ]->getUnitPrice();
+			if ( $this->tierPricing ) {
+				$tieredPrice = PriceManager::getPriceByRules( $item['quantity'], $id );
+				if ( $tieredPrice ) {
+					$unitPrice = (float) $tieredPrice;
+				}
+			}
+
+			$cartTotalPrice += (float) ( $item['quantity'] * $unitPrice );
 			$i++;
 		}
 

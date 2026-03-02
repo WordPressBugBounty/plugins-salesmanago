@@ -101,6 +101,7 @@ class AdminModel extends AbstractModel
 			$PlatformSettings->getPluginCf7()->setActive( isset( $request['salesmanago-plugin-cf7'] ) );
 			$PlatformSettings->getPluginGf()->setActive( isset( $request['salesmanago-plugin-gf'] ) );
 			$PlatformSettings->getPluginFf()->setActive( isset( $request['salesmanago-plugin-ff'] ) );
+			$PlatformSettings->getPluginWc()->setTierPricing( isset( $request['tier-pricing'] ) ? $request['tier-pricing'] : false );
 			if ( $PlatformSettings->isActive( SUPPORTED_PLUGINS['WordPress'] )
 				&& $PlatformSettings->isActive( SUPPORTED_PLUGINS['WooCommerce'] ) ) {
 				$PlatformSettings->getPluginWp()->setActive( false );
@@ -137,6 +138,7 @@ class AdminModel extends AbstractModel
 				->setProductIdentifierType( isset( $request['product-identifier-type'] ) ? $request['product-identifier-type'] : null )
 				->setPurchaseHook( isset( $request['purchase-hook'] ) ? $request['purchase-hook'] : null )
 				->setPreventEventDuplication( isset( $request['prevent-event-duplication'] ) ? $request['prevent-event-duplication'] : false )
+				->setTierPricing( isset( $request['tier-pricing'] ) ? $request['tier-pricing'] : false )
 				->getDoubleOptIn()
 					->setDoubleOptIn( isset( $request['double-opt-in'] ) ? $request['double-opt-in'] : array() );
 			$this->getPlatformSettings()->getPluginWc()

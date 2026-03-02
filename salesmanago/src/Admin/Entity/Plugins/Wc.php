@@ -16,6 +16,7 @@ class Wc extends AbstractPlugin
     protected $productIdentifierType   = self::DEFAULT_PRODUCT_IDENTIFIER_TYPE;
     protected $purchaseHook            = self::DEFAULT_PURCHASE_HOOK;
     protected $preventEventDuplication = false;
+    protected $tierPricing             = false;
 
     public function setPluginSettings($pluginSettings)
     {
@@ -31,6 +32,10 @@ class Wc extends AbstractPlugin
 
         $this->setPreventEventDuplication(isset($pluginSettings->preventEventDuplication)
             ? $pluginSettings->preventEventDuplication
+            : false);
+
+        $this->setTierPricing(isset($pluginSettings->tierPricing)
+            ? $pluginSettings->tierPricing
             : false);
 
         return $this;
@@ -69,6 +74,24 @@ class Wc extends AbstractPlugin
     public function setPreventEventDuplication($preventEventDuplication)
     {
         $this->preventEventDuplication = $preventEventDuplication;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isTierPricing(): bool
+    {
+        return $this->tierPricing;
+    }
+
+    /**
+     * @param bool $tierPricing
+     * @return $this
+     */
+    public function setTierPricing(bool $tierPricing): self
+    {
+        $this->tierPricing = $tierPricing;
         return $this;
     }
 

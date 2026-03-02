@@ -151,7 +151,7 @@ trait Helper {
 	 */
 	public static function getProductsFromOrder( $orderId, $productIdentifierType ) {
 		/* Products */
-		$order          = self::wcGetOrder( $orderId );
+		$order          = static::wcGetOrder( $orderId );
 		$ids            = array();
 		$variantIds     = array();
 		$names          = array();
@@ -160,11 +160,11 @@ trait Helper {
 		$smProductArray = array();
 
 		foreach ( $order->get_items() as $item_id => $item ) {
-			$WcProduct = Helper::wcGetProduct( $item['variation_id'] )
-				? Helper::wcGetProduct( $item['variation_id'] )
-				: Helper::wcGetProduct( $item['product_id'] );
+			$WcProduct = static::wcGetProduct( $item['variation_id'] )
+				? static::wcGetProduct( $item['variation_id'] )
+				: static::wcGetProduct( $item['product_id'] );
 			if ( $WcProduct ) {
-				$smProductArray[] = self::getSmEventDetailsFromWcProduct( $WcProduct );
+				$smProductArray[] = static::getSmEventDetailsFromWcProduct( $WcProduct );
 			}
 			$quantities[] = $item->get_quantity();
 		}
@@ -195,7 +195,7 @@ trait Helper {
 			'externalId'  => $order->get_id(),
 		);
 
-		$products += self::generateProductsDetailsByIdentifierType(
+		$products += static::generateProductsDetailsByIdentifierType(
 			$productIdentifierType,
 			$ids,
 			$variantIds,
@@ -332,7 +332,7 @@ trait Helper {
 	public static function generate_api_v3_webhook_url() {
 		$url = get_site_url();
 
-		return $url . GlobalConstant::API_V3_CALLBACK_URL . '?sm_token=' . self::generate_sm_token();
+		return $url . GlobalConstant::API_V3_CALLBACK_URL . '?sm_token=' . static::generate_sm_token();
 	}
 
 	/**
