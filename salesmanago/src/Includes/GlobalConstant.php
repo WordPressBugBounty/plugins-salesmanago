@@ -10,9 +10,11 @@ class GlobalConstant
         L_NAME = 'last_name',
         DESC   = 'description',
         LOCALE = 'locale',
-	    EMAIL  = 'email',
-	    PHONE  = 'phone',
-	    BIRTHDAY = 'birthday',
+        EMAIL  = 'email',
+        PHONE  = 'phone',
+        BIRTHDAY = 'birthday',
+
+        LAST_PROCESSED_ORDER_STATUS_META_KEY = '_salesmanago_last_processed_order_status',
 
         LOCATION_PREFIX = 'sm_',
 
@@ -26,7 +28,7 @@ class GlobalConstant
         B_ADDRESS_1 = 'billing_address_1',
         B_ADDRESS_2 = 'billing_address_2',
         B_COUNTRY   = 'billing_country',
-	    B_BIRTHDAY  = 'billing_birthday',
+        B_BIRTHDAY  = 'billing_birthday',
 
         P_NO_ACC_EMAIL     = '_billing_email',
         P_NO_ACC_COMPANY   = '_billing_company',
@@ -38,7 +40,7 @@ class GlobalConstant
         P_NO_ACC_POSTCODE  = '_billing_postcode',
         P_NO_ACC_CITY      = '_billing_city',
         P_NO_ACC_COUNTRY   = '_billing_country',
-	    P_NO_ACC_BIRTHDAY  = '_billing_birthday',
+        P_NO_ACC_BIRTHDAY  = '_billing_birthday',
 
         MAP_BRAND		   = 'Brand',
         MAP_MANUFACTURER   = 'Manufacturer',
@@ -61,5 +63,5 @@ class GlobalConstant
         WP_USR_ROLE_CUSTOMER   = 'customer',
         WP_USR_ROLE_SUBSCRIBER = 'subscriber',
 
-		API_V3_CALLBACK_URL = '/wp-json/salesmanago/v2/callbackApiV3';
+        API_V3_CALLBACK_URL = '/wp-json/salesmanago/v2/callbackApiV3';
 }

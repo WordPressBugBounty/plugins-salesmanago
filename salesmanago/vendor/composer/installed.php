@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'salesmanago/wordpress',
-        'pretty_version' => '3.8.2',
-        'version' => '3.8.2.0',
-        'reference' => null,
+        'pretty_version' => '3.11.0',
+        'version' => '3.11.0.0',
+        'reference' => NULL,
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -20,9 +20,9 @@
             'dev_requirement' => false,
         ),
         'salesmanago/wordpress' => array(
-            'pretty_version' => '3.8.2',
-            'version' => '3.8.2.0',
-            'reference' => null,
+            'pretty_version' => '3.11.0',
+            'version' => '3.11.0.0',
+            'reference' => NULL,
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

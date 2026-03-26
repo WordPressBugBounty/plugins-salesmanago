@@ -84,7 +84,8 @@ use SALESmanago\Exception\Exception;
                                 'woocommerce_checkout_order_processed',
                                 'woocommerce_checkout_update_order_meta',
                                 'woocommerce_pre_payment_complete',
-                                'woocommerce_payment_complete'
+                                'woocommerce_payment_complete',
+                                'woocommerce_thankyou'
                             );
 
                             foreach ($hookOptions as $hookName) {

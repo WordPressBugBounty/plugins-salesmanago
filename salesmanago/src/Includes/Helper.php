@@ -410,4 +410,42 @@ trait Helper {
 
 		return true;
 	}
+
+	/**
+	 * @param $order
+	 *
+	 * @return string
+	 */
+	public static function getLastProcessedOrderStatus( $order ): string {
+		if ( !$order ) {
+			return '';
+		}
+
+		return (string) $order->get_meta( GlobalConstant::LAST_PROCESSED_ORDER_STATUS_META_KEY, true );
+	}
+
+	/**
+	 * @param $order
+	 * @param $eventType
+	 *
+	 * @return bool
+	 */
+	public static function wasOrderStatusProcessed( $order, $eventType ): bool {
+		return self::getLastProcessedOrderStatus( $order ) === $eventType;
+	}
+
+	/**
+	 * @param $order
+	 * @param $eventType
+	 *
+	 * @return void
+	 */
+	public static function markOrderAsProcessed( $order, $eventType ) {
+		if ( !$order ) {
+			return;
+		}
+
+		$order->update_meta_data( GlobalConstant::LAST_PROCESSED_ORDER_STATUS_META_KEY, $eventType );
+		$order->save();
+	}
 }

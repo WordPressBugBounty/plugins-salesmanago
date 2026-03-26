@@ -15,8 +15,13 @@ use SALESmanago\Exception\Exception;
 class AdminActionController {
 
 	const
-		EVENT_TYPE_CANCELLATION = 'CANCELLATION',
-        EVENT_TYPE_PURCHASE     = 'PURCHASE';
+		EVENT_TYPE_CANCELLATION         = 'CANCELLATION',
+		EVENT_TYPE_PURCHASE             = 'PURCHASE',
+		EVENT_TYPE_RETURN               = 'RETURN',
+		WOOCOMMERCE_STATUS_PROCESSING   = 'processing',
+		WOOCOMMERCE_STATUS_REFUNDED     = 'refunded',
+		WOOCOMMERCE_STATUS_CANCELLED    = 'cancelled',
+		WOOCOMMERCE_STATUS_FAILED       = 'failed';
 
 	/**
 	 * @var Configuration
@@ -69,29 +74,56 @@ class AdminActionController {
 
 			$Contact = $this->AdminActionModel->parseCustomerFromWcOrder( $WcOrder->get_data() );
 
-            if ( ! $Contact ) {
-                return false;
-            }
+			if ( ! $Contact ) {
+				return false;
+			}
 
-            $eventType = $WcOrder->get_status() === 'processing'
-                ? self::EVENT_TYPE_PURCHASE
-                : self::EVENT_TYPE_CANCELLATION;
+			$eventType = $this->resolveEventType( $WcOrder );
+
+			if ( !empty( $eventType ) && Helper::wasOrderStatusProcessed( $WcOrder, $eventType )) {
+				return false;
+			}
 
 			$Event = $this->AdminActionModel->bindEvent(
 				$this->AdminActionModel->parseEventFromWcOrder( $WcOrder, $this->PlatformSettings ),
-                $eventType,
+				$eventType,
 				$Contact,
 				$this->Configuration->getLocation(),
-                $this->lang
+				$this->lang
 			);
 			if ( $Event ) {
-				return $this->ContactAndEventTransferController->transferBoth( $Contact, $Event );
+				$response = $this->ContactAndEventTransferController->transferBoth( $Contact, $Event );
+
+				if ( $response ) {
+					Helper::markOrderAsProcessed( $WcOrder, $eventType );
+				}
+
+				return $response;
 			} else {
 				return $this->ContactAndEventTransferController->transferContact( $Contact );
 			}
 		} catch ( Exception $e ) {
 			error_log( $e->getMessage(), $e->getCode() );
 			return false;
+		}
+	}
+
+	/**
+	 * @param $order
+	 *
+	 * @return string
+	 */
+	private function resolveEventType ( $order ): string {
+		switch ( $order->get_status() ) {
+			case self::WOOCOMMERCE_STATUS_PROCESSING:
+				return self::EVENT_TYPE_PURCHASE;
+			case self::WOOCOMMERCE_STATUS_REFUNDED:
+				return self::EVENT_TYPE_RETURN;
+			case self::WOOCOMMERCE_STATUS_CANCELLED:
+			case self::WOOCOMMERCE_STATUS_FAILED:
+				return self::EVENT_TYPE_CANCELLATION;
+			default:
+				return '';
 		}
 	}
 

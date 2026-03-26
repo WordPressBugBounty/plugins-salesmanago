@@ -4,11 +4,11 @@ Plugin URI:  https://support.salesmanago.com/integration-with-wordpress/
 Contributors: Benhauer Sp. z o.o.
 Tags: marketing automation, email marketing, crm, live chat, social media, lead nurturing, lead generation, personalized marketing, woocommerce, contacts, lead tracking, click tracking, visitor tracking, inbound marketing, subscription, marketing, newsletter, popup, email, contacts database, contact form, popup form
 Requires at least: 5.6
-Tested up to: 6.8.3
+Tested up to: 6.9.4
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.10.0
+Stable tag: 3.11.0
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -136,9 +136,15 @@ Full details are available [here](https://www.salesmanago.com/info/information-o
 
 
 == Changelog ==
+= 3.11.0 =
+- Added support array-based opt-in checkbox values in forms
+- Fixed issue with duplicated events when order status changes
+- Added woocommerce_thankyou hook handling for external events
 = 3.10.0 =
 - Added a question to the FAQ regarding security
 - Tiered Pricing plugin support added
+- Fixed nested html form in product catalog settings
+- Fixed deprecated calls in PHP 8.2+
 = 3.9.1 =
 - Added security token to prevent running unauthorized CRON jobs
 = 3.9.0 =

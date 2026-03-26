@@ -69,34 +69,53 @@ class AbstractContactModel extends AbstractModel
 	        $this->Contact->getOptions()
 	                      ->setIsSubscriptionStatusNoChange(true);
 
-            //Check if submitted form contains checked checkbox named 'sm-optin' or 'sm_newsletter'
-	        if (
-		        //Field appended with Opt In Input append (sm-optin-email):
-                (isset($_REQUEST[self::OPT_IN_EMAIL]) && $_REQUEST[self::OPT_IN_EMAIL])
-                //Field mapped with mapper
-                || (!empty($optInFieldName) && isset($_REQUEST[$optInFieldName]) && $_REQUEST[$optInFieldName])
-                //Legacy support for previous input name:
-                || (isset($_REQUEST['sm_newsletter']) && $_REQUEST['sm_newsletter'])
-	        ) {
-		        $this->Options
-			        ->setIsSubscribesNewsletter(true)
-		            ->setIsSubscriptionStatusNoChange(false);
-		        $this->setTagsFromConfig(self::TAGS_NEWSLETTER);
-	        }
+            if($this->hasOptInValueInRequest([self::OPT_IN_EMAIL, $optInFieldName, 'sm_newsletter']))
+            {
+                $this->Options
+                    ->setIsSubscribesNewsletter(true)
+                    ->setIsSubscriptionStatusNoChange(false);
+                $this->setTagsFromConfig(self::TAGS_NEWSLETTER);
+            }
 
-			if (
-	            //Field appended with Opt In Mobile Input append (sm-optin-mobile):
-				(isset($_REQUEST[self::OPT_IN_MOBILE]) && $_REQUEST[self::OPT_IN_MOBILE])
-				//Field mapped with mapper
-				|| (!empty($optInMobileFieldName) && isset($_REQUEST[$optInMobileFieldName]) && $_REQUEST[$optInMobileFieldName])
-			) {
-				$this->Options
-				    ->setIsSubscribesMobile(true)
-				    ->setIsSubscriptionStatusNoChange(false);
-			}
+            if ($this->hasOptInValueInRequest([self::OPT_IN_MOBILE, $optInMobileFieldName])) {
+                $this->Options
+                    ->setIsSubscribesMobile(true)
+                    ->setIsSubscriptionStatusNoChange(false);
+            }
         } catch (Exception $e) {
             $e->getLogMessage();
         }
+    }
+
+    /**
+     * Checks if any of the provided request field names contains a valid opt-in value.
+     *
+     * @param array $fieldNames List of request field names to check for opt-in value.
+     * @return bool Returns true if any field contains a valid opt-in value, otherwise false.
+     */
+    private function hasOptInValueInRequest(array $fieldNames): bool
+    {
+        foreach ($fieldNames as $fieldName) {
+            if (!empty($fieldName) && isset($_REQUEST[$fieldName]) && $this->isOptInValue($_REQUEST[$fieldName])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+    * Check if opt-in value is handling both array and scalar values.
+    * Arrays are supported for form builders that send checkbox values as arrays (e.g. Ultimate Member).
+    *
+    * @param mixed $value
+    * @return bool
+    */
+    private function isOptInValue($value)
+    {
+        if (is_array($value)) {
+            return !empty(array_filter($value));
+        }
+        return !empty($value);
     }
 
     /**

@@ -149,6 +149,14 @@ class WcController {
             // Populate Contact Model with fields from submitted data:
 			$order = is_int( $order ) ? wc_get_order( $order ) : $order;
 
+			if ( !$order ) {
+				return false;
+			}
+
+			if ( Helper::wasOrderStatusProcessed( $order, EventModel::EVENT_TYPE_PURCHASE )) {
+				return false;
+			}
+
             //duplication prevention:
             if (!empty($_SESSION['lastOrder'])
                 && $_SESSION['lastOrder'] == EventModel::EVENT_TYPE_PURCHASE . ':' . $order->get_id()
@@ -199,6 +207,10 @@ class WcController {
 			);
 
 			$response = $this->TransferController->transferBoth( $this->ContactModel->get(), $this->EventModel->get() );
+
+			if ( $response ) {
+				Helper::markOrderAsProcessed( $order, EventModel::EVENT_TYPE_PURCHASE );
+			}
 
             //variable to check duplications
             $_SESSION['lastOrder'] = EventModel::EVENT_TYPE_PURCHASE . ':' . $order->get_id();
@@ -253,6 +265,12 @@ class WcController {
 	 */
 	public function orderStatusChanged( $orderId ) {
 		try {
+			$order = Helper::wcGetOrder( $orderId );
+
+			if ( !$order ) {
+				return false;
+			}
+
 			$eventHook = Helper::getCurrentAction();
 			switch ( $eventHook ) {
 				case 'woocommerce_order_status_cancelled':
@@ -264,6 +282,10 @@ class WcController {
 					break;
 				default:
 					$eventType = EventModel::EVENT_TYPE_DEFAULT;
+			}
+
+			if ( Helper::wasOrderStatusProcessed( $order, $eventType )) {
+				return false;
 			}
 
 			if ( ! $this->ContactModel->parseCustomer( $orderId ) ) {
@@ -292,8 +314,13 @@ class WcController {
 				$smEvent
 			);
 			Helper::doAction( 'salesmanago_wc_action_order_change_status', array( 'Event' => $this->EventModel->get() ) );
-			return $this->TransferController->transferEvent( $this->EventModel->get() );
+			$response = $this->TransferController->transferEvent( $this->EventModel->get() );
 
+			if ( $response ) {
+				Helper::markOrderAsProcessed( $order, $eventType );
+			}
+
+			return $response;
 		} catch ( Exception $e ) {
 			error_log( print_r( $e->getMessage(), true ) );
 		} catch ( \Exception $e ) {
