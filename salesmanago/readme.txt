@@ -8,7 +8,7 @@ Tested up to: 6.9.4
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.11.0
+Stable tag: 3.11.1
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -136,6 +136,8 @@ Full details are available [here](https://www.salesmanago.com/info/information-o
 
 
 == Changelog ==
+= 3.11.1 =
+- Fixed issue preventing data from being saved in the Integration Settings tab
 = 3.11.0 =
 - Added support array-based opt-in checkbox values in forms
 - Fixed issue with duplicated events when order status changes

@@ -64,7 +64,7 @@ class AdminModel extends AbstractModel
 		$page = $request['page'];
 
 		/* MAIN = INTEGRATIONS SETTINGS PAGE */
-		if ( $page == 'salesmanago' ) {
+		if ( $page == 'salesmanago-integration-settings' ) {
 			$contactCookieTtl = AbstractEntity::DEFAULT_CONTACT_COOKIE_TTL;
 			if ( ( isset( $request['contact-cookie-ttl-active'] ) && boolval( $request['contact-cookie-ttl-active'] ) )
 				&& ( ! empty( $request['contact-cookie-ttl'] ) || $request['contact-cookie-ttl'] === '0' ) ) {

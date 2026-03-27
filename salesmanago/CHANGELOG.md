@@ -1,8 +1,11 @@
+# 3.11.1 released 27.03.2026
+- Fixed issue preventing data from being saved in the Integration Settings tab
+
 # 3.11.0 released 26.03.2026
 - Added support array-based opt-in checkbox values in forms
 - Fixed issue with duplicated events when order status changes
 - Added woocommerce_thankyou hook handling for external events
-- 
+
 # 3.10.0 released 25.02.2026
 - Added a question to the FAQ regarding security
 - Tiered Pricing plugin support added
