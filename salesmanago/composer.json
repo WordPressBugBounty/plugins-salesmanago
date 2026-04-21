@@ -1,10 +1,10 @@
 {
     "name": "salesmanago/wordpress",
     "description": "Wordpress marketing automation extension",
-    "version": "3.11.1",
+    "version": "3.11.2",
     "require": {
         "php": ">=7.4",
-        "salesmanago/api-sso-util": "3.8.0",
+        "salesmanago/api-sso-util": "3.8.6",
         "ext-json": "*"
     },
     "require-dev": {

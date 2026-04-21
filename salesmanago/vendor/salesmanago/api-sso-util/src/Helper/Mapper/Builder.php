@@ -22,7 +22,8 @@ class Builder implements BuilderInterface
      */
     public function build(
         $toObject,
-        string $map, AdapterInterface $adapter = null,
+        string $map,
+        ?AdapterInterface $adapter = null,
         $fromObject = null
     ) {
         //deserialize map:

@@ -23,6 +23,9 @@ class ReportModel
         ACT_UNKNOWN         = 'unknown',
         //use only for tests:
         ACT_TEST            = 'test',
+        ACT_CREATE_CATALOG  = 'create_catalog',
+        ACT_REMOVED_CATALOG = 'removed_catalog',//basically it is disabling product catalog in integration
+        ACT_DELETE_CATALOG  = 'delete_catalog',
 
         EXPORT_TYPE          = 'EXPORT_TYPE',
         PACKAGES             = 'PACKAGES',
@@ -39,16 +42,19 @@ class ReportModel
      */
     protected $actionToEventType = [
         //client actions:
-        self::ACT_LOGOUT       => 'RETURN',
-        self::ACT_LOGIN        => 'LOGIN',
-        self::ACT_EXPORT       => 'TRANSACTION',
+        self::ACT_LOGOUT          => 'RETURN',
+        self::ACT_LOGIN           => 'LOGIN',
+        self::ACT_EXPORT          => 'TRANSACTION',
         //integration/plugin action:
-        self::ACT_EXCEPTION    => 'CANCELLATION',
-        self::ACT_UPDATE       => 'ACTIVATION',
-        self::ACT_DEACTIVATION => 'CANCELLATION',
-        self::ACT_DELETE       => 'APP_TYPE_RETENTION',
-        self::ACT_UNKNOWN      => 'OTHER',
-        self::ACT_TEST         => 'SURVEY'
+        self::ACT_EXCEPTION       => 'CANCELLATION',
+        self::ACT_UPDATE          => 'ACTIVATION',
+        self::ACT_DEACTIVATION    => 'CANCELLATION',
+        self::ACT_DELETE          => 'APP_TYPE_RETENTION',
+        self::ACT_UNKNOWN         => 'OTHER',
+        self::ACT_TEST            => 'SURVEY',
+        self::ACT_CREATE_CATALOG  => 'VISIT',
+        self::ACT_REMOVED_CATALOG => 'VISIT',
+        self::ACT_DELETE_CATALOG  => 'VISIT',
     ];
 
     /**
@@ -69,7 +75,7 @@ class ReportModel
     /**
      * @return Contact return new instance of contact
      */
-    private function getContact()
+    private function getContact(): Contact
     {
         return new Contact();
     }
@@ -77,7 +83,7 @@ class ReportModel
     /**
      * @return Event return new instance of Event
      */
-    private function getEvent()
+    private function getEvent(): Event
     {
         return new Event();
     }
@@ -122,6 +128,77 @@ class ReportModel
                 ->setIsSubscribes(true)
         );
 
+        switch ($actionType) {
+            case self::ACT_CREATE_CATALOG:
+                $Contact->setOptions(
+                    $Contact->getOptions()
+                        ->setLang(strtolower($this->conf->getPlatformLang()))
+                        ->appendTags(
+                            [
+                                'PRODUCT_CATALOGS', 'CATALOG_CREATED'
+                            ]
+                        )
+                );
+                break;
+            case self::ACT_REMOVED_CATALOG:
+                $Contact->setOptions(
+                    $Contact->getOptions()
+                        ->setLang(strtolower($this->conf->getPlatformLang()))
+                        ->appendTags(
+                            [
+                                'PRODUCT_CATALOG_REMOVED'
+                            ]
+                        )
+                );
+                break;
+            case self::ACT_DELETE_CATALOG:
+                $Contact->setOptions(
+                    $Contact->getOptions()
+                        ->setLang(strtolower($this->conf->getPlatformLang()))
+                        ->appendTags(
+                            [
+                                'CATALOG_DELETED_FROM_SM'
+                            ]
+                        )
+                );
+                break;
+        }
+
+        return $Contact;
+    }
+
+    /**
+     * Generate client information for reporting service with additional tags
+     *
+     * @param array $tags
+     * @param string $actionType - action tag
+     * @return Contact
+     */
+    public function getClientAsContactWithTags(
+        array  $tags = [],
+        string $nameOfReportingItem = '',
+        string $actionType = self::ACT_UNKNOWN
+    ): Contact
+    {
+        $Contact = $this->getClientAsContact($actionType);
+
+        if (!empty($tags)) {
+            $Contact->setOptions(
+                $Contact
+                    ->getOptions()
+                    ->appendTags($tags)
+            );
+        }
+
+        if (!empty($nameOfReportingItem)) {
+            $Contact->setOptions(
+                $Contact
+                    ->getOptions()
+                    ->appendTags([$nameOfReportingItem])
+            );
+        }
+
+
         return $Contact;
     }
 
@@ -133,7 +210,10 @@ class ReportModel
      * @return Event
      * @throws Exception
      */
-    public function getActionAsEvent($actionType = self::ACT_UNKNOWN, $arr = [])
+    public function getActionAsEvent(
+        string $actionType = self::ACT_UNKNOWN,
+        array  $arr = []
+    ): Event
     {
         $Event = $this->getEvent()
             ->setEmail($this->conf->getOwner())
@@ -151,12 +231,59 @@ class ReportModel
             $Event->setDescription(json_encode($arr));
         }
 
-        if ($actionType === self::ACT_EXPORT) {
-            $Event
-                ->setDetail($arr[self::EXPORT_TYPE], 4)
-                ->setDetail($arr[self::PACKAGES], 5)
-                ->setDetail($arr[self::ITEMS], 6)
-                ->setDetail($arr[self::STORE], 7);
+        switch ($actionType) {
+            case self::ACT_CREATE_CATALOG:
+                $Event->setDetail('CATALOG_CREATED', 8);
+                break;
+            case self::ACT_REMOVED_CATALOG:
+                $Event->setDetail('CATALOG_REMOVED', 8);
+                break;
+            case self::ACT_DELETE_CATALOG:
+                $Event->setDetail('CATALOG_DELETED_FROM_SM', 8);
+                break;
+            case self::ACT_EXPORT:
+                $Event
+                    ->setDetail($arr[self::EXPORT_TYPE], 4)
+                    ->setDetail($arr[self::PACKAGES], 5)
+                    ->setDetail($arr[self::ITEMS], 6)
+                    ->setDetail($arr[self::STORE], 7);
+                break;
+        }
+
+        return $Event;
+    }
+
+    /**
+     * Generate event information for reporting service with additional details
+     *
+     * @param array $details - additional details in key=>value array
+     * @param string $typeOfSMEvent
+     * @param string $nameOfReportingItem
+     * @param string $actionType - one of const
+     * @return Event
+     * @throws Exception
+     */
+    public function getActionAsEventWithDetails(
+        array  $details = [],
+        string $typeOfSMEvent = 'OTHER',
+        string $nameOfReportingItem = '',
+        string $actionType = self::ACT_UNKNOWN
+    ): Event
+    {
+        $Event = $this->getActionAsEvent($actionType);
+
+        if (!empty($details)) {
+            foreach ($details as $key => $value) {
+                $Event->setDetail($value, $key);
+            }
+        }
+
+        if (!empty($nameOfReportingItem)) {
+            $Event->setDetail($nameOfReportingItem, 8);
+        }
+
+        if ($typeOfSMEvent) {
+            $Event->setContactExtEventType($typeOfSMEvent);
         }
 
         return $Event;

@@ -29,7 +29,7 @@ class BasicService
      */
     public function __construct(
         ConfigurationInterface $ConfigurationV3,
-        RequestClientConfigurationInterface $cUrlClientConf = null
+        ?RequestClientConfigurationInterface $cUrlClientConf = null
     ) {
         $this->configuration  = $ConfigurationV3;
         $cUrlClientConf       = $cUrlClientConf ?? $this->setCurlClientConfiguration();

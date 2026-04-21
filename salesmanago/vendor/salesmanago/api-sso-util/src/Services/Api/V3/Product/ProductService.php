@@ -12,6 +12,7 @@ use SALESmanago\Helper\Mapper\AdapterInterface;
 use SALESmanago\Helper\Mapper\BuilderInterface;
 use SALESmanago\Helper\Mapper\ProductEntityBuilder;
 use SALESmanago\Model\Api\V3\ProductsModel;
+use SALESmanago\Model\Collections\Api\V3\ProductCatalogsCollection;
 use SALESmanago\Model\Collections\Api\V3\ProductsCollectionInterface;
 use SALESmanago\Exception\ApiV3Exception;
 use SALESmanago\Services\Api\V3\BasicService;
@@ -37,11 +38,16 @@ class ProductService extends BasicService
     protected $ProductsModel;
 
     /**
+     * @var array
+     */
+    protected $data = [];
+
+    /**
      * @throws Exception
      */
     public function __construct(
         ConfigurationInterface $ConfigurationV3,
-        RequestClientConfigurationInterface $cUrlClientConf = null
+        ?RequestClientConfigurationInterface $cUrlClientConf = null
     ) {
         parent::__construct(
             $ConfigurationV3,
@@ -68,15 +74,24 @@ class ProductService extends BasicService
      *
      * @param CatalogEntityInterface $Catalog
      * @param ProductsCollectionInterface $ProductsCollection
-     * @return array
+     * @param ProductCatalogsCollection|null $ProductCatalogsCollection
      * @throws ApiV3Exception
      */
     public function upsertProducts(
         CatalogEntityInterface $Catalog,
-        ProductsCollectionInterface $ProductsCollection
+        ProductsCollectionInterface $ProductsCollection,
+        ?ProductCatalogsCollection $ProductCatalogsCollection = null
     ): array
     {
-        //create request body:
+        if ($this->configuration->getCurlMulti() && $ProductCatalogsCollection) {
+            return $this->RequestService->requestCurlMulti(
+                self::REQUEST_METHOD_POST,
+                self::API_METHOD_UPSERT,
+                $ProductCatalogsCollection->toArray()
+            );
+        }
+
+        //create a request body:
         $data = $this->ProductsModel->getProductsToUpsert($Catalog, $ProductsCollection);
 
         //do request:

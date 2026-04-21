@@ -8,6 +8,8 @@ use SALESmanago\Exception\Exception;
 
 class Configuration extends AbstractConfiguration implements ConfigurationInterface, ReportConfigurationInterface, JsonSerializable
 {
+    use cUrlMultiConfigurationTrait;
+
     const
         ACTIVE                   = 'active',
         ENDPOINT                 = 'endpoint',

@@ -30,7 +30,7 @@ class ProductEntityBuilder implements BuilderInterface
     public function build(
         $productEntity,
         string $map,
-        AdapterInterface $adapter = null,
+        ?AdapterInterface $adapter = null,
         $fromObject = null
     ) {
         //deserialize map:

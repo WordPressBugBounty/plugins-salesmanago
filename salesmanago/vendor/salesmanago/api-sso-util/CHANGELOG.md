@@ -1,9 +1,31 @@
 SALESmanago library for integrations
 ------------------------------------
+Version 3.8.6 25.03.2026
+- Additional safeguards have been added to the execution of methods related to Product Catalogs.
+
+Version 3.8.5 25.09.2025
+- Fixed deprecation for php8.4.
+- Limited the number of images to 5 in Product Catalogs.
+
+Version 3.8.4 15.09.2025
+- Changed the type of the $cUrlClientConf argument to nullable in CatalogService.
+
+Version 3.8.3 03.09.2025
+- Added reporting for product catalogs;
+- Added ability to exclude specific keys from filtering in filterDataArray();
+
+Version 3.8.2 11.08.2025
+- Added handling all types of responses from API V3;
+
+Version 3.8.1 05.08.2025
+- Added nullable operator;
+- Added Product Catalogs Collection;
+- Added curl_multi_* handling for Product Upsert;
+
 Version 3.8.0 06.05.2025
 - Added chunk method to ProductsCollection for splitting collections into smaller parts;
 - Fixed potential error if API V3 service is not available;
-- Fixed parsing API V3 Exception code 14 message
+- Fixed parsing API V3 Exception code 14 message;
 
 Version 3.7.1 06.03.2025
 - Fixed empty custom details and system details serialization in ProductEntity;

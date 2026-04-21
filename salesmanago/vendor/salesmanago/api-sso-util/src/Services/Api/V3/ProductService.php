@@ -38,7 +38,7 @@ class ProductService extends BasicService
      */
     public function __construct(
         ConfigurationInterface $ConfigurationV3,
-        RequestClientConfigurationInterface $cUrlClientConf = null
+        ?RequestClientConfigurationInterface $cUrlClientConf = null
     ) {
         parent::__construct(
             $ConfigurationV3,

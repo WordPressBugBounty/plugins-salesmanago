@@ -3,6 +3,7 @@
 
 namespace SALESmanago\Helper;
 
+use SALESmanago\Entity\Api\V3\Product\ProductEntityInterface;
 use SALESmanago\Entity\Api\V3\Product\SystemDetailsInterface;
 use SALESmanago\Entity\Event\Event;
 
@@ -30,15 +31,19 @@ class DataHelper
      * Unset empty array values
      *
      * @param array $data
+     * @param array $allowedKeys
+     *
      * @return array
      */
-    public static function filterDataArray($data)
+    public static function filterDataArray(array $data, array $allowedKeys = []): array
     {
         $filteredData = array();
-        if (!is_array($data)) {
-            return $data;
-        }
+
         foreach ($data as $key => $value) {
+            if (in_array($key, $allowedKeys, true)) {
+                $filteredData[$key] = is_string($value) ? trim($value) : $value;
+                continue;
+            }
             //For arrays call recursively:
             if (is_array($value)) {
                 $filteredArray = self::filterDataArray($value);

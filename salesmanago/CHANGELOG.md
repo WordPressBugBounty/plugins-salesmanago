@@ -1,3 +1,6 @@
+# 3.11.2 released 20.04.2026
+- Updated API-SSO-UTIL library to 3.8.6
+
 # 3.11.1 released 27.03.2026
 - Fixed issue preventing data from being saved in the Integration Settings tab
 

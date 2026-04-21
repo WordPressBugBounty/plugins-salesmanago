@@ -124,6 +124,53 @@ class ReportService
     }
 
     /**
+     * Report of any action with details
+     *
+     * @param string $nameOfReportingItem
+     * @param string $typeOfSMEvent
+     * @param array $tags - tags of action
+     * @param array $eventDetails - additional details in key=>value array
+     * @param string $actType
+     * @return bool
+     */
+    public function reportActionWithDetails(
+        string $nameOfReportingItem,
+        array $tags = [],
+        array $eventDetails = [],
+        string $typeOfSMEvent = 'OTHER',
+        string $actType = ReportModel::ACT_UNKNOWN
+    ): bool {
+        try {
+            if (!$this->conf->getActiveReporting()) {
+                return false;
+            }
+
+            $this->endpointsExchange();
+
+            $this->transferService = new ContactAndEventTransferService($this->conf);
+            $this->transferService->transferBoth(
+                $this->reportModel->getClientAsContactWithTags(
+                    $tags,
+                    $nameOfReportingItem,
+                    $actType
+                ),
+                $this->reportModel->getActionAsEventWithDetails(
+                    $eventDetails,
+                    $typeOfSMEvent,
+                    $nameOfReportingItem,
+                    $actType
+                )
+            );
+
+            $this->endpointsExchange();
+            return true;
+        } catch (SalesmanagoException|Exception|Error $e) {
+            $this->endpointsExchange();
+            return false;
+        }
+    }
+
+    /**
      * Report of export action
      *
      * @param string $exportType - see ReportModel const EXPORT_TYPE_...

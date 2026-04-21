@@ -3,9 +3,12 @@
 namespace SALESmanago\Entity\Api\V3;
 
 use SALESmanago\Entity\AbstractConfiguration;
+use SALESmanago\Entity\cUrlMultiConfigurationTrait;
 
 class ConfigurationEntity extends AbstractConfiguration implements ConfigurationInterface
 {
+    use cUrlMultiConfigurationTrait;
+
     /**
      * @var null|string
      */

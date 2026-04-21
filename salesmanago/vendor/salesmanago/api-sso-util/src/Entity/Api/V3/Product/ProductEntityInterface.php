@@ -8,6 +8,7 @@ use SALESmanago\Entity\DetailsInterface;
 interface ProductEntityInterface extends JsonSerializable
 {
     const DISCOUNT_PRICE = 'discountPrice';
+    const DESCRIPTION = 'description';
 
     /**
      * @return ProductEntityInterface

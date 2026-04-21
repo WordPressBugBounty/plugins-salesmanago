@@ -248,7 +248,7 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
      */
     public function setImageUrls(array $imageUrls)
     {
-        $this->imageUrls = $imageUrls;
+        $this->imageUrls = array_slice($imageUrls, 0, 5);
         return $this;
     }
 
@@ -436,7 +436,7 @@ class ProductEntity extends AbstractEntity implements ProductEntityInterface
             }
         }
 
-        $data = DataHelper::filterDataArray($data);
+        $data = DataHelper::filterDataArray($data, [self::DESCRIPTION]);
 
         if (!empty($systemDetails)) {
             $data['systemDetails'] = $systemDetails->jsonSerialize();

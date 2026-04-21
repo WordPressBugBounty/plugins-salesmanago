@@ -83,7 +83,10 @@ class ProductsCollection extends AbstractCollection implements ProductsCollectio
 
             foreach ($attributes as $attribute) {
                 $method = 'get' . ucfirst($attribute);
-                $arr[$attribute] = $collectionItem->$method();
+
+                if (method_exists($collectionItem, $method)) {
+                    $arr[$attribute] = $collectionItem->$method();
+                }
             }
 
             $answer[] = $arr;

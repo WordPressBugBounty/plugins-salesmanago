@@ -31,7 +31,7 @@ class AuthService extends BasicService
 
     public function __construct(
         ConfigurationInterface $ConfigurationV3,
-        RequestClientConfigurationInterface $cUrlClientConf = null
+        ?RequestClientConfigurationInterface $cUrlClientConf = null
     ) {
         parent::__construct($ConfigurationV3, $cUrlClientConf);
 
@@ -47,7 +47,7 @@ class AuthService extends BasicService
      */
     public function create(
         User $User,
-        ApiKeyMetaEntityInterface $ApiKeyMetaEntity = null
+        ?ApiKeyMetaEntityInterface $ApiKeyMetaEntity = null
     ): Response {
         $data = $this->AuthModel->getCreate($User, $ApiKeyMetaEntity);
 

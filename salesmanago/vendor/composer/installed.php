@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'salesmanago/wordpress',
-        'pretty_version' => '3.11.1',
-        'version' => '3.11.1.0',
+        'pretty_version' => '3.11.2',
+        'version' => '3.11.2.0',
         'reference' => NULL,
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
@@ -11,17 +11,17 @@
     ),
     'versions' => array(
         'salesmanago/api-sso-util' => array(
-            'pretty_version' => '3.8.0',
-            'version' => '3.8.0.0',
-            'reference' => '32743152a2c9389d8cca89753a6445ec8a9d3b09',
+            'pretty_version' => '3.8.6',
+            'version' => '3.8.6.0',
+            'reference' => '468b4ad339b54dc0750e9b950844c16af9d7d96a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../salesmanago/api-sso-util',
             'aliases' => array(),
             'dev_requirement' => false,
         ),
         'salesmanago/wordpress' => array(
-            'pretty_version' => '3.11.1',
-            'version' => '3.11.1.0',
+            'pretty_version' => '3.11.2',
+            'version' => '3.11.2.0',
             'reference' => NULL,
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',

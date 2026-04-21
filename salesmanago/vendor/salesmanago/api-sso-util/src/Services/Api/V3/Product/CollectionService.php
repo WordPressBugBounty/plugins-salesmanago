@@ -42,7 +42,7 @@ class CollectionService extends BasicService
      */
     public function __construct(
         ConfigurationInterface $ConfigurationV3,
-        RequestClientConfigurationInterface $cUrlClientConf = null
+        ?RequestClientConfigurationInterface $cUrlClientConf = null
     )  {
         parent::__construct($ConfigurationV3, $cUrlClientConf);
         $this->productCollectionModel = new ProductCollectionModel();

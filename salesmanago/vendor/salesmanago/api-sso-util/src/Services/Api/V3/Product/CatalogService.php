@@ -29,7 +29,7 @@ class CatalogService extends BasicService
      */
     public function __construct(
         ConfigurationInterface $ConfigurationV3,
-        RequestClientConfigurationInterface $cUrlClientConf = null
+        ?RequestClientConfigurationInterface $cUrlClientConf = null
     ) {
         $this->catalogModel = new CatalogModel();
         parent::__construct($ConfigurationV3, $cUrlClientConf);

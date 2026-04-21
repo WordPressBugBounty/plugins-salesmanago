@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInitbc82258aef77f951a3cbedef47cb0b43
+class ComposerStaticInitdf0785160b05926b54427aa10234a6db
 {
     public static $prefixLengthsPsr4 = array (
         't' => 
@@ -97,6 +97,7 @@ class ComposerStaticInitbc82258aef77f951a3cbedef47cb0b43
         'SALESmanago\\Entity\\UnionConfigurationInterface' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Entity/UnionConfigurationInterface.php',
         'SALESmanago\\Entity\\User' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Entity/User.php',
         'SALESmanago\\Entity\\cUrlClientConfiguration' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Entity/cUrlClientConfiguration.php',
+        'SALESmanago\\Entity\\cUrlMultiConfigurationTrait' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Entity/cUrlMultiConfigurationTrait.php',
         'SALESmanago\\Exception\\ApiV3Exception' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Exception/ApiV3Exception.php',
         'SALESmanago\\Exception\\Exception' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Exception/Exception.php',
         'SALESmanago\\Exception\\ExceptionCodeResolver' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Exception/ExceptionCodeResolver.php',
@@ -127,6 +128,7 @@ class ComposerStaticInitbc82258aef77f951a3cbedef47cb0b43
         'SALESmanago\\Model\\Api\\V3\\Product\\CollectionModel' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Model/Api/V3/Product/CollectionModel.php',
         'SALESmanago\\Model\\Api\\V3\\ProductsModel' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Model/Api/V3/ProductsModel.php',
         'SALESmanago\\Model\\Collections\\AbstractCollection' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Model/Collections/AbstractCollection.php',
+        'SALESmanago\\Model\\Collections\\Api\\V3\\ProductCatalogsCollection' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Model/Collections/Api/V3/ProductCatalogsCollection.php',
         'SALESmanago\\Model\\Collections\\Api\\V3\\Product\\Collection\\ItemsCollection' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Model/Collections/Api/V3/Product/Collection/ItemsCollection.php',
         'SALESmanago\\Model\\Collections\\Api\\V3\\Product\\Collection\\ItemsCollectionInterface' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Model/Collections/Api/V3/Product/Collection/ItemsCollectionInterface.php',
         'SALESmanago\\Model\\Collections\\Api\\V3\\ProductsCollection' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Model/Collections/Api/V3/ProductsCollection.php',
@@ -155,6 +157,7 @@ class ComposerStaticInitbc82258aef77f951a3cbedef47cb0b43
         'SALESmanago\\Services\\Api\\V3\\ProductCollectionService' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Services/Api/V3/ProductCollectionService.php',
         'SALESmanago\\Services\\Api\\V3\\ProductService' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Services/Api/V3/ProductService.php',
         'SALESmanago\\Services\\Api\\V3\\Product\\CatalogService' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Services/Api/V3/Product/CatalogService.php',
+        'SALESmanago\\Services\\Api\\V3\\Product\\CatalogServiceWithReporting' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Services/Api/V3/Product/CatalogServiceWithReporting.php',
         'SALESmanago\\Services\\Api\\V3\\Product\\CollectionService' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Services/Api/V3/Product/CollectionService.php',
         'SALESmanago\\Services\\Api\\V3\\Product\\ProductService' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Services/Api/V3/Product/ProductService.php',
         'SALESmanago\\Services\\Api\\V3\\RequestService' => __DIR__ . '/..' . '/salesmanago/api-sso-util/src/Services/Api/V3/RequestService.php',
@@ -240,9 +243,9 @@ class ComposerStaticInitbc82258aef77f951a3cbedef47cb0b43
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInitbc82258aef77f951a3cbedef47cb0b43::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInitbc82258aef77f951a3cbedef47cb0b43::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInitbc82258aef77f951a3cbedef47cb0b43::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitdf0785160b05926b54427aa10234a6db::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitdf0785160b05926b54427aa10234a6db::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInitdf0785160b05926b54427aa10234a6db::$classMap;
 
         }, null, ClassLoader::class);
     }

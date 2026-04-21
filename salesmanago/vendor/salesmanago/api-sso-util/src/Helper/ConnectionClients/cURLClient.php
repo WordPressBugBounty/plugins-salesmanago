@@ -57,6 +57,11 @@ class cURLClient
     protected $response = null;
 
     /**
+     * @var array - array of responses
+     */
+    protected $responses = [];
+
+    /**
      * @var array - array of header => value
      */
     protected $headers = [];
@@ -194,6 +199,76 @@ class cURLClient
     public function responseJsonDecode()
     {
         return json_decode($this->response, true);
+    }
+
+    /**
+     * Get responses from multi cURL request
+     * @return array
+     */
+    public function getResponses()
+    {
+        return $this->responses;
+    }
+
+    /**
+     * Send data with curl multi;
+     * @param array|null $data
+     * @throws Exception
+     */
+    public function requestCurlMulti($data = null) {
+        if (!is_array($data)) {
+            throw new Exception(
+                'Data for SALESmanago cURL_multi request must be an array',
+                400
+            );
+        }
+
+        $multiHandle = curl_multi_init();
+        $curlHandles = [];
+
+        $this->headers['Content-Type'] = 'application/json';
+        $this->timeOut = (empty($this->timeOut)) ? self::TIMEOUT : $this->timeOut;
+        $this->timeOutMs = (empty($this->timeOutMs)) ? self::TIMEOUT_MS : $this->timeOutMs;
+        $this->connectTimeOutMs = (empty($this->connectTimeOutMs)) ? self::CONNECTTIMEOUT_MS : $this->connectTimeOutMs;
+        $url = empty($this->host) ? $this->url : $this->host . $this->endpoint;
+
+        foreach ($data as $index => $item) {
+            $item = json_encode($item, JSON_INVALID_UTF8_IGNORE);
+
+            $this->headers['Content-Length'] = strlen($item);
+
+            $ch = curl_init($url);
+
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $item);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $this->type);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $this->buildHeaders());
+            curl_setopt($ch, CURLOPT_TIMEOUT, $this->timeOut);
+            curl_setopt($ch, CURLOPT_TIMEOUT_MS, $this->timeOutMs);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT_MS, $this->connectTimeOutMs);
+
+            $curlHandles[$index] = $ch;
+            curl_multi_add_handle($multiHandle, $ch);
+        }
+
+        $running = 1;
+        while ($running > 0) {
+            curl_multi_exec($multiHandle, $running);
+            if ($running > 0) {
+                curl_multi_select($multiHandle);
+            }
+        }
+
+        foreach ($curlHandles as $index => $ch) {
+            $response = curl_multi_getcontent($ch);
+            $this->responses[$index] = json_decode($response, true);
+
+            curl_multi_remove_handle($multiHandle, $ch);
+            curl_close($ch);
+        }
+
+        curl_multi_close($multiHandle);
     }
 
     /**

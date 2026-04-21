@@ -25,4 +25,15 @@ interface ConfigurationInterface
      * @return string
      */
     public function getApiV3Endpoint();
+
+    /**
+     * @param bool $cUrlMulti
+     * @return $this
+     */
+    public function setCurlMulti(bool $cUrlMulti);
+
+    /**
+     * @return bool
+     */
+    public function getCurlMulti();
 }

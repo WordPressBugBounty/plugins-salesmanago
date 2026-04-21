@@ -27,11 +27,9 @@ class AbstractEntity
         foreach ($data as $itemName => $itemValue) {
             $methodName = 'set'.ucfirst($itemName);
 
-            if (!method_exists($this, $methodName)) {
-                throw new Exception("Set method :: {$methodName} - doesn't exist");
+            if (method_exists($this, $methodName)) {
+                $this->$methodName($itemValue);
             }
-
-            $this->$methodName($itemValue);
         }
     }
 
