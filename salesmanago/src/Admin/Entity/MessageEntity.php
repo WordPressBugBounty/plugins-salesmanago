@@ -42,12 +42,11 @@ final class MessageEntity
     public function addException($e, $type='error')
     {
         $this->messages[] = array(
-            'type'    => $type,
-            'message' => $e->getMessage(),
-            'code'    => $e->getCode()
+            'type'    => $this->sanitize_type( $type ),
+            'message' => $this->sanitize_message( $e->getMessage() ),
+            'code'    => $this->sanitize_code( $e->getCode() )
         );
     }
-
 
     /**
      * @param string $message
@@ -60,9 +59,9 @@ final class MessageEntity
             $code = 700;
         }
         $this->messages[] = array(
-            'type'    => $type,
-            'message' => $message,
-            'code'    => $code
+            'type'    => $this->sanitize_type( $type ),
+            'message' => $this->sanitize_message( $message ),
+            'code'    => $this->sanitize_code( $code )
         );
     }
 
@@ -124,7 +123,6 @@ final class MessageEntity
             681 => __('Error on listing Fluent Forms', 'salesmanago'),
             690 => __('Error on Monitoring code page', 'salesmanago'),
 
-
             700 => __('Success.', 'salesmanago'),
             701 => __('Logged in.', 'salesmanago'),
             702 => __('Logged out.', 'salesmanago'),
@@ -132,13 +130,13 @@ final class MessageEntity
 
             // APIv3 Product Catalog Messages
             704 => __( 'Authentication successful. You can select an existing Product Catalog or create a new one.', 'salesmanago' ),
-            705 => __( 'The API key doesn’t seem valid. Make sure the key is active and all characters have been copied.', 'salesmanago' ),
+            705 => __( 'The API key doesn\'t seem valid. Make sure the key is active and all characters have been copied.', 'salesmanago' ),
             706 => __( 'Unknown API error.', 'salesmanago' ),
-	        707 => __( 'New Product Catalog has been created. Please refresh Catalog list to use it.', 'salesmanago' ),
-	        708 => __( 'Incorrect location field value. Please check it in the Integration settings tab', 'salesmanago' ),
-	        709 => __( 'Error on setting the active catalog', 'salesmanago' ),
-	        710 => __( 'The request has timed out. Please try again', 'salesmanago' ),
-	        711 => __( 'Product Catalog has not been created. Please check the About tab for error information.', 'salesmanago' )
+            707 => __( 'New Product Catalog has been created. Please refresh Catalog list to use it.', 'salesmanago' ),
+            708 => __( 'Incorrect location field value. Please check it in the Integration settings tab', 'salesmanago' ),
+            709 => __( 'Error on setting the active catalog', 'salesmanago' ),
+            710 => __( 'The request has timed out. Please try again', 'salesmanago' ),
+            711 => __( 'Product Catalog has not been created. Please check the About tab for error information.', 'salesmanago' )
         );
         if(!isset($messages[$code]) && isset($messages[floor($code/10)*10])) {
             $code = floor($code/10)*10;
@@ -147,7 +145,8 @@ final class MessageEntity
         } elseif (!isset($messages[$code])) {
             $code = 0;
         }
-        return  ($appendConsoleInfo) ? $messages[$code].$checkConsole : $messages[$code];
+        $message = isset($messages[$code]) ? esc_html( $messages[$code] ) : esc_html( $messages[0] );
+        return  ($appendConsoleInfo) ? $message . $checkConsole : $message;
     }
 
     /**
@@ -160,18 +159,16 @@ final class MessageEntity
             if( empty( $message['type'] ) ) {
                 continue;
             }
+            $type = esc_attr( $this->sanitize_type( $message['type'] ) );
+            
             if( $message['type'] === 'error' || $message['type'] === 'warning' ) {
                 $viewMessage = $this->getMessageByCode( $message['code'], true );
-                $consoleMessage = str_replace("'", '\\\'',
-                    str_replace( "\n", '\\n', $message['message'] ) );
-                $type = empty( $message['type'] ) ? 'info' : $message['type'];
-
+                $consoleMessage = wp_json_encode( $message['message'] );
+                
                 $out .= '<div class="salesmanago-notice notice notice-' . $type . ' inline">' . $viewMessage . '</div>';
-                $out .= '<script>console.warn(\'SM error '. $message['code'] . ': ' . $consoleMessage . '\')</script>';
+                $out .= '<script>console.warn("SM error ' . esc_js( $message['code'] ) . ': " + ' . $consoleMessage . ')</script>';
             } elseif ( $message['type'] === 'success' || $message['type'] === 'info' ) {
                 $viewMessage = $this->getMessageByCode( $message['code'], false );
-                $type = empty( $message['type'] ) ? 'info' : $message['type'];
-
                 $out .= '<div class="salesmanago-notice notice notice-' . $type . ' inline">' . $viewMessage . '</div>';
             } elseif ( $message['type'] === 'apiV3Error' ) {
                 $viewMessage = $this->getMessageByCode( $message['code'], false );
@@ -183,10 +180,23 @@ final class MessageEntity
 
     /**
      * @param mixed $messages
+     * @return $this
      */
     public function setMessages($messages)
     {
-        $this->messages = $messages;
+        if ( is_array( $messages ) ) {
+            $sanitized = array();
+            foreach ( $messages as $msg ) {
+                if ( is_array( $msg ) && isset( $msg['type'], $msg['message'], $msg['code'] ) ) {
+                    $sanitized[] = array(
+                        'type'    => $this->sanitize_type( $msg['type'] ),
+                        'message' => $this->sanitize_message( $msg['message'] ),
+                        'code'    => $this->sanitize_code( $msg['code'] ),
+                    );
+                }
+            }
+            $this->messages = $sanitized;
+        }
         return $this;
     }
 
@@ -200,10 +210,51 @@ final class MessageEntity
 
     /**
      * @param bool $messagesAfterView
+     * @return $this
      */
     public function setMessagesAfterView($messagesAfterView)
     {
-        $this->messagesAfterView = $messagesAfterView;
+        $this->messagesAfterView = (bool) $messagesAfterView;
         return $this;
+    }
+    
+    // ========================================================================
+    // SECURITY HELPER METHODS (for sanitization/escaping)
+    // ========================================================================
+    
+    /**
+     * Sanitize message type to allowed values only
+     *
+     * @param string $type
+     * @return string
+     */
+    private function sanitize_type( $type ) {
+        $allowed = array( 'error', 'warning', 'success', 'info', 'apiV3Error' );
+        return in_array( $type, $allowed, true ) ? $type : 'info';
+    }
+    
+    /**
+     * Sanitize message text to prevent XSS and log injection
+     *
+     * @param string $message
+     * @return string
+     */
+    private function sanitize_message( $message ) {
+        if ( ! is_string( $message ) ) {
+            return '';
+        }
+        $sanitized = preg_replace( '/[\r\n\t\x00-\x1F\x7F]/', ' ', $message );
+        // Trim and limit length to prevent log flooding/DoS
+        return substr( trim( $sanitized ), 0, 2048 );
+    }
+    
+    /**
+     * Sanitize message code to integer
+     *
+     * @param mixed $code
+     * @return int
+     */
+    private function sanitize_code( $code ) {
+        return filter_var( $code, FILTER_VALIDATE_INT ) ?: 0;
     }
 }

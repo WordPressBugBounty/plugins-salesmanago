@@ -3,7 +3,7 @@
  * Plugin Name: SALESmanago & Leadoo
  * Plugin URI:  https://www.salesmanago.com/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
  * Description: SALESmanago Marketing Automation integration for WordPress, WooCommerce, Contact Form 7, Gravity Forms, Tier Pricing
- * Version:     3.11.2
+ * Version:     3.11.3
  * Tested up to: 6.9.4
  * Requires PHP: 7.4
  * Author:      SALESmanago
@@ -65,6 +65,3 @@ function main_salesmanago() {
 }
 
 add_action('plugins_loaded', 'main_salesmanago');
-
-
-

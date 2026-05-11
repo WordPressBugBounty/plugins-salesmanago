@@ -205,6 +205,4 @@ return array(
     'bhr\\Includes\\Helper' => $baseDir . '/src/Includes/Helper.php',
     'bhr\\Includes\\SecureHelper' => $baseDir . '/src/Includes/SecureHelper.php',
     'bhr\\Includes\\SmProduct' => $baseDir . '/src/Includes/SmProduct.php',
-    'tests\\Unit\\Model\\AdminModelTest' => $baseDir . '/tests/Unit/Model/AdminModelTest.php',
-    'tests\\Unit\\TestCase' => $baseDir . '/tests/Unit/TestCase.php',
 );

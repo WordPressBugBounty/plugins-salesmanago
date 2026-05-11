@@ -1,3 +1,9 @@
+# 3.11.3 released 07.05.2026
+- Improved overall application security and hardening across export and AJAX handling mechanisms.
+- Enhanced input validation, sanitization, and response handling to improve platform stability and reliability.
+- Refactored database and request processing logic for better consistency, safety, and maintainability.
+- Strengthened authorization, error handling, and internal data validation mechanisms.
+
 # 3.11.2 released 20.04.2026
 - Updated API-SSO-UTIL library to 3.8.6
 

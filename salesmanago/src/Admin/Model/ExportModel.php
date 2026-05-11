@@ -52,7 +52,7 @@ class ExportModel {
 	protected $started;
 	protected $lastSuccess;
 	protected $packageCount          = 0;
-	protected $lastExportedPackage   = -1;  // No packages have been exported. 0 will be the first one.
+	protected $lastExportedPackage   = -1;
 	protected $status                = 'unknown';
 	protected $message               = '';
 	protected $productIdentifierType = self::DEFAULT_PRODUCT_IDENTIFIER_TYPE;
@@ -65,7 +65,6 @@ class ExportModel {
 		$this->Configuration  = $AdminModel->getConfiguration();
 		$this->ProductBuilder = new ProductBuilder( $AdminModel );
 	}
-
 
 	/**
 	 * @param int $packageCount
@@ -113,7 +112,7 @@ class ExportModel {
 	 * @param string $message
 	 */
 	public function setMessage( $message ) {
-		$this->message = $message;
+		$this->message = $this->sanitize_output( $message );
 	}
 
 	/**
@@ -137,15 +136,32 @@ class ExportModel {
 	 */
 	public function parseArgs() {
 		try {
-			$data = json_decode( base64_decode( $_REQUEST['data'] ) );
+			if ( ! isset( $_REQUEST['data'] ) ) {
+				throw new Exception( 'Missing request data' );
+			}
 
-			$this->dateFrom = empty( $data->dateFrom )
+			$raw_data = sanitize_text_field( $_REQUEST['data'] );
+			$decoded  = base64_decode( $raw_data, true );
+			
+			if ( false === $decoded ) {
+				throw new Exception( 'Invalid base64 encoding' );
+			}
+			
+			$data = json_decode( $decoded );
+			
+			if ( json_last_error() !== JSON_ERROR_NONE || ! is_object( $data ) ) {
+				throw new Exception( 'Invalid JSON data' );
+			}
+
+			$raw_date_from = isset( $data->dateFrom ) ? $data->dateFrom : '';
+			$this->dateFrom = empty( $raw_date_from )
 				? '2000-01-01'
-				: $data->dateFrom;
+				: $this->validate_date_format( sanitize_text_field( $raw_date_from ) );
 
-			$this->dateTo = empty( $data->dateTo )
+			$raw_date_to = isset( $data->dateTo ) ? $data->dateTo : '';
+			$this->dateTo = empty( $raw_date_to )
 				? date( 'Y-m-d', time() + 86400 )
-				: date( 'Y-m-d', strtotime( $data->dateTo ) + 86400 );
+				: date( 'Y-m-d', strtotime( $this->validate_date_format( sanitize_text_field( $raw_date_to ) ) ) + 86400 );
 
 			$this->tags = empty( $data->tags )
 				? array()
@@ -163,24 +179,27 @@ class ExportModel {
 				? time()
 				: (int) $data->started;
 
-			$this->productIdentifierType = empty( $data->identifierType )
+			$raw_identifier = isset( $data->identifierType ) ? $data->identifierType : '';
+			$this->productIdentifierType = empty( $raw_identifier )
 				? self::DEFAULT_PRODUCT_IDENTIFIER_TYPE
-				: $data->identifierType;
+				: $this->validate_identifier_type( sanitize_text_field( $raw_identifier ) );
 
 			$this->lastSuccess = empty( $data->lastSuccess )
 				? 0
 				: (int) $data->lastSuccess;
 
-			$this->statuses = self::checkStatusesFromRequest( $data->statuses )
-				? 'wc-completed'
-				: $data->statuses;
+			$raw_statuses = isset( $data->statuses ) ? sanitize_text_field( $data->statuses ) : '';
+			$this->statuses = self::checkStatusesFromRequest( $raw_statuses )
+				? $raw_statuses
+				: 'wc-completed';
 
-			$this->exportAs = empty( $data->exportAs ) || ! in_array( $data->exportAs, self::ALLOWED_TYPES )
+			$raw_export_as = isset( $data->exportAs ) ? $data->exportAs : '';
+			$this->exportAs = empty( $raw_export_as ) || ! in_array( $raw_export_as, self::ALLOWED_TYPES, true )
 				? self::PURCHASE
-				: $data->exportAs;
+				: sanitize_text_field( $raw_export_as );
 
 		} catch ( \Exception $e ) {
-			$this->message = $e->getMessage();
+			$this->message = $this->sanitize_output( $e->getMessage() );
 			$this->status  = self::FAILED;
 			$this->buildResponse();
 		}
@@ -199,7 +218,7 @@ class ExportModel {
 			'type'                => $this->exportType,
 			'tags'                => $this->tags,
 			'status'              => $this->status,
-			'message'             => $this->message,
+			'message'             => $this->sanitize_output( $this->message ),
 			'identifierType'      => $this->productIdentifierType,
 			'dateFrom'            => $this->dateFrom,
 			'dateTo'              => date( 'Y-m-d', strtotime( $this->dateTo ) - 86400 ),
@@ -207,11 +226,8 @@ class ExportModel {
 			'statuses'            => $this->statuses,
 			'exportAs'            => $this->exportAs,
 		);
-		echo( wp_json_encode( $response ) );
-		die();
+		wp_send_json( $response );
 	}
-
-
 
 	/**
 	 * @param $collection
@@ -236,42 +252,42 @@ class ExportModel {
 
 				/* Contact */
 				$customer['name'] = trim(
-					( isset( $customer['first_name'] ) ? $customer['first_name'] : '' ) .
+					( isset( $customer['first_name'] ) ? sanitize_text_field( $customer['first_name'] ) : '' ) .
 					' ' .
-					( isset( $customer['last_name'] ) ? $customer['last_name'] : '' )
+					( isset( $customer['last_name'] ) ? sanitize_text_field( $customer['last_name'] ) : '' )
 				);
 				$Contact
-					->setEmail( isset( $customer['email'] ) ? $customer['email'] : null )
-					->setName( isset( $customer['name'] ) ? $customer['name'] : null )
-					->setExternalId( isset( $customer['user_id'] ) ? $customer['user_id'] : null )
-					->setPhone( isset( $customer['phone'] ) ? $customer['phone'] : null );
+					->setEmail( isset( $customer['email'] ) ? sanitize_email( $customer['email'] ) : null )
+					->setName( isset( $customer['name'] ) ? sanitize_text_field( $customer['name'] ) : null )
+					->setExternalId( isset( $customer['user_id'] ) ? (int) $customer['user_id'] : null )
+					->setPhone( isset( $customer['phone'] ) ? sanitize_text_field( $customer['phone'] ) : null );
 
 				/* Address */
 				$customer['address'] = trim(
-					( isset( $customer['address_1'] ) ? $customer['address_1'] : '' ) .
+					( isset( $customer['address_1'] ) ? sanitize_text_field( $customer['address_1'] ) : '' ) .
 					' ' .
-					( isset( $customer['address_2'] ) ? $customer['address_2'] : '' )
+					( isset( $customer['address_2'] ) ? sanitize_text_field( $customer['address_2'] ) : '' )
 				);
 				$Address
-					->setStreetAddress( isset( $customer['address'] ) ? $customer['address'] : null )
-					->setCity( isset( $customer['city'] ) ? $customer['city'] : null )
-					->setZipCode( isset( $customer['postcode'] ) ? $customer['postcode'] : null );
+					->setStreetAddress( isset( $customer['address'] ) ? sanitize_text_field( $customer['address'] ) : null )
+					->setCity( isset( $customer['city'] ) ? sanitize_text_field( $customer['city'] ) : null )
+					->setZipCode( isset( $customer['postcode'] ) ? sanitize_text_field( $customer['postcode'] ) : null );
 
 				/* Options */
 				$Options
 					->setTags( empty( $this->tags ) ? array() : $this->tags )
-					->setCreatedOn( isset( $customer['created_on'] ) ? $customer['created_on'] : null );
+					->setCreatedOn( isset( $customer['created_on'] ) ? sanitize_text_field( $customer['created_on'] ) : null );
 
 				$ContactsCollection->addItem( $Contact );
 			}
 			return $ContactsCollection;
 		} catch ( Exception $e ) {
-			$this->message = $e->getViewMessage();
+			$this->message = $this->sanitize_output( method_exists( $e, 'getViewMessage' ) ? $e->getViewMessage() : $e->getMessage() );
 			$this->status  = self::FAILED;
 			$this->buildResponse();
 
 		} catch ( \Exception $e ) {
-			$this->message = $e->getMessage();
+			$this->message = $this->sanitize_output( $e->getMessage() );
 			$this->status  = self::FAILED;
 			$this->buildResponse();
 		}
@@ -301,20 +317,20 @@ class ExportModel {
 				}
 
 				$Event
-					->setEmail( isset( $event['email'] ) ? $event['email'] : null )
+					->setEmail( isset( $event['email'] ) ? sanitize_email( $event['email'] ) : null )
 					->setDate( $date )
-					->setDescription( isset( $event['description'] ) ? $event['description'] : null )
-					->setProducts( isset( $event['products'] ) ? $event['products'] : null )
-					->setValue( isset( $event['value'] ) ? $event['value'] : null )
-					->setContactExtEventType( isset( $event['contactExtEventType'] ) ? $event['contactExtEventType'] : self::PURCHASE )
-					->setExternalId( isset( $event['externalId'] ) ? $event['externalId'] : null )
-					->setShopDomain( isset( $event['shopDomain'] ) ? $event['shopDomain'] : get_site_url() )
-					->setLocation( ! empty( $this->Configuration->getLocation() ) ? $this->Configuration->getLocation() : md5( get_site_url() ) )
+					->setDescription( isset( $event['description'] ) ? sanitize_text_field( $event['description'] ) : null )
+					->setProducts( isset( $event['products'] ) ? sanitize_text_field( $event['products'] ) : null )
+					->setValue( isset( $event['value'] ) ? floatval( $event['value'] ) : null )
+					->setContactExtEventType( isset( $event['contactExtEventType'] ) ? sanitize_text_field( $event['contactExtEventType'] ) : self::PURCHASE )
+					->setExternalId( isset( $event['externalId'] ) ? sanitize_text_field( $event['externalId'] ) : null )
+					->setShopDomain( isset( $event['shopDomain'] ) ? esc_url_raw( $event['shopDomain'] ) : get_site_url() )
+					->setLocation( ! empty( $this->Configuration->getLocation() ) ? sanitize_text_field( $this->Configuration->getLocation() ) : md5( get_site_url() ) )
 					->setDetails(
 						array(
-							'1' => isset( $event['detail1'] ) ? $event['detail1'] : null,
-							'2' => isset( $event['detail2'] ) ? $event['detail2'] : null,
-							'3' => isset( $event['detail3'] ) ? $event['detail3'] : null,
+							'1' => isset( $event['detail1'] ) ? sanitize_text_field( $event['detail1'] ) : null,
+							'2' => isset( $event['detail2'] ) ? sanitize_text_field( $event['detail2'] ) : null,
+							'3' => isset( $event['detail3'] ) ? sanitize_text_field( $event['detail3'] ) : null,
 						)
 					);
 
@@ -322,12 +338,12 @@ class ExportModel {
 			}
 			return $EventsCollection;
 		} catch ( Exception $e ) {
-			$this->message = $e->getViewMessage();
+			$this->message = $this->sanitize_output( method_exists( $e, 'getViewMessage' ) ? $e->getViewMessage() : $e->getMessage() );
 			$this->status  = self::FAILED;
 			$this->buildResponse();
 
 		} catch ( \Exception $e ) {
-			$this->message = $e->getMessage();
+			$this->message = $this->sanitize_output( $e->getMessage() );
 			$this->status  = self::FAILED;
 			$this->buildResponse();
 		}
@@ -348,6 +364,7 @@ class ExportModel {
 				$query .= 'SELECT COUNT(*) AS count FROM (';
 			}
 
+			// Build base query with placeholders
 			$query .= "
             SELECT DISTINCT 
                    B.meta_value as first_name,
@@ -399,22 +416,30 @@ class ExportModel {
 
             WHERE
                   A.post_type = 'shop_order'
-            AND
-                  A.post_date >= '{$this->dateFrom}'
-            AND
-                  A.post_date <= '{$this->dateTo}'
             ";
 
+			$query .= $this->db->prepare( "
+            AND
+                  A.post_date >= %s
+            AND
+                  A.post_date <= %s
+            ", $this->dateFrom, $this->dateTo );
+
 			if ( ! empty( $this->Configuration->getIgnoredDomains() ) ) {
-				$query .= "AND SUBSTRING_INDEX(K.meta_value, '@', -1) NOT IN('" . implode( "','", $this->Configuration->getIgnoredDomains() ) . "')";
+				$ignored_domains = array_map( 'sanitize_text_field', $this->Configuration->getIgnoredDomains() );
+				if ( ! empty( $ignored_domains ) ) {
+					$placeholders = implode( ',', array_fill( 0, count( $ignored_domains ), '%s' ) );
+					$query .= $this->db->prepare( "
+                    AND SUBSTRING_INDEX(K.meta_value, '@', -1) NOT IN($placeholders)
+                    ", ...$ignored_domains );
+				}
 			}
 
 			if ( ! $count ) {
-				$query .= "
-                LIMIT {$limit}
-
-                OFFSET {$offset}
-                ";
+				$query .= $this->db->prepare( "
+                LIMIT %d
+                OFFSET %d
+                ", $limit, $offset );
 			}
 
 			if ( $count ) {
@@ -423,7 +448,7 @@ class ExportModel {
 
 			return trim( preg_replace( '/\s\s+/', ' ', $query ) );
 		} catch ( \Exception $e ) {
-			$this->message = $e->getMessage();
+			$this->message = $this->sanitize_output( $e->getMessage() );
 			$this->status  = self::FAILED;
 			$this->buildResponse();
 		}
@@ -488,16 +513,16 @@ class ExportModel {
 									? $WcProduct->get_parent_id()
 									: $WcProduct->get_id();
 								$prodArr['names'][]        = ( $WcProduct->get_name() )
-									? $WcProduct->get_name()
+									? sanitize_text_field( $WcProduct->get_name() )
 									: '';
 								$prodArr['quantity'][]     = ( $product->get_quantity() )
-									? $product->get_quantity()
+									? (int) $product->get_quantity()
 									: '';
 								$prodArr['variationIds'][] = ( $WcProduct->get_id() )
 									? $WcProduct->get_id()
 									: '';
 								$prodArr['skus'][]         = ( $WcProduct->get_sku() )
-									? $WcProduct->get_sku()
+									? sanitize_text_field( $WcProduct->get_sku() )
 									: '';
 							}
 						}
@@ -511,12 +536,12 @@ class ExportModel {
 				return $data;
 			}
 		} catch ( Exception $e ) {
-			$this->message = $e->getViewMessage();
+			$this->message = $this->sanitize_output( method_exists( $e, 'getViewMessage' ) ? $e->getViewMessage() : $e->getMessage() );
 			$this->status  = self::FAILED;
 			$this->buildResponse();
 
 		} catch ( \Exception $e ) {
-			$this->message = $e->getMessage();
+			$this->message = $this->sanitize_output( $e->getMessage() );
 			$this->status  = self::FAILED;
 			$this->buildResponse();
 		}
@@ -530,44 +555,44 @@ class ExportModel {
 		$exportAs = self::PURCHASE
 	) {
 		$data     = array(
-			'email'               => $order->get_billing_email(),
+			'email'               => sanitize_email( $order->get_billing_email() ),
 			'date'                => ( $order->get_date_created()->getTimestamp() )
 				? $order->get_date_created()->getTimestamp() * 1000
 				: '',
 			'description'         => ( $order->get_payment_method_title() )
-				? $order->get_payment_method_title()
+				? sanitize_text_field( $order->get_payment_method_title() )
 				: '',
 			'products'            => is_array( $prodArr['ids'] )
-				? implode( ',', $prodArr['ids'] )
+				? implode( ',', array_map( 'intval', $prodArr['ids'] ) )
 				: $prodArr['ids'],
 			'value'               => ( $order->get_total() )
-				? $order->get_total()
+				? floatval( $order->get_total() )
 				: '',
-			'contactExtEventType' => $exportAs,
+			'contactExtEventType' => sanitize_text_field( $exportAs ),
 			'detail1'             => is_array( $prodArr['names'] )
-				? implode( ',', $prodArr['names'] )
+				? implode( ',', array_map( 'sanitize_text_field', $prodArr['names'] ) )
 				: '',
 			'detail2'             => ( $order->get_order_key() )
-				? $order->get_order_key()
+				? sanitize_text_field( $order->get_order_key() )
 				: '',
 			'detail3'             => is_array( $prodArr['quantity'] )
-				? implode( '/', $prodArr['quantity'] )
+				? implode( '/', array_map( 'intval', $prodArr['quantity'] ) )
 				: $prodArr['quantity'],
 			'externalId'          => ( $order->get_id() )
-				? $order->get_id()
+				? (int) $order->get_id()
 				: '',
-			'shopDomain'          => get_site_url(),
+			'shopDomain'          => esc_url_raw( get_site_url() ),
 		);
 			$skus = is_array( $prodArr['skus'] )
-				? implode( ',', $prodArr['skus'] )
+				? implode( ',', array_map( 'sanitize_text_field', $prodArr['skus'] ) )
 				: $prodArr['skus'];
 
 			$ids = is_array( $prodArr['ids'] )
-				? implode( ',', $prodArr['ids'] )
+				? implode( ',', array_map( 'intval', $prodArr['ids'] ) )
 				: $prodArr['ids'];
 
 			$variationIds = is_array( $prodArr['variationIds'] )
-				? implode( ',', $prodArr['variationIds'] )
+				? implode( ',', array_map( 'intval', $prodArr['variationIds'] ) )
 				: $prodArr['variationIds'];
 
 		switch ( $productIdentifierType ) {
@@ -597,16 +622,16 @@ class ExportModel {
 	 */
 	public function getExportDataForReporting() {
 		$details = array(
-			'exportType'          => $this->exportType,
+			'exportType'          => sanitize_text_field( $this->exportType ),
 			'dateFrom'            => $this->dateFrom,
 			'dateTo'              => $this->dateTo,
 			'tags'                => $this->tags,
-			'lastExportedPackage' => $this->lastExportedPackage,
-			'started'             => $this->started,
-			'lastSuccess'         => $this->lastSuccess,
-			'packageCount'        => $this->packageCount,
-			'status'              => $this->status,
-			'message'             => $this->message,
+			'lastExportedPackage' => (int) $this->lastExportedPackage,
+			'started'             => (int) $this->started,
+			'lastSuccess'         => (int) $this->lastSuccess,
+			'packageCount'        => (int) $this->packageCount,
+			'status'              => sanitize_text_field( $this->status ),
+			'message'             => $this->sanitize_output( $this->message ),
 		);
 		return wp_json_encode( $details );
 	}
@@ -621,9 +646,10 @@ class ExportModel {
 			return false;
 		}
 		$wcOrderStatuses = Helper::wcGetOrderStatuses();
-		$orderStatuses   = explode( ',', $statuses );
+        $allowedStatuses = array_keys( $wcOrderStatuses );
+		$orderStatuses   = explode( ',', sanitize_text_field( $statuses ) );
 		foreach ( $orderStatuses as $status ) {
-			if ( ! in_array( $status, $wcOrderStatuses ) ) {
+			if ( ! in_array( sanitize_text_field( $status ), $allowedStatuses, true ) ) {
 				return false;
 			}
 		}
@@ -639,12 +665,12 @@ class ExportModel {
 	 * @throws Exception
 	 */
 	protected function countProducts() {
-		$query = "
+		$query = $this->db->prepare( "
 		SELECT COUNT(ID) FROM {$this->db->posts} 
-		WHERE (post_type = 'product' OR post_type = 'product_variation')
+		WHERE (post_type = %s OR post_type = %s)
 		AND post_name != ''
-		AND post_status != 'auto-draft';
-		";
+		AND post_status != %s;
+		", 'product', 'product_variation', 'auto-draft' );
 		return $this->db->get_var( trim( preg_replace( '/\s\s+/', ' ', $query ) ) );
 	}
 
@@ -660,7 +686,7 @@ class ExportModel {
 			$limit  = self::PRODUCT_PACKAGE_SIZE;
 			$offset = $limit * ( $this->lastExportedPackage + 1 );
 
-			$query = "
+			$query = $this->db->prepare( "
 				SELECT
                    A.ID as productId,
                    A.post_title as name,
@@ -689,17 +715,17 @@ class ExportModel {
             LEFT JOIN
                 {$this->db->postmeta} as F
                     ON A.id = F.post_id AND F.meta_key = '_sku'
-            WHERE ( post_type = 'product' OR post_type = 'product_variation' )
+            WHERE ( post_type = %s OR post_type = %s )
             AND post_name != ''
-            AND post_status != 'auto-draft'
+            AND post_status != %s
             GROUP BY A.ID
-			LIMIT {$limit}
-			OFFSET {$offset};";
+			LIMIT %d
+			OFFSET %d;", 'product', 'product_variation', 'auto-draft', $limit, $offset );
 
 			return trim( preg_replace( '/\s\s+/', ' ', $query ) );
 		} catch ( \Exception $e ) {
-			error_log( $e->getMessage() );
-			throw new Exception( $e->getMessage() );
+			error_log( $this->sanitize_output( $e->getMessage() ) );
+			throw new Exception( $this->sanitize_output( $e->getMessage() ) );
 		}
 	}
 
@@ -710,7 +736,7 @@ class ExportModel {
 	 * @throws Exception
 	 */
 	public function prepareProductsForExport( $products, $productIdentifierType ) {
-		 return $this->ProductBuilder->add_products_to_collection( $products, $productIdentifierType );
+		 return $this->ProductBuilder->add_products_to_collection( $products, $this->validate_identifier_type( sanitize_text_field( $productIdentifierType ) ) );
 	}
 
 	/**
@@ -719,7 +745,22 @@ class ExportModel {
 	 * @throws Exception
 	 */
 	public function parseProductExportArgs() {
-		$data = json_decode( base64_decode( $_REQUEST['data'] ) );
+		if ( ! isset( $_REQUEST['data'] ) ) {
+			throw new Exception( 'Missing request data' );
+		}
+
+		$raw_data = sanitize_text_field( $_REQUEST['data'] );
+		$decoded  = base64_decode( $raw_data, true );
+		
+		if ( false === $decoded ) {
+			throw new Exception( 'Invalid base64 encoding' );
+		}
+		
+		$data = json_decode( $decoded );
+		
+		if ( json_last_error() !== JSON_ERROR_NONE || ! is_object( $data ) ) {
+			throw new Exception( 'Invalid JSON data' );
+		}
 
 		$this->setExportType( self::PRODUCTS );
 
@@ -744,11 +785,11 @@ class ExportModel {
 		}
 
 		if ( isset( $data->message ) ) {
-			$this->message = $data->message;
+			$this->message = $this->sanitize_output( $data->message );
 		}
 
 		if ( isset( $data->status ) ) {
-			$this->status = $data->status;
+			$this->status = sanitize_text_field( $data->status );
 			switch ( $this->status ) {
 				case self::FAILED:
 					throw new Exception( $this->message ?? 'Export failed' );
@@ -772,12 +813,11 @@ class ExportModel {
 			'started'             => $this->started,
 			'lastSuccess'         => time(),
 			'type'                => $this->exportType,
-			'status'              => $this->status,
-			'message'             => $this->message,
+			'status'              => sanitize_text_field( $this->status ),
+			'message'             => $this->sanitize_output( $this->message ),
 			'count'               => $this->count,
 		);
-		echo wp_json_encode( $response );
-		die(); // Due to WP ajax.
+		wp_send_json( $response );
 	}
 
 	/**
@@ -797,8 +837,7 @@ class ExportModel {
 			'message'             => 'Expired API Key. Refresh the page and add a new API key',
 			'count'               => $this->count,
 		);
-		echo json_encode( $response );
-		die(); // Due to WP ajax
+		wp_send_json( $response );
 	}
 
 	/**
@@ -838,5 +877,53 @@ class ExportModel {
 			$this->buildProductExportResponse();
 		}
 		return $products;
+	}
+	
+	// ========================================================================
+	// SECURITY HELPER METHODS (for sanitization/validation)
+	// ========================================================================
+	
+	/**
+	 * Sanitize output to prevent XSS and log injection
+	 *
+	 * @param string $text Raw text to sanitize
+	 * @return string Sanitized text
+	 */
+	private function sanitize_output( $text ) {
+		if ( ! is_string( $text ) ) {
+			return '';
+		}
+		$sanitized = preg_replace( '/[\r\n\t\x00-\x1F\x7F]/', ' ', $text );
+		// Trim and limit length to prevent log flooding/DoS
+		return substr( trim( $sanitized ), 0, 2048 );
+	}
+	
+	/**
+	 * Validate date format (YYYY-MM-DD)
+	 *
+	 * @param string $date Raw date string
+	 * @return string Validated date or default
+	 */
+	private function validate_date_format( $date ) {
+		if ( preg_match( '/^\d{4}-\d{2}-\d{2}$/', $date ) ) {
+			return $date;
+		}
+		// Return safe default for invalid dates
+		return '2000-01-01';
+	}
+	
+	/**
+	 * Validate product identifier type against allowed values
+	 *
+	 * @param string $type Raw identifier type
+	 * @return string Validated type or default
+	 */
+	private function validate_identifier_type( $type ) {
+		$allowed = array(
+			self::DEFAULT_PRODUCT_IDENTIFIER_TYPE,
+			self::PRODUCT_IDENTIFIER_TYPE_SKU,
+			self::PRODUCT_IDENTIFIER_TYPE_VARIANT,
+		);
+		return in_array( $type, $allowed, true ) ? $type : self::DEFAULT_PRODUCT_IDENTIFIER_TYPE;
 	}
 }

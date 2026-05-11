@@ -8,7 +8,7 @@ Tested up to: 6.9.4
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.11.2
+Stable tag: 3.11.3
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -136,6 +136,11 @@ Full details are available [here](https://www.salesmanago.com/info/information-o
 
 
 == Changelog ==
+= 3.11.3 =
+- Improved overall application security and hardening across export and AJAX handling mechanisms
+- Enhanced input validation, sanitization, and response handling to improve platform stability and reliability
+- Refactored database and request processing logic for better consistency, safety, and maintainability
+- Strengthened authorization, error handling, and internal data validation mechanisms
 = 3.11.2 =
 - Updated API-SSO-UTIL library to 3.8.6
 = 3.11.1 =
