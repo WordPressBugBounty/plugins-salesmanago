@@ -17,7 +17,7 @@ use bhr\Frontend\Model\Helper;
 				<?php _e( 'Easily set up product synchronization to instantly reflect all changes from WordPress in Recommendation Frames, Personal Shopping Inbox, and other modules', 'salesmanago' ); ?>
 			</li>
 			<li>
-				<?php _e( 'Log in to SALESmanago and go to Integration Center ➔ API ➔ API v3 tab', 'salesmanago' ); ?>
+				<?php _e( 'Log in to Manago AI and go to Integration Center ➔ API ➔ API v3 tab', 'salesmanago' ); ?>
 			</li>
 			<li>
 				<?php _e( 'Create a new API key. Enter your name (e.g. WordPress), Webhook URL, and expiry time. You can copy the webhook URL from the Webhook URL field below.', 'salesmanago' ); ?>
@@ -64,7 +64,7 @@ use bhr\Frontend\Model\Helper;
 			if ( ! Helper::checkEndpointForHTTPS( $api_v3_webhook_url ) ) :
 				?>
 				<span class="span-error">
-					<?php _e( 'Important: Your server must have SSL enabled to receive webhooks with error notices from SALESmanago', 'salesmanago' ); ?>
+					<?php _e( 'Important: Your server must have SSL enabled to receive webhooks with error notices from Manago AI', 'salesmanago' ); ?>
 				</span>
 			<?php endif; ?>
 		</div>
@@ -89,7 +89,7 @@ use bhr\Frontend\Model\Helper;
 				<input type="hidden" name="action" value="addApiV3Key">
 			</div>
 			<p class="description sm-api-key-error-wrapper">
-				<span id="sm-api-key-error" class="span-error hidden"><?php _e( 'Invalid API Key. Make sure the key exists in the SALESmanago app', 'salesmanago' ); ?></span>
+				<span id="sm-api-key-error" class="span-error hidden"><?php _e( 'Invalid API Key. Make sure the key exists in the Manago AI app', 'salesmanago' ); ?></span>
 			</p>
 		</form>
 	</div>

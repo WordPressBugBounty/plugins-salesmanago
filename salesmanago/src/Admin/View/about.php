@@ -20,7 +20,7 @@ use bhr\Admin\Entity\MessageEntity;
         </textarea>
         <div class="sm-api-v3-log-label-wrapper">
             <label>
-                <?php _e( 'Error log contains crucial information about any potential problems with API v3 data transfer. If you need support with troubleshooting, contact us at ', 'salesmanago' ) ?><a href="mailto:support@salesmanago.com">support@salesmanago.com</a>
+                <?php _e( 'Error log contains crucial information about any potential problems with API v3 data transfer. If you need support with troubleshooting, contact us at ', 'salesmanago' ) ?><a href="mailto:support@manago.ai">support@manago.ai</a>
             </label>
             <div>
                 <button class="button button-secondary" onclick="salesmanagoCopyLog('salesmanago-api-v3-error-log')"><?php _e('Copy', 'salesmanago') ?></button>
@@ -44,7 +44,7 @@ use bhr\Admin\Entity\MessageEntity;
 		$this->AdminModel->saveConfiguration();
         ?>
     <div class="salesmanago-notice notice notice-info inline">
-		<?=__( 'There is no SALESmanago error or plugin has no permission to read error log.', 'salesmanago' )?>
+		<?=__( 'There is no Manago AI error or plugin has no permission to read error log.', 'salesmanago' )?>
     </div>
     <?php endif ?>
     <h2><?= __('Our support pages', 'salesmanago')?></h2>
@@ -52,10 +52,10 @@ use bhr\Admin\Entity\MessageEntity;
         <tbody>
         <?php
             $supportPages = array(
-                "Contact Form 7" => __( 'https://support.salesmanago.com/how-do-i-integrate-salesmanago-with-contact-form-7-wordpress/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ),
-                "Gravity Forms"  => __( 'https://support.salesmanago.com/integration-with-wordpress-gravity-forms-plugin/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ),
-                "WooCommerce"    => __( 'https://support.salesmanago.com/woocommerce-integration-settings/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ),
-                "WordPress"      => __( 'https://support.salesmanago.com/integration-with-wordpress/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ),
+                "Contact Form 7" => __( 'https://support.manago.ai/how-do-i-integrate-salesmanago-with-contact-form-7-wordpress/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ),
+                "Gravity Forms"  => __( 'https://support.manago.ai/integration-with-wordpress-gravity-forms-plugin/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ),
+                "WooCommerce"    => __( 'https://support.manago.ai/woocommerce-integration-settings/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ),
+                "WordPress"      => __( 'https://support.manago.ai/integration-with-wordpress/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ),
             );
             foreach ($supportPages as $key => $value):
         ?>
@@ -123,7 +123,7 @@ use bhr\Admin\Entity\MessageEntity;
         <button style="display: block" class="button button-secondary" onclick="salesmanagoCopyLog('salesmanago-error-log')"><?php _e('Copy', 'salesmanago') ?></button>
         <?php else: ?>
         <div class="salesmanago-notice notice notice-info inline">
-            <?=__( 'There is no SALESmanago error or plugin has no permission to read error log.', 'salesmanago' )?>
+            <?=__( 'There is no Manago AI error or plugin has no permission to read error log.', 'salesmanago' )?>
         </div>
         <?php endif;?>
     </form>

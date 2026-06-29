@@ -115,7 +115,7 @@
                         </select>
                         <span class="dashicons dashicons-editor-help sm-tooltip">
                             <span class="sm-tooltip-text sm-tooltip-text-responsive description">
-                            <?php _e( 'In SALESmanago, you can limit the access to the Product Catalog to analytics only. To make the Catalog available in Recommendation Frames, Emails, PSI, and other features, select "true".', 'salesmanago' ); ?>
+                            <?php _e( 'In Manago AI, you can limit the access to the Product Catalog to analytics only. To make the Catalog available in Recommendation Frames, Emails, PSI, and other features, select "true".', 'salesmanago' ); ?>
                             </span>
                         </span>
                     </div>

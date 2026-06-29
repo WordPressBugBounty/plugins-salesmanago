@@ -1,13 +1,13 @@
 <?php
 /**
- * Plugin Name: SALESmanago & Leadoo
- * Plugin URI:  https://www.salesmanago.com/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
- * Description: SALESmanago Marketing Automation integration for WordPress, WooCommerce, Contact Form 7, Gravity Forms, Tier Pricing
- * Version:     3.11.3
- * Tested up to: 6.9.4
+ * Plugin Name: Manago AI & Leadoo AI
+ * Plugin URI:  https://manago.ai/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
+ * Description: Manago AI Marketing Automation integration for WordPress, WooCommerce, Contact Form 7, Gravity Forms, Tier Pricing
+ * Version:     3.12.0
+ * Tested up to: 7.0
  * Requires PHP: 7.4
- * Author:      SALESmanago
- * Author URI:  https://www.salesmanago.com/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
+ * Author:      Manago AI
+ * Author URI:  https://www.manago.ai/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
  * License:     License: GPL2
  */
 

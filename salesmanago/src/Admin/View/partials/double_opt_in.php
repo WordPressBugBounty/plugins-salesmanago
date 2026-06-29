@@ -23,7 +23,7 @@ $active = $this->selected('', 'double-opt-in-active', $context);
                 <?php _e('Let contacts confirm newsletter signup with email confirmation', 'salesmanago');?>
             </label>
             <p class="description">
-                <?php echo(__('Learn more on', 'salesmanago') . ' <a href="' . __('https://support.salesmanago.com/email-confirming-subscription/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago') . '" target="_blank">' . __('SALESmanago support page.', 'salesmanago')) ?>
+                <?php echo(__('Learn more on', 'salesmanago') . ' <a href="' . __('https://support.manago.ai/email-confirming-subscription/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago') . '" target="_blank">' . __('Manago AI support page.', 'salesmanago')) ?>
             </p>
         </td>
     </tr>

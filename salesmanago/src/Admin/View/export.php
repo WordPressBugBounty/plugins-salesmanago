@@ -41,7 +41,7 @@ printWindowVariables();
 	</div>
 </div>
 <div id="salesmanago-export-forms">
-	<h2><?php _e( 'Export WooCommerce cutomers to SALESmanago', 'salesmanago' ); ?></h2>
+	<h2><?php _e( 'Export WooCommerce cutomers to Manago AI', 'salesmanago' ); ?></h2>
 	<form onsubmit="return salesmanagoExportContacts()" action="" method="post" enctype="application/x-www-form-urlencoded" id="salesmanago-export-contacts">
 		<table class="form-table">
 			<tr valign="top">
@@ -119,18 +119,18 @@ printWindowVariables();
         <input type="submit" class="button button-primary" value="<?php _e( 'Export contacts', 'salesmanago' ); ?>">
     </form>
 	<hr>
-	<h2><?php _e( 'Export WooCommerce orders as external events to SALESmanago', 'salesmanago' ); ?></h2>
+	<h2><?php _e( 'Export WooCommerce orders as external events to Manago AI', 'salesmanago' ); ?></h2>
 	<!--<p>--><?php // _e('', 'salesmanago') ?><!--</p>-->
 	<div class="salesmanago-notice notice notice-warning inline">
 		<?php _e( 'Remember to export contacts before exporting external events.', 'salesmanago' ); ?>
 	</div>
 	<br>
 	<div class="salesmanago-notice notice notice-warning inline">
-		<?php _e( 'Exporting external events for the second time will duplicate them in SALESmanago.', 'salesmanago' ); ?>
+		<?php _e( 'Exporting external events for the second time will duplicate them in Manago AI.', 'salesmanago' ); ?>
 		<?php
 		if ( ! empty( $installedDate ) && $installedDate < time() - 86400 ) {
 			$installedDate = date( 'Y-m-d', $installedDate );
-			echo( __( 'Events created after', 'salesmanago' ) . ' <b>' . $installedDate . '</b> ' . __( 'are most likely already in SALESmanago.', 'salesmanago' ) );
+			echo( __( 'Events created after', 'salesmanago' ) . ' <b>' . $installedDate . '</b> ' . __( 'are most likely already in Manago AI.', 'salesmanago' ) );
 		}
 		?>
 	</div>

@@ -31,7 +31,7 @@
 
 <h3><?php _e('Additional details type', 'salesmanago') ?></h3>
 <p class="description">
-	<?php _e('Choose how additional details are transferred to SALESmanago.', 'salesmanago') ?>
+	<?php _e('Choose how additional details are transferred to Manago AI.', 'salesmanago') ?>
 </p>
 <table class="form-table" id="salesmanago-properties-type">
     <tr valign="top">

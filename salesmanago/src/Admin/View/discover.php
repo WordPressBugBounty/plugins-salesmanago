@@ -1,16 +1,16 @@
 <div class="discover-section video-wrapper" style="border:1px solid #ddd; padding:16px; background:#fff;">
     <p class="discover-subtitle" style="margin:0 0.5em 8px; font-weight:600;">
-        <?php _e('Discover SALESmanago & Leadoo', 'salesmanago'); ?>
+        <?php _e('Discover Manago AI & Leadoo AI', 'salesmanago'); ?>
     </p>
     <p class="discover-text video-description" style="margin:0 0.5em 16px; color:#555; line-height:1.4;">
         <?php _e(
-            'Enhance SALESmanago by integrating with Leadoo, a conversational marketing platform that captures and qualifies leads in real-time. Automatically sync these leads to fuel personalised campaigns and boost conversions. Combine Leadoo with SALESmanago for smarter engagement.',
+            'Enhance Manago AI by integrating with Leadoo AI, a conversational marketing platform that captures and qualifies leads in real-time. Automatically sync these leads to fuel personalised campaigns and boost conversions. Combine Leadoo AI with Manago AI for smarter engagement.',
             'salesmanago'
         ); ?>
     </p>
     <?php
         if ( isset($_GET['page']) && $_GET['page'] === 'salesmanago-discover-leadoo' ) {
-            $url = 'https://www.salesmanago.com/info/conversational-marketing.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=cosell';
+            $url = 'https://www.manago.ai/info/conversational-marketing.htm?utm_source=product&utm_medium=wpplugin&utm_campaign=cosell';
         } elseif ( isset($_GET['page'], $_GET['action'])
             && $_GET['page'] === 'leadoo'
             && $_GET['action'] === 'discover' ) {

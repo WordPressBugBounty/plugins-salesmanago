@@ -1,3 +1,6 @@
+# 3.12.0 released 29.06.2026
+- Rebranding
+
 # 3.11.3 released 07.05.2026
 - Improved overall application security and hardening across export and AJAX handling mechanisms.
 - Enhanced input validation, sanitization, and response handling to improve platform stability and reliability.

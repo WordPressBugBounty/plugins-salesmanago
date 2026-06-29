@@ -158,7 +158,7 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                                             <option value="wp-cron" <?php selected($this->AdminModel->getPlatformSettings()->getCronMethod(), 'wp-cron'); ?>><?php _e('WP-CRON', 'salesmanago'); ?></option>
                                             <option value="native" <?php selected($this->AdminModel->getPlatformSettings()->getCronMethod(), 'native'); ?>><?php _e('Custom CRON', 'salesmanago'); ?></option>
                                         </select>
-                                        <p class="description"><?php _e('Choose how you want to synchronize your product catalog with SALESmanago', 'salesmanago'); ?></p>
+                                        <p class="description"><?php _e('Choose how you want to synchronize your product catalog with Manago AI', 'salesmanago'); ?></p>
                                     </td>
                                 </tr>
                                 <tr>
@@ -173,13 +173,13 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                                 </tr>
                             </table>
                         <div id="cron-method-description-real-time" class="cron-method-description">
-		                    <?php _e('With this option, product data is transferred to SALESmanago in real time, immediately after a product is added or edited. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#2" target="_blank">For detailed information, read the Support article >></a>', 'salesmanago'); ?>
+		                    <?php _e('With this option, product data is transferred to Manago AI in real time, immediately after a product is added or edited. <a href="https://support.manago.ai/wordpress-product-data-synchronization-methods/#2" target="_blank">For detailed information, read the Support article >></a>', 'salesmanago'); ?>
                         </div>
                         <div id="cron-method-description-wp-cron" class="cron-method-description">
-		                    <?php _e('IMPORTANT: This option may increase page loading times in your e-store, potentially affecting the user experience. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#4" target="_blank">For more information, read the Support article >></a>', 'salesmanago'); ?>
+		                    <?php _e('IMPORTANT: This option may increase page loading times in your e-store, potentially affecting the user experience. <a href="https://support.manago.ai/wordpress-product-data-synchronization-methods/#4" target="_blank">For more information, read the Support article >></a>', 'salesmanago'); ?>
                         </div>
                         <div id="cron-method-description-native" class="cron-method-description">
-                            <?php _e('IMPORTANT: This option requires additional configuration on your hosting platform. <a href="https://support.salesmanago.com/wordpress-product-data-synchronization-methods/#3" target="_blank">For explanations and instructions, read the Support article >></a>', 'salesmanago'); ?>
+                            <?php _e('IMPORTANT: This option requires additional configuration on your hosting platform. <a href="https://support.manago.ai/wordpress-product-data-synchronization-methods/#3" target="_blank">For explanations and instructions, read the Support article >></a>', 'salesmanago'); ?>
 
                             <div class="salesmanago-cron-token-box">
                                 <p>
@@ -222,7 +222,7 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                                     <thead>
                                     <tr>
                                         <th>
-                                            <?php echo esc_html( __( 'Field in SALESmanago', 'salesmanago' ) ); ?>
+                                            <?php echo esc_html( __( 'Field in Manago AI', 'salesmanago' ) ); ?>
                                         </th>
                                         <th>
                                             <?php echo esc_html( __( 'Attribute from WooCommerce', 'salesmanago' ) ); ?>
@@ -271,7 +271,7 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                                     <thead>
                                     <tr>
                                         <th>
-                                            <?php echo esc_html( __( 'Field in SALESmanago', 'salesmanago' ) ); ?>
+                                            <?php echo esc_html( __( 'Field in Manago AI', 'salesmanago' ) ); ?>
                                         </th>
                                         <th>
                                             <?php echo esc_html( __( 'Attribute from WooCommerce', 'salesmanago' ) ); ?>

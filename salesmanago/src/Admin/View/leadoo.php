@@ -1,12 +1,12 @@
 <div class="wrap leadoo-wrap" <?php if ($_GET['page'] === 'leadoo' && $_GET['action'] !== 'discover'): ?> style="max-width: 100%;"<?php endif; ?> >
     <h1>
-        <img src="<?php echo plugin_dir_url(__FILE__) . 'img/leadoo-logo.svg'; ?>" class="logo" alt="Leadoo logo">
+        <img src="<?php echo plugin_dir_url(__FILE__) . 'img/leadoo-logo.svg'; ?>" class="logo" alt="Leadoo AI logo">
     </h1>
     <h2 class="nav-tab-wrapper">
-        <a href="?page=leadoo" class="nav-tab <?= ($_GET['page'] === 'leadoo' && !isset($_GET['action'])) ? 'nav-tab-active' : '' ?>">Leadoo</a>
+        <a href="?page=leadoo" class="nav-tab <?= ($_GET['page'] === 'leadoo' && !isset($_GET['action'])) ? 'nav-tab-active' : '' ?>">Leadoo AI</a>
         <a href="<?= admin_url('admin.php?page=' . $_GET['page']) . '&action=discover';//pageInSmLink should be set before include this file ?>"
            class="nav-tab <?= ($_GET['page'] === 'leadoo' && $_GET['action'] === 'discover') ? 'nav-tab-active' : '' ?>">
-            <?php _e('Discover SALESmanago', 'salesmanago') ?>
+            <?php _e('Discover Manago AI', 'salesmanago') ?>
         </a>
     </h2>
     <?php if ($_GET['page'] === 'leadoo' && !isset($_GET['action'])): ?>
@@ -20,12 +20,12 @@
         <?php endif; ?>
         <div id="leadoo-tutorial">
             <h2 class="tutorial-toggle">
-                <?php _e('Tutorial: Adding Leadoo Bots to Your Website', 'salesmanago'); ?>
+                <?php _e('Tutorial: Adding Leadoo AI Bots to Your Website', 'salesmanago'); ?>
                 <span class="dashicons dashicons-arrow-down" style="float:right;"></span>
             </h2>
             <div class="tutorial-content">
                 <p>
-                    <?php _e("Implementing Leadoo is extremely easy. Simply add the Leadoo bot script to the header section and it will automatically start working", "salesmango"); ?>
+                    <?php _e("Implementing Leadoo AI is extremely easy. Simply add the Leadoo AI bot script to the header section and it will automatically start working", "salesmango"); ?>
                 </p>
             </div>
             <div class="tutorial-content">
@@ -34,7 +34,7 @@
                         <li>
                             <strong><?php _e("Step#1:", "salesmanago");?></strong>
                             <ul class="step-details">
-                                <li><?php _e("Open the Leadoo admin panel and navigate to the chatbot or relevant section. Click the blue “Add to site” button.", "salesmanago");?></li>
+                                <li><?php _e("Open the Leadoo AI admin panel and navigate to the chatbot or relevant section. Click the blue “Add to site” button.", "salesmanago");?></li>
                             </ul>
                         </li>
                         <li>

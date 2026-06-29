@@ -279,7 +279,7 @@ class Helper
 				return $bytes;
 			} else {
 				error_log( $entry );
-				throw new SmException( 'Permission to open SALESmanago log file denied' );
+				throw new SmException( 'Permission to open Manago AI log file denied' );
 			}
 		} catch ( Exception | Error $e) {
 			return false;
@@ -300,4 +300,3 @@ function ErrorToExceptionHandler( $severity, $message, $file, $line ) {
 	}
 	throw new ErrorException( $message, 0, $severity, $file, $line );
 }
-

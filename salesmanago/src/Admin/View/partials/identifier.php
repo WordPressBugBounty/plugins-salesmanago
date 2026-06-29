@@ -21,7 +21,7 @@
         ?>
     </select>
     <p class="description">
-        <?php _e('Chosen identifier type must match ID in Product Feed uploaded to SALESmanago', 'salesmanago'); ?>
+        <?php _e('Chosen identifier type must match ID in Product Feed uploaded to Manago AI', 'salesmanago'); ?>
     </p>
 </td>
 </tr>

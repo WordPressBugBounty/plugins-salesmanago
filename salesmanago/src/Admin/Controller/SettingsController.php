@@ -48,8 +48,8 @@ class SettingsController
 	 */
 	public function registerMenuPages() {
         Helper::addMenuPage(
-            __( 'General settings of SALESmanago&Leadoo integration', 'salesmanago' ),
-            __( 'SALESmanago & Leadoo', 'salesmanago' ),
+            __( 'General settings of Manago AI&Leadoo AI integration', 'salesmanago' ),
+            __( 'Manago AI & Leadoo AI', 'salesmanago' ),
             SALESMANAGO_AND_LEADOO,
             SALESMANAGO_AND_LEADOO,
             array( $this, 'includeSettingsView' ),
@@ -59,7 +59,7 @@ class SettingsController
 
         Helper::addSubmenuPage(
             SALESMANAGO_AND_LEADOO,
-            __( 'General settings of SALESmanago&Leadoo integration', 'salesmanago' ),
+            __( 'General settings of Manago AI&Leadoo AI integration', 'salesmanago' ),
             __( 'Integrations', 'salesmanago' ),
             SALESMANAGO,
             SALESMANAGO_AND_LEADOO . '-main',
@@ -80,8 +80,8 @@ class SettingsController
         // Otherwise - show login screen
         Helper::addSubmenuPage(
             !$this->AdminModel->getUserLogged() ? SALESMANAGO_AND_LEADOO : null,
-            __( 'Login to SALESmanago account', 'salesmanago' ),
-            __( 'SALESmanago', 'salesmanago' ),
+            __( 'Login to Manago AI account', 'salesmanago' ),
+            __( 'Manago AI', 'salesmanago' ),
             SALESMANAGO,
             SALESMANAGO . '-login',
             array( $this, 'includeSettingsView' ),
@@ -210,8 +210,8 @@ class SettingsController
             )
                 ? SALESMANAGO_AND_LEADOO
                 : null,
-            __( 'Discover Leadoo', 'salesmanago' ),
-            __( 'Discover Leadoo', 'salesmanago' ),
+            __( 'Discover Leadoo AI', 'salesmanago' ),
+            __( 'Discover Leadoo AI', 'salesmanago' ),
             SALESMANAGO,
             SALESMANAGO . '-discover-leadoo',
             array( $this, 'includeSettingsView' )
@@ -219,14 +219,14 @@ class SettingsController
 
         Helper::addSubmenuPage(
             SALESMANAGO_AND_LEADOO,
-            __( 'General settings of Leadoo integration', 'salesmanago' ),
-            __( 'Leadoo', 'salesmanago' ),
+            __( 'General settings of Leadoo AI integration', 'salesmanago' ),
+            __( 'Leadoo AI', 'salesmanago' ),
             SALESMANAGO,
             LEADOO,
             array( $this, 'includeSettingsView' )
         );
 
-        //Added to select Discover SALESmanago submenu:
+        //Added to select Discover Manago AI submenu:
         add_filter( 'submenu_file', function( $submenu_file ) {
             // only on our plugin's top‐level
             if ( isset( $_GET['page'] ) && $_GET['page'] === 'leadoo' ) {
@@ -247,8 +247,8 @@ class SettingsController
                 || $_GET['page'] === 'salesmanago-discover-salesmanago'
             ) ? SALESMANAGO_AND_LEADOO
                 : null,
-            __( 'Discover SALESmanago', 'salesmanago' ),
-            __( 'Discover SALESmanago', 'salesmanago' ),
+            __( 'Discover Manago AI', 'salesmanago' ),
+            __( 'Discover Manago AI', 'salesmanago' ),
             SALESMANAGO,
             LEADOO . '&action=discover',
             array( $this, 'includeSettingsView' )
@@ -257,9 +257,9 @@ class SettingsController
 		Helper::addSubmenuPage(
             SALESMANAGO_AND_LEADOO,
 			__( 'Manage integrations with plugins', 'salesmanago' ),
-			__( 'salesmanago.com', 'salesmanago' ),
+			__( 'manago.ai', 'salesmanago' ),
             SALESMANAGO,
-			'https://salesmanago.com/'
+			'https://manago.ai/'
 		);
 
         Helper::addSubmenuPage(

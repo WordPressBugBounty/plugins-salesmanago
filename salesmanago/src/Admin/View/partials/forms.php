@@ -59,7 +59,7 @@ if ( isset( $formsWithSetup ) ) :
 	<table class="form-table" >
 		<tr valign="top">
 			<th>
-				<label for="salesmanago-forms-<?php echo( $key ); ?>-owner"><?php _e( 'SALESmanago owner', 'salesmanago' ); ?></label>
+				<label for="salesmanago-forms-<?php echo( $key ); ?>-owner"><?php _e( 'Manago AI owner', 'salesmanago' ); ?></label>
 			</th>
 			<td>
 				<select required id="salesmanago-forms-<?php echo( $key ); ?>-owner" name="salesmanago-forms[<?php echo( $key ); ?>][owner]" class="regular-text">
@@ -121,7 +121,7 @@ if ( isset( $formsWithSetup ) ) :
             '    <table class="form-table">' +
             '          <tr valign="top">\n' +
             '            <th>\n' +
-            '                <label for="salesmanago-forms-' + key + '-owner"><?php _e('SALESmanago owner', 'salesmanago') ?></label>\n'+
+            '                <label for="salesmanago-forms-' + key + '-owner"><?php _e('Manago AI owner', 'salesmanago') ?></label>\n'+
             '            </th>\n'+
             '            <td>\n'+
             '                <select required id="salesmanago-forms-' + key + '-owner" name="salesmanago-forms[' + key + '][owner]" class="regular-text">\n'+

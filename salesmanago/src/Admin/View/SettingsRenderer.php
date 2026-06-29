@@ -119,8 +119,8 @@ class SettingsRenderer {
 
 		echo( '<div class="wrap" id="salesmanago">' );
 		echo( '
-        <a href="https://salesmanago.com/login.htm?&utm_source=integration&utm_medium=wordpress&utm_content=logo" target="_blank">
-            <img id="salesmanago-logo" src="' . $this->AdminModel->getPluginUrl() . 'src/Admin/View/img/logo.svg" alt="SALESmanago"/>
+        <a href="https://manago.ai/login.htm?&utm_source=integration&utm_medium=wordpress&utm_content=logo" target="_blank">
+            <img id="salesmanago-logo" src="' . $this->AdminModel->getPluginUrl() . 'src/Admin/View/img/logo.svg" alt="Manago AI"/>
         </a>' );
 		echo( MessageEntity::getInstance()->getMessagesHtml() );
 		if ( empty( $page ) ) {

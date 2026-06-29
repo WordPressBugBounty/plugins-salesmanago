@@ -231,7 +231,7 @@ class Admin {
 		if ( $is_new_api_v3_error ) {
 			$api_v3_warning_notice =
 				'<div id="sm-api-v3-warning-notice" class="salesmanago-notice notice notice-error">'
-				. __( 'SALESmanago Product API Error detected. Check the About tab.', 'salesmanago' ) . '</div>';
+				. __( 'Manago AI Product API Error detected. Check the About tab.', 'salesmanago' ) . '</div>';
 			echo $api_v3_warning_notice;
 		}
 	}

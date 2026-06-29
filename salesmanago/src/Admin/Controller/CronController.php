@@ -118,15 +118,15 @@ class CronController {
     public function custom_cron_schedule( array $schedules ) {
         $schedules[ self::CRON_SCHEDULE_KEY_60 ] = [
             'interval' => 60,
-            'display' => __('SALESmanago Custom Cron Schedule - 60 sec')
+            'display' => __('Manago AI Custom Cron Schedule - 60 sec')
         ];
         $schedules[ self::CRON_SCHEDULE_KEY_180 ] = [
             'interval' => 180,
-            'display' => __('SALESmanago Custom Cron Schedule - 180 sec'),
+            'display' => __('Manago AI Custom Cron Schedule - 180 sec'),
         ];
         $schedules[ self::CRON_SCHEDULE_KEY_300 ] = [
             'interval' => 300,
-            'display' => __('SALESmanago Custom Cron Schedule - 300 sec'),
+            'display' => __('Manago AI Custom Cron Schedule - 300 sec'),
         ];
 
         return $schedules;

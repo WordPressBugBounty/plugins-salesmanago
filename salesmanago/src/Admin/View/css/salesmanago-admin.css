@@ -149,10 +149,8 @@
 
 #salesmanago-logo
 {
-	max-height: 35px;
-	max-width: 175px;
-	margin-top: 5px;
-	margin-left: 5px;
+	max-height: 100px;
+	vertical-align: middle;
 }
 
 #salesmanago select
@@ -617,7 +615,7 @@
 	justify-content: center;
 }
 .integration-card .icon.sales { background: #e6ff33; }
-.integration-card .icon.leadoo { background: #005ca8; }
+.integration-card .icon.leadoo { background: transparent; }
 
 .integration-card h2 {
 	margin: 0 0 4px;

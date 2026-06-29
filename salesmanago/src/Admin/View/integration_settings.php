@@ -123,7 +123,7 @@
 						'value'       => Helper::generate_api_v3_webhook_url(),
 						'readonly'    => 'readonly',
 						'validation'  => '',
-						'error'       => __('Important: Your server must have SSL enabled to receive webhooks with error notices from SALESmanago'),
+						'error'       => __('Important: Your server must have SSL enabled to receive webhooks with error notices from Manago AI'),
 					),
 				);
 				foreach ( $accountSettingsInputs as $key => $value ) :
@@ -159,8 +159,8 @@
 		<h3><?php _e( 'Web Push Notifications', 'salesmanago' ); ?></h3>
 		<div class="salesmanago-notice notice notice-info inline">
 			<?php _e( 'Learn more about Web Push consents on our', 'salesmanago' ); ?>
-			<a target="_blank" href="<?php echo __( 'https://support.salesmanago.com/domain-configuration-for-web-push-notifications/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ); ?>">
-				<?php echo __( 'SALESmanago support page', 'salesmanago' ); ?>
+			<a target="_blank" href="<?php echo __( 'https://support.manago.ai/domain-configuration-for-web-push-notifications/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip', 'salesmanago' ); ?>">
+				<?php echo __( 'Manago AI support page', 'salesmanago' ); ?>
 			</a>
 		</div>
 		<table class="form-table">

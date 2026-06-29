@@ -1,6 +1,6 @@
 /* jshint esversion: 6 */
 document.addEventListener( 'DOMContentLoaded', appendSalesmanagoSubmenu('https://leadoo.com', 'https://leadoo.com?utm_source=integration&utm_medium=wordpress&utm_content=left_menu'), false );
-document.addEventListener( 'DOMContentLoaded', appendSalesmanagoSubmenu('https://salesmanago.com', 'https://salesmanago.com?utm_source=integration&utm_medium=wordpress&utm_content=left_menu'), false );
+document.addEventListener( 'DOMContentLoaded', appendSalesmanagoSubmenu('https://manago.ai', 'https://manago.ai?utm_source=integration&utm_medium=wordpress&utm_content=left_menu'), false );
 
 function appendSalesmanagoSubmenu(pageSlug, newUrl) {
 	document.addEventListener('DOMContentLoaded', () => {

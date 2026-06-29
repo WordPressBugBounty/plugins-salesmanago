@@ -141,9 +141,9 @@ msgid "Append field to registration form"
 msgstr "Dodaj pole do formularza rejestracyjnego"
 
 #: src/Admin/View/export.php:133
-#| msgid "are most likely already in SALESmanago"
-msgid "are most likely already in SALESmanago."
-msgstr "prawdopodobnie znajdują się już w SALESmanago."
+#| msgid "are most likely already in Manago AI"
+msgid "are most likely already in Manago AI."
+msgstr "prawdopodobnie znajdują się już w Manago AI."
 
 #: src/Admin/Entity/MessageEntity.php:133
 msgid ""
@@ -218,8 +218,8 @@ msgstr ""
 "zamówieniom"
 
 #: src/Admin/View/partials/custom_properties.php:34
-msgid "Choose how additional details are transferred to SALESmanago."
-msgstr "Wybierz jak przesłać dodatkowe szczegóły do SALESmanago"
+msgid "Choose how additional details are transferred to Manago AI."
+msgstr "Wybierz jak przesłać dodatkowe szczegóły do Manago AI"
 
 #: src/Admin/View/partials/owner.php:43
 msgid "Choose owner contacts will be assigned to"
@@ -227,10 +227,10 @@ msgstr "Wybierz właściciela do którego zostaną przypisane nowe kontakty"
 
 #: src/Admin/View/partials/identifier.php:24
 msgid ""
-"Chosen identifier type must match ID in Product Feed uploaded to SALESmanago"
+"Chosen identifier type must match ID in Product Feed uploaded to Manago AI"
 msgstr ""
 "Wybrany typ identyfikatora musi być zgodny z ID produktu w feedzie "
-"produktowym wgranym do SALESmanago"
+"produktowym wgranym do Manago AI"
 
 #: src/Admin/View/export.php:31
 #: src/Admin/View/product_api/product_catalog.php:182
@@ -531,13 +531,13 @@ msgid "Export status"
 msgstr "Status eksportu"
 
 #: src/Admin/View/export.php:44
-msgid "Export WooCommerce cutomers to SALESmanago"
-msgstr "Eksportuj klientów z WooCommerce do SALESmanago"
+msgid "Export WooCommerce cutomers to Manago AI"
+msgstr "Eksportuj klientów z WooCommerce do Manago AI"
 
 #: src/Admin/View/export.php:122
-msgid "Export WooCommerce orders as external events to SALESmanago"
+msgid "Export WooCommerce orders as external events to Manago AI"
 msgstr ""
-"Eksportuj zamówienia z WooCommerce jako zdarzenia zewnętrzne do SALESmanago"
+"Eksportuj zamówienia z WooCommerce jako zdarzenia zewnętrzne do Manago AI"
 
 #: src/Admin/View/product_api/product_catalog.php:14
 msgid "Exported packages: "
@@ -546,10 +546,10 @@ msgstr "Wyeksportowane pakiety: "
 #: src/Admin/View/export.php:129
 msgid ""
 "Exporting external events for the second time will duplicate them in "
-"SALESmanago."
+"Manago AI."
 msgstr ""
 "Wielokrotne eksportowanie zdarzeń zewnętrznych spowoduje ich powielenie w "
-"SALESmanago."
+"Manago AI."
 
 #: src/Admin/View/product_api/product_catalog.php:114
 msgid "Failed to refresh the list. Try reloading the page."
@@ -602,8 +602,8 @@ msgid "General settings"
 msgstr "Ogólne ustawienia"
 
 #: src/Admin/Controller/SettingsController.php:53
-msgid "General settings of SALESmanago integration"
-msgstr "Ustawienia integracji SALESmanago"
+msgid "General settings of Manago AI integration"
+msgstr "Ustawienia integracji Manago AI"
 
 #: src/Admin/View/integration_settings.php:176
 msgid "Generate sw.js"
@@ -644,64 +644,64 @@ msgstr "Hook aktywujący zdarzenie zakupu"
 
 #: src/Admin/View/integration_settings.php:160
 #| msgid ""
-#| "https://support.salesmanago.com/domain-configuration-for-web-push-"
+#| "https://support.manago.ai/domain-configuration-for-web-push-"
 #| "notifications/?utm_source=wordpress&utm_content=tooltip"
 msgid ""
-"https://support.salesmanago.com/domain-configuration-for-web-push-"
+"https://support.manago.ai/domain-configuration-for-web-push-"
 "notifications/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 msgstr ""
-"https://pomoc.salesmanago.pl/konfiguracja-domeny-dla-powiadomien-web-push/?"
+"https://pomoc.manago.ai/konfiguracja-domeny-dla-powiadomien-web-push/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 
 #: src/Admin/View/partials/double_opt_in.php:26
 #| msgid ""
-#| "https://support.salesmanago.com/email-confirming-subscription/?"
+#| "https://support.manago.ai/email-confirming-subscription/?"
 #| "utm_source=wordpress&utm_content=tooltip"
 msgid ""
-"https://support.salesmanago.com/email-confirming-subscription/?"
+"https://support.manago.ai/email-confirming-subscription/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 msgstr ""
-"https://pomoc.salesmanago.pl/konfiguracja-wiadomosci-z-potwierdzeniem-"
+"https://pomoc.manago.ai/konfiguracja-wiadomosci-z-potwierdzeniem-"
 "subskrypcji/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 
 #: src/Admin/View/about.php:50 src/Admin/View/plugins/plugin_cf7.php:12
 #| msgid ""
-#| "https://support.salesmanago.com/how-do-i-integrate-salesmanago-with-"
+#| "https://support.manago.ai/how-do-i-integrate-salesmanago-with-"
 #| "contact-form-7-wordpress/?utm_source=wordpress&utm_content=tooltip"
 msgid ""
-"https://support.salesmanago.com/how-do-i-integrate-salesmanago-with-contact-"
+"https://support.manago.ai/how-do-i-integrate-salesmanago-with-contact-"
 "form-7-wordpress/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 msgstr ""
-"https://pomoc.salesmanago.pl/instegracja-salesmanago-z-contact-form-7-"
+"https://pomoc.manago.ai/instegracja-salesmanago-z-contact-form-7-"
 "wordpress/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 
 #: src/Admin/View/about.php:51 src/Admin/View/plugins/plugin_gf.php:12
 #| msgid ""
-#| "https://support.salesmanago.com/integration-with-wordpress-gravity-forms-"
+#| "https://support.manago.ai/integration-with-wordpress-gravity-forms-"
 #| "plugin/?utm_source=wordpress&utm_content=tooltip"
 msgid ""
-"https://support.salesmanago.com/integration-with-wordpress-gravity-forms-"
+"https://support.manago.ai/integration-with-wordpress-gravity-forms-"
 "plugin/?utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 msgstr ""
-"https://pomoc.salesmanago.pl/integracja-z-wordpress-wtyczka-gravity-forms/?"
+"https://pomoc.manago.ai/integracja-z-wordpress-wtyczka-gravity-forms/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 
 #: src/Admin/View/about.php:53
 msgid ""
-"https://support.salesmanago.com/integration-with-wordpress/?"
+"https://support.manago.ai/integration-with-wordpress/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 msgstr ""
-"https://pomoc.salesmanago.pl/integracje-z-wordpress/?"
+"https://pomoc.manago.ai/integracje-z-wordpress/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 
 #: src/Admin/View/about.php:52
 msgid ""
-"https://support.salesmanago.com/woocommerce-integration-settings/?"
+"https://support.manago.ai/woocommerce-integration-settings/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 msgstr ""
-"https://pomoc.salesmanago.pl/ustawienia-integracji-z-woocommerce/?"
+"https://pomoc.manago.ai/ustawienia-integracji-z-woocommerce/?"
 "utm_source=integration&utm_medium=wordpress&utm_content=tooltip"
 
 #. URI of the plugin
@@ -741,10 +741,10 @@ msgstr "Ważne"
 #: src/Admin/View/product_api/add_api_key.php:67
 msgid ""
 "Important: Your server must have SSL enabled to receive webhooks with error "
-"notices from SALESmanago"
+"notices from Manago AI"
 msgstr ""
 "Ważne: twój serwer musi mieć włączone SSL, aby otrzymywać webhooki z "
-"informacjami o błędach z SALESmanago"
+"informacjami o błędach z Manago AI"
 
 #: src/Admin/View/product_api/product_catalog.php:224
 #| msgid ""
@@ -760,11 +760,11 @@ msgstr "W trakcie..."
 
 #: src/Admin/View/product_api/create_catalog.php:107
 msgid ""
-"In SALESmanago, you can limit the access to the Product Catalog to analytics "
+"In Manago AI, you can limit the access to the Product Catalog to analytics "
 "only. To make the Catalog available in Recommendation Frames, Emails, PSI, "
 "and other features, select \"true\"."
 msgstr ""
-"W SALESmanago możesz ograniczyć dostęp do Katalogu Produktowego wyłącznie do "
+"W Manago AI możesz ograniczyć dostęp do Katalogu Produktowego wyłącznie do "
 "analityki. Aby Katalog był dostępny w Ramkach Rekomendacji, E-mailach, PSI i "
 "innych funkcjonalnościach, wybierz “tak”."
 
@@ -798,10 +798,10 @@ msgid "Interrupted on:"
 msgstr "Przerwany:"
 
 #: src/Admin/View/product_api/add_api_key.php:92
-msgid "Invalid API Key. Make sure the key exists in the SALESmanago app"
+msgid "Invalid API Key. Make sure the key exists in the Manago AI app"
 msgstr ""
 "Nieprawidłowy klucz API. Upewnij się, że klucz istnieje w aplikacji "
-"SALESmanago"
+"Manago AI"
 
 #: src/Admin/View/product_api/create_catalog.php:58
 msgid "ISO currency code of your store (e.g. EUR, USD)"
@@ -858,9 +858,9 @@ msgid "Location field for external events"
 msgstr "Pole location w zdarzeniach zewnętrznych"
 
 #: src/Admin/View/product_api/add_api_key.php:20
-msgid "Log in to SALESmanago and go to Integration Center ➔ API ➔ API v3 tab"
+msgid "Log in to Manago AI and go to Integration Center ➔ API ➔ API v3 tab"
 msgstr ""
-"Zaloguj się do SALESmanago i przejdź do Centrum Integracji ➔ API ➔ zakładka "
+"Zaloguj się do Manago AI i przejdź do Centrum Integracji ➔ API ➔ zakładka "
 "API v3"
 
 #: src/Admin/View/partials/navbar.php:84
@@ -886,8 +886,8 @@ msgid "Login tags"
 msgstr "Tagi logowania"
 
 #: src/Admin/Controller/SettingsController.php:77
-msgid "Login to SALESmanago account"
-msgstr "Zaloguj się do konta SALESmanago"
+msgid "Login to Manago AI account"
+msgstr "Zaloguj się do konta Manago AI"
 
 #: src/Admin/View/export.php:283
 msgid "Making sure everything was exported"
@@ -1115,9 +1115,9 @@ msgid "Problem"
 msgstr "Problem"
 
 #: src/Admin/View/SettingsRenderer.php:55
-msgid "SALESmanago Product API Error detected. Check the About tab."
+msgid "Manago AI Product API Error detected. Check the About tab."
 msgstr ""
-"Pojawił się błąd związany z API Produktowym SALESmanago. Sprawdź zakładkę O wtyczce"
+"Pojawił się błąd związany z API Produktowym Manago AI. Sprawdź zakładkę O wtyczce"
 
 #: src/Admin/View/integration_settings.php:119
 msgid "Product API Webhook URL"
@@ -1191,38 +1191,38 @@ msgstr "zwróciło status:"
 #. Name of the plugin
 #. Author of the plugin
 #: src/Admin/Controller/SettingsController.php:54
-msgid "SALESmanago"
-msgstr "SALESmanago"
+msgid "Manago AI"
+msgstr "Manago AI"
 
 #. Description of the plugin
 #, fuzzy
 #| msgid ""
-#| "SALESmanago Marketing Automation integration for Wordpress, WooCommerce, "
+#| "Manago AI Marketing Automation integration for Wordpress, WooCommerce, "
 #| "Contact Form 7, Gravity Forms"
 msgid ""
-"SALESmanago Marketing Automation integration for WordPress, WooCommerce, "
+"Manago AI Marketing Automation integration for WordPress, WooCommerce, "
 "Contact Form 7, Gravity Forms"
 msgstr ""
-"SALESmanago Marketing Automation integracje dla Wordpress, WooCommerce, "
+"Manago AI Marketing Automation integracje dla Wordpress, WooCommerce, "
 "Contact Form 7, Gravity Forms"
 
 #: src/Admin/View/partials/forms.php:62 src/Admin/View/partials/forms.php:124
-msgid "SALESmanago owner"
-msgstr "Właściciel kontaktu w SALESmanago"
+msgid "Manago AI owner"
+msgstr "Właściciel kontaktu w Manago AI"
 
 #: src/Admin/View/integration_settings.php:161
 #: src/Admin/View/plugins/plugin_gf.php:12
 #: src/Admin/View/plugins/plugin_cf7.php:12
-msgid "SALESmanago support page"
-msgstr "stronie pomocy SALESmanago"
+msgid "Manago AI support page"
+msgstr "stronie pomocy Manago AI"
 
 #: src/Admin/View/partials/double_opt_in.php:26
-msgid "SALESmanago support page."
-msgstr "stronie pomocy SALESmanago"
+msgid "Manago AI support page."
+msgstr "stronie pomocy Manago AI"
 
 #: src/Admin/Controller/SettingsController.php:203
-msgid "SALESmanago.com"
-msgstr "SALESmanago.com"
+msgid "manago.ai"
+msgstr "manago.ai"
 
 #: src/Admin/View/product_api/product_catalog.php:91
 #: src/Admin/View/partials/save.php:7
@@ -1291,7 +1291,7 @@ msgstr "Czasem nazywane 'short ID'"
 
 #: src/Admin/Entity/MessageEntity.php:100
 msgid ""
-"Specified endpoint cannot be resolved. On SALESmanago panel go to Settings ->"
+"Specified endpoint cannot be resolved. On Manago AI panel go to Settings ->"
 " Integration and check your endpoint in API access tab."
 msgstr ""
 "Podany endpoint nie mógł zostać odnaleziony. Przejdź do Ustawienia ->  "
@@ -1435,9 +1435,9 @@ msgstr "Upłynął limit czasu żądania. Spróbuj ponownie później"
 
 #: src/Admin/View/about.php:42 src/Admin/View/about.php:121
 msgid ""
-"There is no SALESmanago error or plugin has no permission to read error log."
+"There is no Manago AI error or plugin has no permission to read error log."
 msgstr ""
-"Nie odnaleziono błędów związanych z SALESmanago lub wtyczka nie ma uprawnień "
+"Nie odnaleziono błędów związanych z Manago AI lub wtyczka nie ma uprawnień "
 "do odczytu dziennika błędów."
 
 #: src/Admin/View/partials/double_opt_in.php:44
@@ -1516,17 +1516,17 @@ msgid "Unknown error"
 msgstr "Nieznany błąd"
 
 #: src/Admin/Entity/MessageEntity.php:108
-msgid "Unknown error in SALESmanago plugin"
-msgstr "Wystąpił nieznany błąd we wtyczce SALESmanago"
+msgid "Unknown error in Manago AI plugin"
+msgstr "Wystąpił nieznany błąd we wtyczce Manago AI"
 
 #: src/Admin/Entity/MessageEntity.php:102
 msgid "Unknown error on settings read/write"
 msgstr "Wystąpił nieznany błąd w ustawieniach odczytu/zapisu"
 
 #: src/Admin/Entity/MessageEntity.php:99
-msgid "Unknown error while connecting to SALESmanago with Guzzle Client"
+msgid "Unknown error while connecting to Manago AI with Guzzle Client"
 msgstr ""
-"Wystąpił nieznany błąd podczas łączenia się z SALESmanago przez Guzzle Client"
+"Wystąpił nieznany błąd podczas łączenia się z Manago AI przez Guzzle Client"
 
 #: src/Admin/Entity/MessageEntity.php:97
 msgid "Unknown export (batch upsert) error"

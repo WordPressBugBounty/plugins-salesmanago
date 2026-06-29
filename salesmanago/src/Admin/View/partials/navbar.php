@@ -72,7 +72,7 @@
                 'name'      => 'salesmanago-discover-leadoo',
                 'available' => true,
                 'active'    => $this->active( 'salesmanago-discover-leadoo' ),
-                'label'     => __('Discover Leadoo', 'salesmanago'),
+                'label'     => __('Discover Leadoo AI', 'salesmanago'),
             )
 		);
 
