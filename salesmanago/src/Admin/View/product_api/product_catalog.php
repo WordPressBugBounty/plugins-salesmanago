@@ -28,6 +28,14 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
             <?php else:
             $product_catalogs = json_decode( $this->AdminModel->getConfiguration()->getCatalogs() );
             $active_catalog = $this->AdminModel->getConfiguration()->getActiveCatalog();
+            $multicatalogs = $this->ProductCatalogController->getMultiCatalogRows();
+			$multi_catalog_mode = $this->ProductCatalogController->isMultiCatalogMode();
+			$export_locations = array();
+			foreach ( $multicatalogs as $row ) {
+				if ( ! empty( $row['selected'] ) ) {
+					$export_locations[] = $row['location'];
+				}
+			}
             if ( empty ( $product_catalogs ) && ( ! empty ( $_REQUEST['subpage'] ) && $_REQUEST['subpage'] !== 'go-back' ) ):
                 require_once 'create_catalog.php';
                 ?>
@@ -35,9 +43,15 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
 	            <?php
 	            if ( ! empty( $_REQUEST['catalog-created'] ) ):?>
                     <div class="salesmanago-notice notice notice-success inline"">
-                        <?php _e( 'New Product Catalog has been created. Please refresh Catalog list to use it.', 'salesmanago' );?>
+                        <?php _e( 'New Product Catalog has been created. Please refresh catalog list.', 'salesmanago' );?>
                     </div>
 	            <?php endif ?>
+				<?php if ( ! empty( $_REQUEST['catalogs-saved'] ) ) : ?>
+					<div class="salesmanago-notice notice notice-success inline">
+						<?php esc_html_e( 'Catalog synchronization settings have been saved.', 'salesmanago' ); ?>
+					</div>
+				<?php endif; ?>
+
                 <div class="sm-product-catalog-synchro-container">
                     <div class="sm-product-catalog-headline-and-btn-wrapper">
                         <h1><?php _e( 'Real-time product synchronization', 'salesmanago' );?></h1>
@@ -51,6 +65,92 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                         </a>
                     </div>
                     <h3><?php _e( 'Product Catalog setup', 'salesmanago' );?></h3>
+                    <?php if ( $multi_catalog_mode ): ?>
+                        <div id="sm-multi-catalog-list">
+                        <form action="" method="post">
+                            <table class="widefat striped">
+                                <thead>
+                                <tr>
+                                    <th><?php esc_html_e( 'Synchronize', 'salesmanago' ); ?></th>
+                                    <th><?php esc_html_e( 'Catalog name', 'salesmanago' ); ?></th>
+                                    <th><?php esc_html_e( 'Location', 'salesmanago' ); ?></th>
+                                    <th><?php esc_html_e( 'Catalog ID', 'salesmanago' ); ?></th>
+                                    <th><?php esc_html_e( 'Currency', 'salesmanago' ); ?></th>
+                                    <th><?php esc_html_e( 'WPML language', 'salesmanago' ); ?></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ( $multicatalogs as $row ) : ?>
+                                        <tr>
+                                            <td>
+                                                <input
+                                                    type="checkbox"
+                                                    class="sm-multi-catalog-checkbox"
+                                                    name="sm-selected-catalogs[]"
+                                                    value="<?php echo esc_attr( $row['catalogId'] ); ?>"
+                                                    data-location="<?php echo esc_attr( $row['location'] ); ?>"
+                                                    <?php checked( $row['selected'] ); ?>
+                                                    <?php disabled( ! $row['canSynchronize'] ); ?>
+                                                >
+                                            </td>
+                                            <td><?php echo esc_html( $row['name'] ); ?></td>
+                                            <td><code><?php echo esc_html( $row['location'] ); ?></code></td>
+                                            <td><code><?php echo esc_html( $row['catalogId'] ); ?></code></td>
+                                            <td>
+                                                <?php echo esc_html( $row['currency'] ); ?>
+                                            </td>
+                                            <td>
+                                                <?php if ( $row['canSynchronize'] ) : ?>
+                                                    <?php echo esc_html( implode( ', ', wp_list_pluck( $row['languages'], 'name' ) ) ); ?>
+                                                <?php else : ?>
+                                                    <p class="description">
+                                                        <?php esc_html_e( 'No active WPML language is configured for this location.', 'salesmanago' ); ?>
+                                                    </p>
+                                                <?php endif; ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+									<?php if ( empty( $multicatalogs ) ) : ?>
+										<tr>
+											<td colspan="6">
+												<?php esc_html_e( 'No MANAGO AI catalogs are available. Refresh the catalog list or create a new catalog.', 'salesmanago' ); ?>
+											</td>
+										</tr>
+									<?php endif; ?>
+                                </tbody>
+                            </table>
+                            <input type="hidden" name="action" value="setActiveCatalogs">
+                            <?php wp_nonce_field( 'setActiveCatalogs', 'sm_nonce' ); ?>
+                            <p class="submit">
+                                <button
+                                    type="submit"
+                                    class="button button-primary"
+                                    onclick="salesmanagoClearInterruptedExportData()"
+                                >
+                                    <?php esc_html_e( 'Save catalogs', 'salesmanago' ); ?>
+                                </button>
+                                <button
+                                    type="button"
+                                    class="button button-secondary"
+                                    onclick="salesmanagoRefreshCatalogList()"
+                                >
+                                    <span
+                                        id="sm-refresh-icon"
+                                        class="dashicons dashicons-update"
+                                    >
+                                    </span>
+                                    <?php esc_html_e( 'Refresh catalogs', 'salesmanago' ); ?>
+                                </button>
+                                <span id="sm-refresh-catalog-success" class="sm-refresh-catalog-success hidden">
+                                    <span class="dashicons dashicons-yes"></span>
+                                </span>
+                                <span id="sm-refresh-catalog-fail" class="sm-refresh-catalog-fail hidden">
+                                    <span class="dashicons dashicons-no"></span>
+                                </span>
+                            </p>
+                        </form>
+						</div>
+                    <?php else: ?>
                     <form action="" method="post">
                         <div class="sm-product-catalog-select-wrapper">
                             <div>
@@ -146,6 +246,7 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                             </div>
                         </div>
                     </form>
+                    <?php endif; ?>
 
                     <h3><?php _e('Product Synchronization Settings', 'salesmanago'); ?></h3>
                     <form method="post" action="">
@@ -374,7 +475,12 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                             </form>
                         </div>
                         </div>
-                        <form onsubmit="return salesmanagoLaunchProductExport( event )" method="post" id="salesmanago-export-products">
+                        <form
+                            onsubmit="return salesmanagoLaunchProductExport( event )"
+                            method="post"
+                            id="salesmanago-export-products"
+                            data-export-locations="<?php echo esc_attr( wp_json_encode( $export_locations ) ); ?>"
+                        >
                             <?php
                             if ( function_exists( 'wp_nonce_field' ) ) {
                                 wp_nonce_field( 'salesmanago_export_products', 'sm_nonce' );
@@ -382,10 +488,10 @@ if ( $this->AdminModel->getInstalledPluginByName( 'wc' ) ):?>
                             ?>
 
                             <input
-                                type="submit"
-                                class="button button-primary sm-btn-top-margin"
-                                id="sm-btn-product-export"
-                                <?php if ( empty( $active_catalog ) ) echo "disabled" ?>
+                                 type="submit"
+                                 class="button button-primary sm-btn-top-margin"
+                                 id="sm-btn-product-export"
+                                 <?php if ( $multi_catalog_mode ? empty( $export_locations ) : empty( $active_catalog ) ) echo "disabled" ?>
                                 value="<?php _e( 'Start export', 'salesmanago' );?>"
                             >
                         </form>

@@ -51,6 +51,7 @@ class Settings extends AbstractModel
                     : $config->cookieTtl)
                 ->setIgnoredDomains($config->ignoredDomains)
                 ->setLocation($config->location)
+                ->setMultilocations( isset( $config->multilocations ) ? (array) $config->multilocations : [] )
                 ->setSmApp($config->smApp ?? null)
                 ->setLeadooScript($config->leadooScript ?? "");
         } catch (\Exception $e) {

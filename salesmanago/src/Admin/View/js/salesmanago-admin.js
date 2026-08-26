@@ -110,6 +110,27 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+	const catalogCheckboxes = document.querySelectorAll('.sm-multi-catalog-checkbox');
+
+	catalogCheckboxes.forEach(function( checkbox ) {
+		checkbox.addEventListener('change', function() {
+			if ( ! checkbox.checked ) {
+				return;
+			}
+
+			catalogCheckboxes.forEach(function( otherCheckbox ) {
+				if (
+					otherCheckbox !== checkbox
+					&& otherCheckbox.dataset.location === checkbox.dataset.location
+				) {
+					otherCheckbox.checked = false;
+				}
+			});
+		});
+	});
+});
+
 function salesmanagoRemoveForm(id)
 {
 	let smFormTable = document.getElementById( "salesmanago-form-" + id );
@@ -520,7 +541,36 @@ function salesmanagoExportEvents()
 function salesmanagoLaunchProductExport( event )
 {
 	event.preventDefault();
+	let exportForm = document.getElementById( 'salesmanago-export-products' );
+	let locations = [];
+
+	try {
+		locations = JSON.parse( exportForm.dataset.exportLocations || '[]' );
+	} catch ( error ) {
+		locations = [];
+	}
+
+	if ( ! Array.isArray( locations ) ) {
+		locations = [];
+	}
+
+	// A blank location retains the legacy single-catalog export behavior.
+	if ( locations.length === 0 ) {
+		locations = [ '' ];
+	}
+
 	window.localStorage.setItem( 'salesmanagoProductExport', null );
+	window.localStorage.setItem(
+		'salesmanagoProductExport',
+		JSON.stringify( {
+			locations: locations,
+			currentLocationIndex: 0,
+			location: locations[0],
+			completedLocations: [],
+			exportedProducts: 0,
+			isFirstRequest: true
+		} )
+	);
 	window.salesmanago.type = 'products';
 	salesmanagoExportProducts( salesmanagoExportProductPackage );
 	salesmanagoShowProductExportProgressBar();
@@ -534,13 +584,10 @@ function salesmanagoExportProducts( callback )
 	let smXhttp    = new XMLHttpRequest();
 	let smFormData = new FormData();
 	document.getElementById( 'sm-product-export-summary' ).setAttribute( 'hidden', '' );
-	let smData     = btoa(
-		JSON.stringify(
-			{
-				isFirstRequest: true
-			}
-		)
-	);
+	let exportState = salesmanagoGetProductExportState();
+	exportState.isFirstRequest = true;
+	window.localStorage.setItem( 'salesmanagoProductExport', JSON.stringify( exportState ) );
+	let smData = btoa( JSON.stringify( exportState ) );
 
 	if (window.salesmanagoSec && window.salesmanagoSec.nonce) {
 		smFormData.append('sm_nonce', window.salesmanagoSec.nonce);
@@ -550,8 +597,31 @@ function salesmanagoExportProducts( callback )
 	smFormData.append( 'data', smData );
 	smXhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
-			window.localStorage.setItem( 'salesmanagoProductExport', this.responseText );
-			callback();
+			let smExportStatus = salesmanagoStoreProductExportResponse( this.responseText );
+			if ( ! smExportStatus ) {
+				salesmanagoUpdateProductView();
+				return;
+			}
+
+			if ( smExportStatus.status === "done" || smExportStatus.status === "no_data" ) {
+				smExportStatus = salesmanagoCompleteProductExportLocation( smExportStatus );
+			}
+
+			const locationCompleted =
+				smExportStatus.status === 'done'
+				|| smExportStatus.status === 'no_data';
+
+			if ( locationCompleted && salesmanagoStartNextProductExportLocation() ) {
+				salesmanagoExportProducts( salesmanagoExportProductPackage );
+				return;
+			}
+
+			salesmanagoUpdateProductView();
+			if ( smExportStatus.status === "in_progress" ) {
+				callback();
+			} else {
+				salesmanagoToggleProductExportBtns();
+			}
 		} else if (this.readyState === 4 && this.status !== 200) {
 			salesmanagoUpdateProductView();
 		}
@@ -573,12 +643,29 @@ function salesmanagoExportProductPackage()
 		smFormData.append('sm_nonce', window.salesmanagoSec.nonce);
 	}
 
-	smFormData.append( 'data', btoa( window.localStorage.getItem( 'salesmanagoProductExport' ), true ) );
+	smFormData.append( 'data', btoa( JSON.stringify( salesmanagoGetProductExportState() ) ) );
 	smXhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200) {
-			window.localStorage.setItem( 'salesmanagoProductExport', this.responseText );
+			let smExportStatus = salesmanagoStoreProductExportResponse( this.responseText );
+			if ( ! smExportStatus ) {
+				salesmanagoUpdateProductView();
+				return;
+			}
+
+			if ( smExportStatus.status === "done" || smExportStatus.status === "no_data" ) {
+				smExportStatus = salesmanagoCompleteProductExportLocation( smExportStatus );
+			}
+
+			const locationCompleted =
+				smExportStatus.status === 'done'
+				|| smExportStatus.status === 'no_data';
+
+			if ( locationCompleted && salesmanagoStartNextProductExportLocation() ) {
+				salesmanagoExportProducts( salesmanagoExportProductPackage );
+				return;
+			}
+
 			salesmanagoUpdateProductView();
-			let smExportStatus = JSON.parse( window.localStorage.getItem( 'salesmanagoProductExport' ) );
 			if (smExportStatus.status === "in_progress") {
 				salesmanagoExportProductPackage();
 			} else {
@@ -592,20 +679,114 @@ function salesmanagoExportProductPackage()
 	smXhttp.send( smFormData );
 }
 
+function salesmanagoGetProductExportState()
+{
+	try {
+		let state = JSON.parse( window.localStorage.getItem( 'salesmanagoProductExport' ) );
+		return state && typeof state === 'object' ? state : {};
+	} catch ( error ) {
+		return {};
+	}
+}
+
+function salesmanagoStoreProductExportResponse( responseText )
+{
+	try {
+		let previousState = salesmanagoGetProductExportState();
+		let responseState = JSON.parse( responseText );
+
+		responseState.locations = previousState.locations || [ '' ];
+		responseState.currentLocationIndex = previousState.currentLocationIndex || 0;
+		responseState.location = responseState.location || previousState.location || '';
+		responseState.completedLocations = previousState.completedLocations || [];
+		responseState.exportedProducts = previousState.exportedProducts || 0;
+		window.localStorage.setItem( 'salesmanagoProductExport', JSON.stringify( responseState ) );
+
+		return responseState;
+	} catch ( error ) {
+		return null;
+	}
+}
+
+function salesmanagoCompleteProductExportLocation( state )
+{
+	state.completedLocations = state.completedLocations || [];
+	state.exportedProducts = state.exportedProducts || 0;
+
+	if ( state.completedLocations.includes( state.location ) ) {
+		return state;
+	}
+
+	const exportedProductsBeforeCurrentLocation = state.exportedProducts;
+
+	state.completedLocations.push( state.location );
+	state.exportedProducts += Number( state.count || 0 );
+
+	if ( state.status === 'no_data' && exportedProductsBeforeCurrentLocation > 0 ) {
+		state.status = 'done';
+		state.message = '';
+	}
+
+	window.localStorage.setItem( 'salesmanagoProductExport', JSON.stringify( state ) );
+
+	return state;
+}
+
+function salesmanagoStartNextProductExportLocation()
+{
+	let state = salesmanagoGetProductExportState();
+	let nextIndex = state.currentLocationIndex + 1;
+
+	if ( ! state.locations || nextIndex >= state.locations.length ) {
+		return false;
+	}
+
+	window.localStorage.setItem(
+		'salesmanagoProductExport',
+		JSON.stringify( {
+			locations: state.locations,
+			currentLocationIndex: nextIndex,
+			location: state.locations[nextIndex],
+			completedLocations: state.completedLocations || [],
+			exportedProducts: state.exportedProducts || 0,
+			isFirstRequest: true
+		} )
+	);
+
+	return true;
+}
+
 function salesmanagoUpdateProductView()
 {
 	const smExportStatus = JSON.parse( window.localStorage.getItem( 'salesmanagoProductExport' ) );
 	if ( ! smExportStatus ) {
 		return;
 	}
+	const totalLocations = smExportStatus.locations ? smExportStatus.locations.length : 1;
+	const completedLocations = smExportStatus.completedLocations
+		? smExportStatus.completedLocations.length
+		: 0;
+	const currentLocationNumber = Math.min(
+		(smExportStatus.currentLocationIndex || 0) + 1,
+		totalLocations
+	);
+	const locationLabel = smExportStatus.location
+		? ': ' + smExportStatus.location
+		: '';
+
 	document.getElementById( "sm-product-export-status" ).innerHTML = _t( smExportStatus.status );
 	if ( smExportStatus.status === "in_progress" ) {
 		salesmanagoSetProductExportNoticeType( 'notice-info' );
-		let smPercentage = Math.round( 100 * ( smExportStatus.lastExportedPackage + 1 ) / ( smExportStatus.packageCount ) );
+		const currentProgress = smExportStatus.packageCount > 0
+			? ( smExportStatus.lastExportedPackage + 1 ) / smExportStatus.packageCount
+			: 0;
+		let smPercentage = Math.round(
+			100 * ( completedLocations + currentProgress ) / totalLocations
+		);
 		document.getElementById( 'sm-product-export-progress' ).value = smPercentage;
-		if ( smExportStatus.status === "in_progress" ) {
-			document.getElementById( "sm-product-export-status" ).innerHTML += " (" + smPercentage + "%)";
-		}
+		document.getElementById( "sm-product-export-status" ).innerHTML =
+			'Exporting ' + currentLocationNumber + ' of ' + totalLocations + ' locations' +
+			locationLabel + ' (' + smPercentage + '%)';
 	} else if ( smExportStatus.status === "done" || smExportStatus.status === 'no_data' ) {
 		salesmanagoSetProductExportNoticeType( 'notice-success' );
 		document.getElementById( 'sm-product-export-progress' ).value = 100;
@@ -650,7 +831,10 @@ function salesmanagoSetProductExportNoticeType( type = 'notice-warning' )
 function salesmanagoToggleProductExportBtns()
 {
 	document.getElementById( 'sm-btn-product-export' ).style.display = 'none';
-	document.getElementById( 'sm-btn-set-active-catalog' ).toggleAttribute( 'disabled' );
+	let activeCatalogButton = document.getElementById( 'sm-btn-set-active-catalog' );
+	if ( activeCatalogButton ) {
+		activeCatalogButton.toggleAttribute( 'disabled' );
+	}
 	document.getElementById( 'sm-btn-product-export-try-again' ).toggleAttribute( 'disabled' );
 }
 
@@ -663,7 +847,7 @@ function salesmanagoShowProductExportSummary()
 		document.getElementById( 'sm-continue-product-exp-btn-wrapper' ).style.display = 'inline-block';
 	} else {
 		document.getElementById( 'sm-continue-product-exp-btn-wrapper' ).style.display = 'none';
-		document.getElementById( 'sm-product-export-summary' ).innerHTML               = _t( 'products_exported' ) + smProductExportSummary.count + '<br>';
+		document.getElementById( 'sm-product-export-summary' ).innerHTML               = _t( 'products_exported' ) + smProductExportSummary.exportedProducts + '<br>';
 	}
 }
 // Show warning when choosing 'None' catalog for synchro
@@ -887,22 +1071,41 @@ function copyApiV3EndpointToClipBoard()
 
 function salesmanagoLocationValidation()
 {
-	const input = document.getElementById('salesmanago-location');
-	const message = document.getElementById('salesmanago-location-error');
-	const regex = /^[a-zA-Z_][a-zA-Z0-9_]{2,35}$/;
+	const inputs = document.querySelectorAll('.salesmanago-location-input, #salesmanago-location');
+	const saveBtn = document.getElementById('salesmanago-save-btn');
+	const regex = /^[a-zA-Z_][a-zA-Z0-9_]{2,254}$/;
+	let hasError = false;
 
-	let saveBtn = document.getElementById("salesmanago-save-btn");
+	inputs.forEach(function(input) {
+		const messageId = input.getAttribute('data-error-id');
+		const message = messageId ? document.getElementById(messageId) : null;
+		const isInvalid = !input.value || !regex.test(input.value);
 
-	if (!input.value || !regex.test(input.value)) {
-		input.classList.add('text-input-validation-error');
-		message.classList.remove('hidden');
+		if (isInvalid) {
+			input.classList.add('text-input-validation-error');
+			if (message) {
+				message.classList.remove('hidden');
+			}
+			hasError = true;
+		} else {
+			input.classList.remove('text-input-validation-error');
+			if (message) {
+				message.classList.add('hidden');
+			}
+		}
+	});
+
+	if (!saveBtn) {
+		return;
+	}
+
+	if (hasError) {
 		saveBtn.setAttribute('disabled', '');
 	} else {
-		input.classList.remove('text-input-validation-error');
-		message.classList.add('hidden');
 		saveBtn.removeAttribute('disabled');
 	}
 }
+
 function salesmanagoValidateApiKey()
 {
 	const input = document.getElementById( 'api-v3-key-input' );
@@ -946,7 +1149,7 @@ function salesmanagoValidateCurrencyCode()
 
 function salesmanagoRefreshCatalogList() {
 
-	salesmanagoRotateAnimation('sm-refresh-catalogs');
+	salesmanagoRotateAnimation('sm-refresh-icon');
 
 	let smData = new FormData();
 	smData.append( 'action', 'salesmanago_refresh_catalogs' );
@@ -956,8 +1159,22 @@ function salesmanagoRefreshCatalogList() {
 	let smXhttp                = new XMLHttpRequest();
 	smXhttp.onreadystatechange = function () {
 		if (this.readyState === 4 && this.status === 200 && this.responseText !== 'ERR') {
-			salesmanagoUpdateCatalogSelectElement(JSON.parse(this.responseText));
-			salesmanagoShowRefreshCatalogNotice(true);
+			try {
+				let updatedCatalogs = JSON.parse(this.responseText);
+				if (!Array.isArray(updatedCatalogs)) {
+					throw new Error('Invalid catalog response');
+				}
+
+				if (document.getElementById('sm-multi-catalog-list')) {
+					window.location.reload();
+					return;
+				}
+
+				salesmanagoUpdateCatalogSelectElement(updatedCatalogs);
+				salesmanagoShowRefreshCatalogNotice(true);
+			} catch (error) {
+				salesmanagoShowRefreshCatalogNotice(false);
+			}
 		} else if (this.readyState === 4 && ( this.status !== 200 || this.responseText === 'ERR')) {
 			salesmanagoShowRefreshCatalogNotice(false);
 		}

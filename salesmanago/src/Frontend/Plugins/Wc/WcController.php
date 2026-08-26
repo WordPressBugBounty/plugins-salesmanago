@@ -12,6 +12,7 @@ use bhr\Frontend\Plugins\Wc\WcContactModel as ContactModel;
 use bhr\Frontend\Plugins\Wc\WcEventModel as EventModel;
 use bhr\Includes\GlobalConstant;
 use bhr\Admin\Entity\Configuration;
+use bhr\Includes\Integrations\Wpml\WpmlLocationResolver;
 use SALESmanago\Exception\Exception;
 
 use bhr\Frontend\Controller\TransferController;
@@ -24,26 +25,29 @@ class WcController {
 	private $ContactModel;
 	private $EventModel;
 	private $Configuration;
+	private $PlatformSettings;
 
 	private $productIdentifierType;
 	private $preventEventDuplication = false;
-    private $lang;
+	private $lang;
 
 	public function __construct( $PlatformSettings, Configuration $Configuration, TransferController $TransferController ) {
-		$this->TransferController = $TransferController;
-		$this->Configuration      = $Configuration;
 		if ( ! $this->ContactModel = new ContactModel( $PlatformSettings ) ) {
 			return false;
 		}
+		$this->PlatformSettings = $PlatformSettings;
+		$this->TransferController = $TransferController;
+		$this->Configuration = $Configuration;
+
 		$this->EventModel = new EventModel( $PlatformSettings );
 
 		$this->productIdentifierType = $PlatformSettings->PluginWc->productIdentifierType;
 
-        $this->lang = Helper::getLanguage(
-            isset($PlatformSettings->languageDetection)
-                ? $PlatformSettings->languageDetection
-                : Wc::DEFAULT_LANGUAGE_DETECTION
-        );
+		$this->lang = Helper::getLanguage(
+			isset($PlatformSettings->languageDetection)
+				? $PlatformSettings->languageDetection
+				: Wc::DEFAULT_LANGUAGE_DETECTION
+		);
 
 		if ( isset( $PlatformSettings->PluginWc->preventEventDuplication ) ) {
 			$this->preventEventDuplication = boolval( $PlatformSettings->PluginWc->preventEventDuplication );
@@ -100,15 +104,19 @@ class WcController {
 	}
 
 	/**
+	 * @param int|null $userId
 	 * Parse woocommerce user to SM contact, send contact to SM
 	 * Set smclient for contact
 	 *
 	 * @return bool
 	 */
-	public function registerUser() {
+	public function registerUser( $userId = null ) {
 		try {
-			if ( $this->ContactModel->parseCustomerFromPost() ) {
-				$this->ContactModel->setTagsFromConfig( ContactModel::TAGS_REGISTRATION );
+			if (
+                $this->ContactModel->parseCustomerFromPost()
+                || $this->ContactModel->parseContact( $userId, GlobalConstant::ID)
+            ) {
+                $this->ContactModel->setTagsFromConfig( ContactModel::TAGS_REGISTRATION );
 				Helper::doAction( 'salesmanago_wc_register_contact', array( 'Contact' => $this->ContactModel->get() ) );
 				return $this->TransferController->transferContact( $this->ContactModel->get() );
 			}
@@ -191,12 +199,14 @@ class WcController {
 				return false;
 			}
 
+			$language = sanitize_key( $order->get_meta( 'wpml_language', true ) );
+
 			$this->EventModel->bindEvent(
 				$client,
 				EventModel::EVENT_TYPE_PURCHASE,
 				$products,
-				$this->Configuration->getLocation(),
-                $this->lang
+				$this->getLocation( $language ),
+				$this->lang
 			);
 			Helper::doAction(
 				'salesmanago_wc_purchase',
@@ -244,8 +254,8 @@ class WcController {
 				$client,
 				EventModel::EVENT_TYPE_CART,
 				$products,
-				$this->Configuration->getLocation(),
-                $this->lang,
+				$this->getLocation(),
+				$this->lang,
 				$smEvent
 			);
 			Helper::doAction( 'salesmanago_wc_cart', array( 'Event' => $this->EventModel->get() ) );
@@ -305,11 +315,13 @@ class WcController {
 				return false;
 			}
 
+			$language = sanitize_key( $order->get_meta( 'wpml_language', true ) );
+
 			$this->EventModel->bindEvent(
 				$client,
 				$eventType,
 				$products,
-                Configuration::getInstance()->getLocation(),
+                $this->getLocation( $language ),
                 $this->lang,
 				$smEvent
 			);
@@ -328,4 +340,27 @@ class WcController {
 		}
 		return false;
 	}
+
+	/**
+	 * In frontend context PlatformSettings is decoded stdClass,
+	 * so we have to access multilocation as a property
+	 *
+	 * @param  string|null  $language
+	 *
+	 * @return string
+	 */
+	private function getLocation( ?string $language = null ): string {
+		$isEnabled = filter_var(
+			$this->PlatformSettings->wpmlMultilocationEnabled ?? false,
+			FILTER_VALIDATE_BOOLEAN
+		);
+
+		return WpmlLocationResolver::resolve(
+			$this->Configuration->getLocation(),
+			$this->Configuration->getMultilocations(),
+			$isEnabled,
+			$language
+		);
+	}
+
 }

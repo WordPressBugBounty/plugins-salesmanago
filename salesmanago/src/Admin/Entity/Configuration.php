@@ -43,6 +43,16 @@ class Configuration extends \SALESmanago\Entity\Configuration implements UnionCo
      */
     protected $leadooScript = '';
 
+	/**
+	 * @var array<string, string>
+	 */
+	protected $multilocations = [];
+
+	/**
+	 * @var array<string, string>
+	 */
+	protected $activeCatalogsByLocation = [];
+
     /**
      * @return string|null
      */
@@ -146,12 +156,49 @@ class Configuration extends \SALESmanago\Entity\Configuration implements UnionCo
 	 */
 	public function setIsNewApiError ( $isNewApiError ) {
 		$this->isNewApiError = $isNewApiError;
+		return $this;
+	}
+
+	/**
+	 * @return array<string, string>
+	 */
+	public function getMultilocations(): array {
+		return is_array($this->multilocations) ? $this->multilocations : [];
+	}
+
+	/**
+	 * @param array<string, string> $multilocations
+	 *
+	 * @return $this
+	 */
+	public function setMultilocations( array $multilocations ) {
+		$this->multilocations = $multilocations;
+		return $this;
+	}
+
+	/**
+	 * @return array<string, string>
+	 */
+	public function getActiveCatalogsByLocation(): array {
+		return is_array($this->activeCatalogsByLocation) ? $this->activeCatalogsByLocation : [];
+	}
+
+	/**
+	 * @param  array  $activeCatalogsByLocation
+	 *
+	 * @return $this
+	 */
+	public function setActiveCatalogsByLocation( array $activeCatalogsByLocation ) {
+		$this->activeCatalogsByLocation = $activeCatalogsByLocation;
+		return $this;
 	}
 
     public function jsonSerialize(): array
     {
         $arr = parent::jsonSerialize();
         $arr['smApp'] = $this->getSmApp();
+        $arr['multilocations'] = $this->getMultilocations();
+        $arr['activeCatalogsByLocation'] = $this->getActiveCatalogsByLocation();
         return $arr;
     }
 }

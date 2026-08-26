@@ -1,18 +1,18 @@
 {
     "packages": [
         {
-            "name": "salesmanago/api-sso-util",
-            "version": "3.8.6",
-            "version_normalized": "3.8.6.0",
+            "name": "managoai/php-sdk",
+            "version": "4.0.0",
+            "version_normalized": "4.0.0.0",
             "source": {
                 "type": "git",
-                "url": "https://bitbucket.org/benhauerdev/api-sso-util.git",
-                "reference": "468b4ad339b54dc0750e9b950844c16af9d7d96a"
+                "url": "https://bitbucket.org/benhauerdev/php-sdk.git",
+                "reference": "21c2ed30dc99344fcdd8ae56a37317acce12a916"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://bitbucket.org/benhauerdev/api-sso-util/get/468b4ad339b54dc0750e9b950844c16af9d7d96a.zip",
-                "reference": "468b4ad339b54dc0750e9b950844c16af9d7d96a",
+                "url": "https://bitbucket.org/benhauerdev/php-sdk/get/21c2ed30dc99344fcdd8ae56a37317acce12a916.zip",
+                "reference": "21c2ed30dc99344fcdd8ae56a37317acce12a916",
                 "shasum": ""
             },
             "require": {
@@ -27,7 +27,7 @@
                 "phpunit/phpunit": "^9",
                 "squizlabs/php_codesniffer": "^3.5.8"
             },
-            "time": "2026-03-26T13:25:43+00:00",
+            "time": "2026-07-03T10:55:43+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -44,16 +44,16 @@
             ],
             "authors": [
                 {
-                    "name": "SALESmanago",
-                    "email": "dev@salesmanago.pl"
+                    "name": "Manago AI",
+                    "email": "dev@managoai.com"
                 }
             ],
-            "description": "core api code",
-            "homepage": "https://bitbucket.org/benhauerdev/api-sso-util",
+            "description": "PHP SDK for Manago AI integrations",
+            "homepage": "https://bitbucket.org/benhauerdev/php-sdk",
             "support": {
-                "source": "https://bitbucket.org/benhauerdev/api-sso-util/src/468b4ad339b54dc0750e9b950844c16af9d7d96a/?at=3.8.6"
+                "source": "https://bitbucket.org/benhauerdev/php-sdk/src/21c2ed30dc99344fcdd8ae56a37317acce12a916/?at=4.0.0"
             },
-            "install-path": "../salesmanago/api-sso-util"
+            "install-path": "../managoai/php-sdk"
         }
     ],
     "dev": false,

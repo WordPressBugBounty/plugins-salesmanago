@@ -7,6 +7,7 @@ use bhr\Admin\Entity\Plugins\Wc;
 use bhr\Admin\Model\AdminActionModel;
 use bhr\Admin\Model\Helper;
 
+use bhr\Includes\Integrations\Wpml\WpmlLocationResolver;
 use SALESmanago\Controller\ContactAndEventTransferController;
 use SALESmanago\Entity\Configuration;
 use SALESmanago\Entity\Response;
@@ -84,11 +85,18 @@ class AdminActionController {
 				return false;
 			}
 
+			$location = WpmlLocationResolver::resolve(
+				$this->Configuration->getLocation(),
+				$this->Configuration->getMultilocations(),
+				$this->PlatformSettings->isWpmlMultilocationEnabled(),
+				sanitize_key( $WcOrder->get_meta( 'wpml_language', true ) )
+			);
+
 			$Event = $this->AdminActionModel->bindEvent(
 				$this->AdminActionModel->parseEventFromWcOrder( $WcOrder, $this->PlatformSettings ),
 				$eventType,
 				$Contact,
-				$this->Configuration->getLocation(),
+				$location,
 				$this->lang
 			);
 			if ( $Event ) {

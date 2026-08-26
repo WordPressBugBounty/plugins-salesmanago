@@ -8,5 +8,5 @@ $baseDir = dirname($vendorDir);
 return array(
     'tests\\' => array($baseDir . '/tests'),
     'bhr\\' => array($baseDir . '/src'),
-    'SALESmanago\\' => array($vendorDir . '/salesmanago/api-sso-util/src'),
+    'SALESmanago\\' => array($vendorDir . '/managoai/php-sdk/src'),
 );

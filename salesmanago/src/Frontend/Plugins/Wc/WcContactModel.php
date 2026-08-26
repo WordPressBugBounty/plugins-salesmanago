@@ -9,9 +9,15 @@ if ( ! defined( 'ABSPATH' ) ) {
 use bhr\Frontend\Model\AbstractContactModel;
 use bhr\Frontend\Model\Helper;
 use bhr\Includes\GlobalConstant;
+use Automattic\WooCommerce\Blocks\Domain\Services\CheckoutFields as BlocksCheckoutFields;
+use Automattic\WooCommerce\Blocks\Package as BlocksPackage;
 use SALESmanago\Entity\Contact\Contact;
+use WC_Order;
 
 class WcContactModel extends AbstractContactModel {
+
+	const CHECKOUT_BLOCK_OPT_IN_EMAIL_FIELD = 'salesmanago/sm-optin-email';
+	const CHECKOUT_BLOCK_OPT_IN_MOBILE_FIELD = 'salesmanago/sm-optin-mobile';
 
 	public $user;      // holds userId or user login
 	public $userType;  // login or register
@@ -156,6 +162,7 @@ class WcContactModel extends AbstractContactModel {
         if ( Helper::preventMultipleDoubleOptInMails() ) {
             $this->setOptInStatuses();
         }
+        $this->setCheckoutBlockOptInStatusesFromOrder( Helper::wcGetOrder( $orderId ) );
 
         return $this->Contact;
     }
@@ -206,6 +213,7 @@ class WcContactModel extends AbstractContactModel {
 		if ( Helper::preventMultipleDoubleOptInMails() ) {
 			$this->setOptInStatuses();
 		}
+		$this->setCheckoutBlockOptInStatusesFromOrder( $order );
 
 		return $this->Contact;
 	}
@@ -336,5 +344,55 @@ class WcContactModel extends AbstractContactModel {
 		}
 
 		return $this->Contact;
+	}
+
+	/**
+	 * @param mixed $order
+	 * @return void
+	 */
+	private function setCheckoutBlockOptInStatusesFromOrder( $order ) {
+		if ( ! $order instanceof \WC_Order
+			|| ! class_exists( '\\Automattic\\WooCommerce\\Blocks\\Package' )
+			|| ! class_exists( '\\Automattic\\WooCommerce\\Blocks\\Domain\\Services\\CheckoutFields' ) ) {
+			return;
+		}
+
+		try {
+			$checkoutFields = BlocksPackage::container()->get(
+				BlocksCheckoutFields::class
+			);
+
+			$this->applyCheckoutBlockOptInValues(
+				$checkoutFields->get_field_from_object( self::CHECKOUT_BLOCK_OPT_IN_EMAIL_FIELD, $order, 'other' ),
+				$checkoutFields->get_field_from_object( self::CHECKOUT_BLOCK_OPT_IN_MOBILE_FIELD, $order, 'other' )
+			);
+		} catch ( \Throwable $e ) {
+			\bhr\Admin\Model\Helper::salesmanago_log( $e->getMessage(), __FILE__ );
+		}
+	}
+
+	/**
+	 * @param mixed $newsletterOptIn
+	 * @param mixed $mobileOptIn
+	 * @return void
+	 */
+	private function applyCheckoutBlockOptInValues( $newsletterOptIn, $mobileOptIn ) {
+		$hasNewsletterOptIn = ! empty( $newsletterOptIn );
+		$hasMobileOptIn = ! empty( $mobileOptIn );
+
+		if ( ! $hasNewsletterOptIn && ! $hasMobileOptIn ) {
+			return;
+		}
+
+		$this->Options->setIsSubscriptionStatusNoChange( false );
+
+		if ( $hasNewsletterOptIn ) {
+			$this->Options->setIsSubscribesNewsletter( true );
+			$this->setTagsFromConfig( self::TAGS_NEWSLETTER );
+		}
+
+		if ( $hasMobileOptIn ) {
+			$this->Options->setIsSubscribesMobile( true );
+		}
 	}
 }

@@ -4,11 +4,11 @@ Plugin URI:  https://support.manago.ai/integration-with-wordpress/
 Contributors: Benhauer Sp. z o.o.
 Tags: marketing automation, email marketing, crm, live chat, social media, lead nurturing, lead generation, personalized marketing, woocommerce, contacts, lead tracking, click tracking, visitor tracking, inbound marketing, subscription, marketing, newsletter, popup, email, contacts database, contact form, popup form
 Requires at least: 5.6
-Tested up to: 7.0
+Tested up to: 7.1
 Tested up to WooCommerce: 8.2.1
 Tested up to ContactForm7: 5.5.6
 Tested up to GravityForms: 2.4.10
-Stable tag: 3.12.0
+Stable tag: 3.13.0
 License: GPLv2+ License
 URI: https://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: salesmanago
@@ -138,6 +138,12 @@ Full details are available [here](https://www.manago.ai/info/information-obligat
 
 
 == Changelog ==
+= 3.13.0 =
+- Added support for WPML plugin in Product Catalogs and External Events
+- Added WPML-based multi-catalog support for Product Catalogs
+- Updated ManagoAI/PHP-SDK library to 4.0.0
+- Added support for WooCommerce block consents and registration fallback
+- Fix: always show tier pricing option in plugin settings
 = 3.12.0 =
 - Rebranding to Manago AI & Leadoo AI
 = 3.11.3 =

@@ -11,11 +11,11 @@ use bhr\Admin\Model\AdminModel;
 use bhr\Admin\Model\Helper;
 use bhr\Frontend\Plugins\Wc\WcEventModel;
 use bhr\Includes\Helper as IncludesHelper;
+use bhr\Includes\Integrations\Wpml\WpmlLanguageContext;
 use Error;
 use Exception;
 use SALESmanago\Entity\Api\V3\Product\ProductEntity;
 use SALESmanago\Exception\Exception as SmException;
-use SALESmanago\Helper\Mapper\Map\ItemEntity;
 use SALESmanago\Helper\Mapper\ProductEntityBuilder;
 use SALESmanago\Model\Collections\Api\V3\ProductsCollection as Collection;
 use WC_Product_Variable;
@@ -25,6 +25,8 @@ use WC_Product_Variable;
  * Build product entities for export and hook upsert
  */
 class ProductBuilder {
+
+	use IncludesHelper;
 
 	const PRODUCT_INSTOCK                = 'instock',
 		  PRODUCT_AVAILABLE_ON_BACKORDER = 'onbackorder',
@@ -98,8 +100,8 @@ class ProductBuilder {
 			}
 			$quantity                        = $wc_product->get_stock_quantity();
 			$wc_product_data['quantity']     = ! is_null( $quantity ) ? $quantity : '';
-			$wc_product_data['mainImageUrl'] = ! empty( $wc_product->get_image() ) ? IncludesHelper::getImageUrl( $wc_product->get_image_id() ) : '';
-			$wc_product_data['productUrl']   = ! empty( $wc_product->get_permalink() ) ? $wc_product->get_permalink() : '';
+			$wc_product_data['mainImageUrl'] = ! empty( $wc_product->get_image() ) ? self::getImageUrl( $wc_product->get_image_id() ) : '';
+			$wc_product_data['productUrl']   = $this->get_product_url( $wc_product );
 			$wc_product_data['active']       = ! ( $wc_product->get_catalog_visibility() === self::PRODUCT_INACTIVE );
 			$wc_product_data['available']    = $this->determine_product_availability( $wc_product );
 
@@ -107,12 +109,12 @@ class ProductBuilder {
 				// live synchro case
 				$imageUrls = !empty($parentImageUrls)
 					? $parentImageUrls
-					: (array_map([IncludesHelper::class, 'getImageUrl'], $wc_product->get_gallery_image_ids() ?? []));
+					: (array_map([self::class, 'getImageUrl'], $wc_product->get_gallery_image_ids() ?? []));
 			} else {
 				// export case
 				$imageUrls = !empty($parentImageUrls)
-					? (array_map([IncludesHelper::class, 'getImageUrl'], $parentImageUrls))
-					: (array_map([IncludesHelper::class, 'getImageUrl'], $wc_product->get_gallery_image_ids() ?? []));
+					? (array_map([self::class, 'getImageUrl'], $parentImageUrls))
+					: (array_map([self::class, 'getImageUrl'], $wc_product->get_gallery_image_ids() ?? []));
 			}
 
 			$wc_product_data['imageUrls'] = array_slice($imageUrls, 0, 5);
@@ -121,6 +123,36 @@ class ProductBuilder {
 		} catch ( Exception | Error $e ) {
 			Helper::salesmanago_log( $e->getMessage(), __FILE__ );
 			return null;
+		}
+	}
+
+	/**
+	 * Returns the product permalink in the product's WPML source language if WPML is available,
+	 * otherwise returns the product permalink in the current language.
+	 *
+	 * @param $wc_product
+	 *
+	 * @return string
+	 */
+	private function get_product_url( $wc_product ): string {
+		$wpml_context = new WpmlLanguageContext();
+
+		if ( !$wpml_context->can_scope_post_permalink() ) {
+			return $wc_product->get_permalink() ?: '';
+		}
+
+		$language_code = $wpml_context->get_post_language_code( $wc_product->get_id() );
+
+		if ( empty( $language_code ) && $wc_product->get_parent_id() ) {
+			$language_code = $wpml_context->get_post_language_code( $wc_product->get_parent_id() );
+		}
+
+		$language_context = $wpml_context->switch_to_language( $language_code );
+
+		try {
+			return $wc_product->get_permalink() ?: '';
+		} finally {
+			$wpml_context->restore_language( $language_context );
 		}
 	}
 
@@ -425,7 +457,7 @@ class ProductBuilder {
 	    }
 
         if ( empty( $map ) ) {
-            $map = IncludesHelper::generateDefaultMapping();
+            $map = self::generateDefaultMapping();
         }
 
         return json_encode( $map );

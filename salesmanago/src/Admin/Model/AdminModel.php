@@ -13,6 +13,9 @@ use bhr\Admin\Entity\PlatformSettings;
 
 use bhr\Admin\Entity\Plugins\AbstractPlugin;
 use bhr\Admin\Entity\Plugins\Wc;
+use bhr\Includes\Integrations\Wpml\WpmlLanguageContext;
+use bhr\Includes\Integrations\Wpml\WpmlLocationResolver;
+use bhr\Includes\LocationValidator;
 use Error;
 use SALESmanago\Entity\AbstractEntity;
 use bhr\Admin\Entity\Configuration;
@@ -37,6 +40,7 @@ class AdminModel extends AbstractModel
 	public $Configuration;
 	public $PlatformSettings;
 	private $CronController;
+	private $wpmlContext;
 
 	public function __construct() {
 		parent::__construct();
@@ -51,6 +55,7 @@ class AdminModel extends AbstractModel
 		$this->Configuration    = Configuration::getInstance();
 		$this->PlatformSettings = PlatformSettings::getInstance();
 		$this->CronController    = new CronController();
+		$this->wpmlContext       = new WpmlLanguageContext();
 	}
 
     /**
@@ -71,9 +76,14 @@ class AdminModel extends AbstractModel
 				$contactCookieTtl = (int)( (float) self::validateContactCookieTtl($request['contact-cookie-ttl']) * 24 * 60 * 60 );
 			}
 
+			$location = !empty( $request['salesmanago-location'] )
+				? LocationValidator::validate_or_default( $request['salesmanago-location'], Helper::getLocation() )
+				: Helper::getLocation();
+
 			$this->getConfiguration()
 				->setIgnoredDomains( Helper::clearCSVInput( $request['salesmanago-ignored-domains'], false ) )
-				->setLocation( ! empty( $request['salesmanago-location'] ) ? self::validateLocation($request['salesmanago-location']) : Helper::getLocation() )
+				->setLocation( $location )
+				->setMultilocations( $this->parseMultilocationsFromRequest( $request ) )
 				->setContactCookieTtl( $contactCookieTtl );
 
 			$this->getPlatformSettings()
@@ -101,7 +111,10 @@ class AdminModel extends AbstractModel
 			$PlatformSettings->getPluginCf7()->setActive( isset( $request['salesmanago-plugin-cf7'] ) );
 			$PlatformSettings->getPluginGf()->setActive( isset( $request['salesmanago-plugin-gf'] ) );
 			$PlatformSettings->getPluginFf()->setActive( isset( $request['salesmanago-plugin-ff'] ) );
-			$PlatformSettings->getPluginWc()->setTierPricing( isset( $request['tier-pricing'] ) ? $request['tier-pricing'] : false );
+			$PlatformSettings->getPluginWc()->setTierPricing( isset( $request['salesmanago-tier-pricing'] ) ? $request['salesmanago-tier-pricing'] : false );
+			$PlatformSettings->setWpmlMultilocationEnabled(
+				isset( $request['salesmanago-plugin-wpml'] ) && $this->isWpmlAvailable()
+			);
 			if ( $PlatformSettings->isActive( SUPPORTED_PLUGINS['WordPress'] )
 				&& $PlatformSettings->isActive( SUPPORTED_PLUGINS['WooCommerce'] ) ) {
 				$PlatformSettings->getPluginWp()->setActive( false );
@@ -138,7 +151,7 @@ class AdminModel extends AbstractModel
 				->setProductIdentifierType( isset( $request['product-identifier-type'] ) ? $request['product-identifier-type'] : null )
 				->setPurchaseHook( isset( $request['purchase-hook'] ) ? $request['purchase-hook'] : null )
 				->setPreventEventDuplication( isset( $request['prevent-event-duplication'] ) ? $request['prevent-event-duplication'] : false )
-				->setTierPricing( isset( $request['tier-pricing'] ) ? $request['tier-pricing'] : false )
+				->setTierPricing( isset( $request['salesmanago-tier-pricing'] ) ? $request['salesmanago-tier-pricing'] : false )
 				->getDoubleOptIn()
 					->setDoubleOptIn( isset( $request['double-opt-in'] ) ? $request['double-opt-in'] : array() );
 			$this->getPlatformSettings()->getPluginWc()
@@ -350,13 +363,15 @@ class AdminModel extends AbstractModel
 			->setOwnersList( isset( $conf->ownersList ) ? $conf->ownersList : array() )
 			->setActive( isset( $conf->active ) ? $conf->active : false )
 			->setLocation( isset( $conf->location ) ? $conf->location : Helper::getLocation() )
-            ->setSmApp(isset( $conf->smApp ) ? $conf->smApp : 0)
+			->setMultilocations( isset( $conf->multilocations ) ? (array) $conf->multilocations : [] )
+			->setSmApp(isset( $conf->smApp ) ? $conf->smApp : 0)
 			->setPlatformName( self::platformName )
-            ->setApiV3Key( isset( $conf->apiV3Key ) ? $conf->apiV3Key : '' )
-            ->setApiV3Endpoint( isset ( $conf->apiV3Endpoint) ? $conf->apiV3Endpoint : 'https://api.salesmanago.com' )
-            ->setCatalogs( isset ( $conf->Catalogs) ? $conf->Catalogs : '' )
-            ->setActiveCatalog( isset ( $conf->activeCatalog ) ? $conf->activeCatalog : '' )
-            ->setLeadooScript( isset( $conf->leadooScript ) ? $conf->leadooScript : '' )
+			->setApiV3Key( isset( $conf->apiV3Key ) ? $conf->apiV3Key : '' )
+			->setApiV3Endpoint( isset ( $conf->apiV3Endpoint) ? $conf->apiV3Endpoint : 'https://api.salesmanago.com' )
+			->setCatalogs( isset ( $conf->Catalogs) ? $conf->Catalogs : '' )
+			->setActiveCatalog( isset ( $conf->activeCatalog ) ? $conf->activeCatalog : '' )
+			->setActiveCatalogsByLocation( isset( $conf->activeCatalogsByLocation ) ? (array) $conf->activeCatalogsByLocation : [] )
+			->setLeadooScript( isset( $conf->leadooScript ) ? $conf->leadooScript : '' )
 			->setisNewApiError( $conf->isNewApiError ?? false );
 
 	}
@@ -459,6 +474,9 @@ class AdminModel extends AbstractModel
 		$PlatformSettings->getPluginCf7()->setPluginSettings( $settings->PluginCf7 ?? null );
 		$PlatformSettings->getPluginGf()->setPluginSettings( $settings->PluginGf ?? null );
 		$PlatformSettings->getPluginFf()->setPluginSettings( $settings->PluginFf ?? null );
+		$PlatformSettings->setWpmlMultilocationEnabled(
+			filter_var( $settings->wpmlMultilocationEnabled ?? false, FILTER_VALIDATE_BOOLEAN )
+		);
 	}
 
 	/**
@@ -1021,19 +1039,6 @@ class AdminModel extends AbstractModel
         return 3652;
     }
 
-    /**
-     * @param $param
-     *
-     * @return string
-     */
-    private static function validateLocation($param)
-    {
-        if ( preg_match( '/^[a-zA-Z_][a-zA-Z0-9_]+$/', $param ) && strlen($param) > 2 && strlen($param) < 37 ) {
-            return $param;
-        }
-        return Helper::getLocation();
-    }
-
 	/**
 	 * @return array
 	 */
@@ -1068,5 +1073,73 @@ class AdminModel extends AbstractModel
      */
 	public function getCronController() {
 		return $this->CronController;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isWpmlAvailable(): bool {
+		return $this->wpmlContext->can_resolve_multilocations();
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getWpmlMultilocationFields(): array {
+		if ( !$this->getPlatformSettings()->isWpmlMultilocationEnabled() || !$this->isWpmlAvailable() ) {
+			return [];
+		}
+
+		$configuration = $this->getConfiguration();
+		$wpml_resolver = new WpmlLocationResolver( $this->wpmlContext );
+
+		$fields = [];
+
+		foreach ( $this->wpmlContext->get_active_languages() as $language ) {
+			$language_code = $language['code'];
+
+			$fields[] = [
+				'code' => $language_code,
+				'name' => $language['name'],
+				'value' => $wpml_resolver->resolve_location(
+					$configuration->getLocation(),
+					$configuration->getMultilocations(),
+					true,
+					$language_code
+				)
+			];
+		}
+
+		return $fields;
+	}
+
+	/**
+	 * @param array $request
+	 *
+	 * @return array
+	 */
+	private function parseMultilocationsFromRequest( array $request ): array {
+		if ( empty( $request['salesmanago-multilocations'] ) || !is_array( $request['salesmanago-multilocations'] ) ) {
+			return [];
+		}
+
+		$multilocations = [];
+
+		foreach ( $request['salesmanago-multilocations'] as $code => $location ) {
+			$code = sanitize_key( wp_unslash( $code ) );
+			$location = LocationValidator::sanitize( $location );
+
+			if ( '' === $code || '' === $location ) {
+				continue;
+			}
+
+			if ( !LocationValidator::is_valid( $location ) ) {
+				continue;
+			}
+
+			$multilocations[ $code ] = $location;
+		}
+
+		return $multilocations;
 	}
 }

@@ -30,6 +30,7 @@ final class PlatformSettings implements \JsonSerializable
     protected $cronEnabled = false;
     protected $cronValue = 0;
     protected $cronMethod = 'real-time';
+    protected $wpmlMultilocationEnabled = false;
 
     private function __construct()
     {
@@ -365,6 +366,23 @@ final class PlatformSettings implements \JsonSerializable
 	public function setCronMethod( string $cronMethod )
 	{
 		$this->cronMethod = $cronMethod;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isWpmlMultilocationEnabled(): bool {
+		return (bool) $this->wpmlMultilocationEnabled;
+	}
+
+	/**
+	 * @param  bool  $wpmlMultilocationEnabled
+	 *
+	 * @return $this
+	 */
+	public function setWpmlMultilocationEnabled( bool $wpmlMultilocationEnabled ) {
+		$this->wpmlMultilocationEnabled = $wpmlMultilocationEnabled;
 		return $this;
 	}
 }

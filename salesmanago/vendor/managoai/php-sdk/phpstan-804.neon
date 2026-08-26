@@ -1,0 +1,44 @@
+includes:
+    - vendor/phpstan/phpstan-strict-rules/rules.neon
+    - vendor/spaze/phpstan-disallowed-calls/extension.neon
+    # (opcjonalnie) zostawiasz też deprecation-rules, jeśli chcesz widzieć je razem
+    # - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+
+parameters:
+    level: max
+    paths:
+        - src
+
+    # Celujemy w 8.4 – dzięki temu PHPStan stosuje semantykę i stuby 8.4
+    phpVersion: 80400
+
+    # Agresywniejsze sprawdzanie typów / warunków:
+    checkMissingCallableSignature: true
+    checkUninitializedProperties: true
+    checkAlwaysTrueCheckTypeFunctionCall: true
+    checkAlwaysTrueInstanceof: true
+    checkAlwaysTrueStrictComparison: true
+    reportUnmatchedIgnoredErrors: true
+    treatPhpDocTypesAsCertain: false       # mniej fałszywych pozytywów
+
+    # Ujarzmij magiczne/dynamiczne rzeczy:
+    universalObjectCratesClasses:
+        - stdClass
+
+    # Zabronione wywołania (przykładowy zestaw – dopasuj pod siebie):
+    disallowedFunctionCalls:
+        - var_dump
+        - dd
+        - die
+        - exit
+        - print_r
+    disallowedMethodCalls:
+        - Symfony\Component\VarDumper\VarDumper::dump
+    disallowedConstantUsages:
+        - STDIN
+        - STDOUT
+        - STDERR
+
+    # Jeśli masz mixed-heavy fragmenty, możesz wyciąć katalogi z ultra-strict:
+    # excludePaths:
+    #     - tests/Fixtures/*

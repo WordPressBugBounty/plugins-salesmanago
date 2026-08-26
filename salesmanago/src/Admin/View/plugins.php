@@ -57,13 +57,48 @@
             </tr>
             <?php endforeach; ?>
 
-        <?php if ( class_exists('TierPricingTable\PriceManager') ) : ?>
+        <?php $wpml_detected = $this->AdminModel->isWpmlAvailable(); ?>
+        <tr valign="top">
+            <th scope="row" class="titledesc">
+                <label for="salesmanago-plugin-wpml">
+                    <?php esc_html_e('WPML', 'salesmanago'); ?>
+                </label>
+                <?php if ( !$wpml_detected ) : ?>
+                    <p class="plugin-not-active"><?php esc_html_e( 'Plugin not detected', 'salesmanago' ); ?></p>
+                <?php endif; ?>
+            </th>
+            <td>
+                <input
+                    type="checkbox"
+                    name="salesmanago-plugin-wpml"
+                    value="1"
+                    id="salesmanago-plugin-wpml"
+                    <?php checked( $wpml_detected && $this->AdminModel->getPlatformSettings()->isWpmlMultilocationEnabled() ); ?>
+                    <?php disabled( !$wpml_detected ); ?>
+                >
+                <label for="salesmanago-plugin-wpml">
+                    <?php esc_html_e( 'Integrate WPML plugin', 'salesmanago' ); ?>
+                </label>
+                <p class="description">
+                    <?php esc_html_e('Enable WPML plugin support to detect its configured languages and extend integration with separate multi-location fields per language', 'salesmanago'); ?>
+                </p>
+            </td>
+        </tr>
+
+        <?php
+            $tier_pricing_detected = class_exists('TierPricingTable\PriceManager');
+            $tier_pricing_enabled = (bool) $this->AdminModel->getPlatformSettings()->getPluginWc()->isTierPricing();
+        ?>
             <tr valign="top">
                 <th scope="row" class="titledesc">
-                    <label for="salesmanago-tier-pricing"><?php _e('Capture Tiered Pricing prices', 'salesmanago') ?></label>
+                    <label for="salesmanago-tier-pricing"><?php _e('Tiered Pricing', 'salesmanago') ?></label>
+                    <?php if ( !$tier_pricing_detected ) : ?>
+                        <p class="plugin-not-active"><?php esc_html_e( 'Plugin not detected', 'salesmanago' ); ?></p>
+                    <?php endif; ?>
                 </th>
                 <td>
-                    <input type="checkbox" name="tier-pricing" <?php $this->selected('true', 'tier-pricing', SUPPORTED_PLUGINS['WooCommerce']) ?> value="1" id="salesmanago-tier-pricing">
+                    <input type="checkbox" name="salesmanago-tier-pricing" value="1" id="salesmanago-tier-pricing"
+                            <?php checked( $tier_pricing_enabled ); ?> <?php disabled( !$tier_pricing_detected ); ?>>
                     <label for="salesmanago-tier-pricing">
                         <span><?php _e('Use prices from Tier Pricing Table plugin', 'salesmanago') ?></span>
                         <p class="description">
@@ -72,7 +107,6 @@
                     </label>
                 </td>
             </tr>
-        <?php endif; ?>
 
             </tbody>
         </table>

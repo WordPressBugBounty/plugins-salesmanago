@@ -7,6 +7,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use bhr\Admin\Builder\ProductBuilder;
+use bhr\Includes\Integrations\Wpml\WpmlLanguageContext;
+use bhr\Includes\Integrations\Wpml\WpmlLocationResolver;
 use SALESmanago\Entity\Contact\Address;
 use SALESmanago\Entity\Contact\Contact;
 use SALESmanago\Entity\Contact\Options;
@@ -59,11 +61,16 @@ class ExportModel {
 	protected $count                 = 0;
 	protected $statuses              = 'wc-completed';
 	protected $exportAs              = self::PURCHASE;
+	protected $productExportLocation = '';
+
+	private $isMultiLocationsEnabled;
 
 	public function __construct( $AdminModel ) {
 		$this->db             = $GLOBALS['wpdb'];
 		$this->Configuration  = $AdminModel->getConfiguration();
 		$this->ProductBuilder = new ProductBuilder( $AdminModel );
+		$this->isMultiLocationsEnabled =
+			$AdminModel->getPlatformSettingsFromDb()->getPlatformSettings()->isWpmlMultilocationEnabled();
 	}
 
 	/**
@@ -78,6 +85,13 @@ class ExportModel {
 	 */
 	public function getLastExportedPackage() {
 		return $this->lastExportedPackage;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getProductExportLocation(): string {
+		return $this->productExportLocation;
 	}
 
 	/**
@@ -302,6 +316,10 @@ class ExportModel {
 		try {
 			$EventsCollection = new EventsCollection();
 
+			$confLocation      = $this->Configuration->getLocation();
+			$confMultilocation = $this->Configuration->getMultilocations();
+			$wpmlResolver      = new WpmlLocationResolver();
+
 			foreach ( $collection as $event ) {
 				if ( empty( $event['email'] ) ) {
 					continue;
@@ -316,6 +334,13 @@ class ExportModel {
 					$date = null;
 				}
 
+				$location = $wpmlResolver->resolve_location(
+					$confLocation,
+					$confMultilocation,
+					$this->isMultiLocationsEnabled,
+					$event['wpmlLanguage'] ?? ''
+				);
+
 				$Event
 					->setEmail( isset( $event['email'] ) ? sanitize_email( $event['email'] ) : null )
 					->setDate( $date )
@@ -325,7 +350,7 @@ class ExportModel {
 					->setContactExtEventType( isset( $event['contactExtEventType'] ) ? sanitize_text_field( $event['contactExtEventType'] ) : self::PURCHASE )
 					->setExternalId( isset( $event['externalId'] ) ? sanitize_text_field( $event['externalId'] ) : null )
 					->setShopDomain( isset( $event['shopDomain'] ) ? esc_url_raw( $event['shopDomain'] ) : get_site_url() )
-					->setLocation( ! empty( $this->Configuration->getLocation() ) ? sanitize_text_field( $this->Configuration->getLocation() ) : md5( get_site_url() ) )
+					->setLocation( $location )
 					->setDetails(
 						array(
 							'1' => isset( $event['detail1'] ) ? sanitize_text_field( $event['detail1'] ) : null,
@@ -582,6 +607,7 @@ class ExportModel {
 				? (int) $order->get_id()
 				: '',
 			'shopDomain'          => esc_url_raw( get_site_url() ),
+			'wpmlLanguage'        => sanitize_key( $order->get_meta( 'wpml_language', true ) ),
 		);
 			$skus = is_array( $prodArr['skus'] )
 				? implode( ',', array_map( 'sanitize_text_field', $prodArr['skus'] ) )
@@ -664,13 +690,34 @@ class ExportModel {
 	 * @return mixed
 	 * @throws Exception
 	 */
-	protected function countProducts() {
-		$query = $this->db->prepare( "
-		SELECT COUNT(ID) FROM {$this->db->posts} 
-		WHERE (post_type = %s OR post_type = %s)
-		AND post_name != ''
-		AND post_status != %s;
-		", 'product', 'product_variation', 'auto-draft' );
+	protected function countProducts( array $language_codes = array() ) {
+		$query = "SELECT COUNT(DISTINCT A.ID) FROM {$this->db->posts} AS A";
+		$args = array( 'product', 'product_variation', 'auto-draft' );
+
+		if ( ! empty( $language_codes ) ) {
+			$query .= "
+				LEFT JOIN {$this->db->prefix}icl_translations AS translation
+					ON translation.element_id = A.ID
+					AND translation.element_type = CONCAT('post_', A.post_type)
+				LEFT JOIN {$this->db->posts} AS parent
+					ON parent.ID = A.post_parent
+				LEFT JOIN {$this->db->prefix}icl_translations AS parent_translation
+					ON parent_translation.element_id = parent.ID
+					AND parent_translation.element_type = 'post_product'";
+			$args = array_merge( $args, $language_codes );
+		}
+
+		$query .= "
+			WHERE (A.post_type = %s OR A.post_type = %s)
+			AND A.post_name != ''
+			AND A.post_status != %s";
+
+		if ( ! empty( $language_codes ) ) {
+			$placeholders = implode( ', ', array_fill( 0, count( $language_codes ), '%s' ) );
+			$query .= " AND COALESCE(translation.language_code, parent_translation.language_code) IN ({$placeholders})";
+		}
+
+		$query = $this->db->prepare( $query, $args );
 		return $this->db->get_var( trim( preg_replace( '/\s\s+/', ' ', $query ) ) );
 	}
 
@@ -681,10 +728,31 @@ class ExportModel {
 	 * @return string|null
 	 * @throws Exception
 	 */
-	public function getBasicProductDataQuery() {
+	public function getBasicProductDataQuery( array $language_codes = array() ) {
 		try {
 			$limit  = self::PRODUCT_PACKAGE_SIZE;
 			$offset = $limit * ( $this->lastExportedPackage + 1 );
+			$args = array( 'product', 'product_variation', 'auto-draft' );
+			$language_join = '';
+			$language_filter = '';
+
+			if ( ! empty( $language_codes ) ) {
+				$language_join = "
+					LEFT JOIN {$this->db->prefix}icl_translations AS translation
+						ON translation.element_id = A.ID
+						AND translation.element_type = CONCAT('post_', A.post_type)
+					LEFT JOIN {$this->db->posts} AS parent
+						ON parent.ID = A.post_parent
+					LEFT JOIN {$this->db->prefix}icl_translations AS parent_translation
+						ON parent_translation.element_id = parent.ID
+						AND parent_translation.element_type = 'post_product'";
+				$placeholders = implode( ', ', array_fill( 0, count( $language_codes ), '%s' ) );
+				$language_filter = " AND COALESCE(translation.language_code, parent_translation.language_code) IN ({$placeholders})";
+				$args = array_merge( $args, $language_codes );
+			}
+
+			$args[] = $limit;
+			$args[] = $offset;
 
 			$query = $this->db->prepare( "
 				SELECT
@@ -715,12 +783,15 @@ class ExportModel {
             LEFT JOIN
                 {$this->db->postmeta} as F
                     ON A.id = F.post_id AND F.meta_key = '_sku'
-            WHERE ( post_type = %s OR post_type = %s )
-            AND post_name != ''
-            AND post_status != %s
+			{$language_join}
+            WHERE ( A.post_type = %s OR A.post_type = %s )
+            AND A.post_name != ''
+            AND A.post_status != %s
+			{$language_filter}
             GROUP BY A.ID
+            ORDER BY A.ID ASC
 			LIMIT %d
-			OFFSET %d;", 'product', 'product_variation', 'auto-draft', $limit, $offset );
+			OFFSET %d;", $args );
 
 			return trim( preg_replace( '/\s\s+/', ' ', $query ) );
 		} catch ( \Exception $e ) {
@@ -749,7 +820,7 @@ class ExportModel {
 			throw new Exception( 'Missing request data' );
 		}
 
-		$raw_data = sanitize_text_field( $_REQUEST['data'] );
+		$raw_data = sanitize_text_field( wp_unslash( $_REQUEST['data'] ) );
 		$decoded  = base64_decode( $raw_data, true );
 		
 		if ( false === $decoded ) {
@@ -784,6 +855,10 @@ class ExportModel {
 			$this->count = (int) $data->count;
 		}
 
+		if ( isset( $data->location ) ) {
+			$this->productExportLocation = sanitize_text_field( $data->location );
+		}
+
 		if ( isset( $data->message ) ) {
 			$this->message = $this->sanitize_output( $data->message );
 		}
@@ -816,6 +891,7 @@ class ExportModel {
 			'status'              => sanitize_text_field( $this->status ),
 			'message'             => $this->sanitize_output( $this->message ),
 			'count'               => $this->count,
+			'location'            => $this->productExportLocation,
 		);
 		wp_send_json( $response );
 	}
@@ -860,23 +936,58 @@ class ExportModel {
 	 * @return array products
 	 * @throws Exception
 	 */
-	public function getProductsFromDB() {
-		$query    = $this->getBasicProductDataQuery();
+	public function getProductsFromDB( array $language_codes = array() ) {
+		$query    = $this->getBasicProductDataQuery( $language_codes );
 		$products = $this->db->get_results( $query, ARRAY_A );
-		$this->setCount( $this->countProducts() );
+		$this->setCount( $this->countProducts( $language_codes ) );
 		$this->setPackageCount(
 			(int) ceil(
 				$this->getCount() / self::PRODUCT_PACKAGE_SIZE
 			)
 		);
 		if ( ! $products ) {
-			if ( $this->status !== 'done' ) {
+			if ( $this->getCount() > 0 ) {
+				$this->setStatus( self::DONE );
+				$this->setMessage( '' );
+			} else {
 				$this->setStatus( self::NO_PRODUCTS );
 				$this->setMessage( 'No products to export' );
 			}
 			$this->buildProductExportResponse();
 		}
 		return $products;
+	}
+
+	/**
+	 * Returns active WPML languages that resolve to the requested catalog location.
+	 *
+	 * @return array<int, string>
+	 */
+	public function getProductExportLanguageCodes(): array {
+		if ( ! $this->isMultiLocationsEnabled || '' === $this->productExportLocation ) {
+			return array();
+		}
+
+		$context = new WpmlLanguageContext();
+		if ( ! $context->can_resolve_multilocations() ) {
+			return array();
+		}
+
+		$languages = array();
+		foreach ( $context->get_active_languages() as $language ) {
+			$location = WpmlLocationResolver::resolve(
+				$this->Configuration->getLocation(),
+				$this->Configuration->getMultilocations(),
+				true,
+				$language['code']
+			);
+
+			if ( $location === $this->productExportLocation ) {
+				$languages[] = $language['code'];
+			}
+		}
+
+		return array_values( array_unique( $languages ) );
 	}
 	
 	// ========================================================================

@@ -1,3 +1,10 @@
+# 3.13.0 released 26.08.2026
+- Added support for WPML plugin in Product Catalogs and External Events
+- Added WPML-based multi-catalog support for Product Catalogs
+- Updated ManagoAI/PHP-SDK library to 4.0.0
+- Added support for WooCommerce block consents and registration fallback
+- Fix: always show tier pricing option in plugin settings
+
 # 3.12.0 released 29.06.2026
 - Rebranding
 

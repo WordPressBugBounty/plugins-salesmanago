@@ -330,10 +330,15 @@ class SettingsController
 	                $ProductCatalogController = new ProductCatalogController( $ProductCatalogModel );
 	                $ProductCatalogController->processSetActiveCatalogRequest( $_REQUEST );
 					break;
-				case 'acknowledgeProductApiError':
-					$CallbackController = new CallbackController();
-					$CallbackController->acknowledge_callback_message();
-					break;
+                case 'setActiveCatalogs':
+                    $ProductCatalogModel = new ProductCatalogModel( $this->AdminModel );
+                    $ProductCatalogController = new ProductCatalogController( $ProductCatalogModel );
+                    $ProductCatalogController->processSetActiveCatalogsRequest( $_REQUEST );
+                    break;
+                case 'acknowledgeProductApiError':
+                    $CallbackController = new CallbackController();
+                    $CallbackController->acknowledge_callback_message();
+                    break;
             }
 		}
 		if ( ! empty( $_REQUEST['message'] ) ) {

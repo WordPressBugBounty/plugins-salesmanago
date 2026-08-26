@@ -53,6 +53,7 @@ class SecureHelper
             'addApiV3Key',
             'addProductCatalog',
             'setActiveCatalog',
+			'setActiveCatalogs',
             'acknowledgeProductApiError',
             'salesmanago_refresh_catalogs',
             'salesmanago_settings_save',

@@ -3,12 +3,24 @@
         <div class="sm-product-catalog-headline-and-btn-wrapper">
             <h2>
                 <?php
-				use bhr\Admin\Entity\Configuration;
-
-				$api_v3_key = $this->AdminModel->getConfiguration()->getApiV3Key();
-				if ( empty( $api_v3_key ) ) :
+                $configuration = $this->AdminModel->getConfiguration();
+                $api_v3_key = $configuration->getApiV3Key();
+                if ( empty( $api_v3_key ) ) :
                     wp_redirect('admin.php?page=salesmanago-product-catalog');
                 endif;
+
+                $multi_catalog_mode = $this->ProductCatalogController->isMultiCatalogMode();
+                $multi_catalog_locations = $multi_catalog_mode
+					? $this->ProductCatalogController->getMultiCatalogLocations()
+					: array();
+
+                if ( ! $multi_catalog_mode ) {
+                    $catalog_location = \bhr\Includes\Integrations\Wpml\WpmlLocationResolver::resolve(
+                        $configuration->getLocation(),
+                        $configuration->getMultilocations(),
+                        $this->AdminModel->getPlatformSettings()->isWpmlMultilocationEnabled()
+                    );
+                }
 
                 _e( 'Start real-time product synchronization by creating a new Product Catalog', 'salesmanago' ); ?>
             </h2>
@@ -24,7 +36,7 @@
         <h3>
 	        <?php _e( 'Product Catalog setup', 'salesmanago' ); ?>
         </h3>
-        <hr/>
+		<hr/>
 		<?php
 		if ( $this->catalogsLimitReached ):?>
             <div class="salesmanago-notice notice inline"">
@@ -81,14 +93,34 @@
                         <?php _e( 'Location', 'salesmanago' ) ?>
                     </label>
                     <div class="sm-create-catalog-tooltip-container">
+						<?php if ( $multi_catalog_mode ) : ?>
+							<select
+								id="sm-catalog-location"
+								name="sm-catalog-location"
+								class="regular-text"
+								required
+							>
+								<option value="">
+									<?php esc_html_e( 'Select location', 'salesmanago' ); ?>
+								</option>
+								<?php foreach ( $multi_catalog_locations as $location => $languages ) : ?>
+									<option value="<?php echo esc_attr( $location ); ?>">
+										<?php echo esc_html(
+                                                $location . ' (' . implode( ', ', wp_list_pluck( $languages, 'name' ) ) . ')'
+                                        ); ?>
+									</option>
+								<?php endforeach; ?>
+							</select>
+						<?php else : ?>
                         <input
                                 id="sm-catalog-location"
                                 type="text"
-                                name="sm-catalog-location"
-                                value="<?= Configuration::getInstance()->getLocation() ?>"
+								name="sm-catalog-location"
+                                value="<?php echo esc_attr( $catalog_location ); ?>"
                                 readonly
                                 class="regular-text"
                         >
+						<?php endif; ?>
                         <span class="dashicons dashicons-editor-help sm-tooltip">
                             <span class="sm-tooltip-text sm-tooltip-text-responsive description">
                                 <?php _e( 'This field is used to assign products to External Events. The value is assigned automatically.', 'salesmanago' ); ?>
@@ -128,7 +160,7 @@
             <button type="submit"
                     class="button-primary sm-btn-top-margin"
                     id="sm-btn-create-catalog"
-				    <?php if ( $this->catalogsLimitReached ): ?> disabled <?php endif ?>
+				    <?php if ( $this->catalogsLimitReached ): ?> disabled <?php endif; ?>
             >
 	            <?php _e( 'CREATE', 'salesmanago' ) ?>
                 <span class="dashicons dashicons-arrow-right-alt salesmanago-arrow-icon"></span>

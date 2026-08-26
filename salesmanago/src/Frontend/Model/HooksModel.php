@@ -11,6 +11,7 @@ use bhr\Frontend\Model\Settings as SettingsModel;
 
 use bhr\Frontend\Plugins\Wp\WpController;
 use bhr\Frontend\Plugins\Wc\WcController;
+use bhr\Frontend\Plugins\Wc\WcContactModel;
 use bhr\Frontend\Plugins\Cf7\Cf7Controller;
 use bhr\Frontend\Plugins\Gf\GfController;
 use bhr\Frontend\Plugins\Ff\FfController;
@@ -48,6 +49,9 @@ class HooksModel {
         /* WooCommerce hooks */
         if (!empty($this->SettingsModel->getPlatformSettings()->PluginWc->active)
             && $this->SettingsModel->getPlatformSettings()->PluginWc->active) {
+            $isEmailAppendEverywhere = $this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->mode === 'appendEverywhere';
+            $isMobileAppendEverywhere = $this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->mode === 'appendEverywhere';
+
             /* Order Hooks */
             Helper::addAction('woocommerce_order_status_cancelled', array($this, 'initWc'), 10, 1);
             Helper::addAction('woocommerce_order_status_refunded', array($this, 'initWc'), 10, 1);
@@ -74,19 +78,23 @@ class HooksModel {
                 Helper::addAction('woocommerce_order_status_changed', array($this, 'initWc'));
             }
 
+            if ($isEmailAppendEverywhere || $isMobileAppendEverywhere) {
+                Helper::addAction('woocommerce_init', array($this, 'registerCheckoutBlockFields'));
+            }
+
             /* Opt-in input Hooks */
             if($this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->mode === 'append') {
                 Helper::addAction('woocommerce_register_form', array($this, 'appendCheckbox'),14);
-            } elseif($this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->mode === 'appendEverywhere') {
+            } elseif($isEmailAppendEverywhere) {
                 Helper::addAction('woocommerce_register_form', array($this, 'appendCheckbox'),14);
                 Helper::addAction('woocommerce_review_order_before_submit', array($this, 'appendCheckbox'),14);
             }
-	        if ($this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->mode === 'append') {
-		        Helper::addAction('woocommerce_register_form', array($this, 'appendCheckboxMobile'),14);
-	        } elseif($this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->mode === 'appendEverywhere') {
-		        Helper::addAction('woocommerce_register_form', array($this, 'appendCheckboxMobile'),14);
-		        Helper::addAction('woocommerce_review_order_before_submit', array($this, 'appendCheckboxMobile'),14);
-	        }
+            if ($this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->mode === 'append') {
+                Helper::addAction('woocommerce_register_form', array($this, 'appendCheckboxMobile'),14);
+            } elseif($isMobileAppendEverywhere) {
+                Helper::addAction('woocommerce_register_form', array($this, 'appendCheckboxMobile'),14);
+                Helper::addAction('woocommerce_review_order_before_submit', array($this, 'appendCheckboxMobile'),14);
+            }
         }
 
         /* Contact Form 7 hook */
@@ -194,7 +202,7 @@ class HooksModel {
                 $WcController->createUser($data, $oldData);
                 break;
             case 'user_register':
-                $WcController->registerUser();
+                $WcController->registerUser($data);
                 break;
             case 'wp_login':
                 $WcController->loginUser($data);
@@ -321,5 +329,51 @@ class HooksModel {
                 <span class="' . $cssClass . '">' . $displayLabel . '</span>
             </label>
         </p>');
+	}
+
+	/**
+	 * @return void
+	 * @throws \Exception
+	 */
+	public function registerCheckoutBlockFields()
+	{
+		if (!function_exists('woocommerce_register_additional_checkout_field')) {
+			return;
+		}
+
+		if ($this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->mode === 'appendEverywhere') {
+			woocommerce_register_additional_checkout_field(array(
+				'id'       => WcContactModel::CHECKOUT_BLOCK_OPT_IN_EMAIL_FIELD,
+				'label'    => $this->getCheckoutBlockFieldLabel(false),
+				'location' => 'contact',
+				'type'     => 'checkbox',
+			));
+		}
+
+		if ($this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->mode === 'appendEverywhere') {
+			woocommerce_register_additional_checkout_field(array(
+				'id'       => WcContactModel::CHECKOUT_BLOCK_OPT_IN_MOBILE_FIELD,
+				'label'    => $this->getCheckoutBlockFieldLabel(true),
+				'location' => 'contact',
+				'type'     => 'checkbox',
+			));
+		}
+	}
+
+	/**
+	 * @param bool $mobile
+	 * @return string
+	 */
+	private function getCheckoutBlockFieldLabel($mobile = false)
+	{
+		$label = $mobile
+			? $this->SettingsModel->getPlatformSettings()->PluginWc->OptInMobileInput->label
+			: $this->SettingsModel->getPlatformSettings()->PluginWc->OptInInput->label;
+
+		Helper::loadPluginTextDomain('salesmanago', false, 'salesmanago/languages');
+
+		$translationKey = $mobile ? '!optInMobileInputLabel' : '!optInInputLabel';
+		$translatedLabel = __($translationKey, 'salesmanago');
+		return ($translatedLabel === $translationKey) ? $label : $translatedLabel;
 	}
 }

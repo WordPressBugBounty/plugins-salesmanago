@@ -7,6 +7,7 @@ if( !defined( 'ABSPATH' ) ) exit;
 use bhr\Admin\Builder\ProductBuilder;
 use bhr\Admin\Model\AdminModel;
 use bhr\Admin\Model\Helper;
+use bhr\Includes\Integrations\Wpml\WpmlCatalogResolver;
 use SALESmanago\Entity\Api\V3\CatalogEntity;
 use SALESmanago\Exception\ApiV3Exception;
 use SALESmanago\Exception\Exception;
@@ -75,7 +76,7 @@ class CronController {
     /**
     * Gets the cron security token, optionally masked for display purposes.
     *
-    * @param bool masked
+    * @param bool $masked
     * @return string
     */
     public function get_cron_token( bool $masked = true ) {
@@ -88,12 +89,13 @@ class CronController {
         return $token;
     }
 
-    /**
-     * Schedule SM cron event
-     *
-     * @param $custom_cron_schedules
-     * @return void
-     */
+	/**
+	 * Schedule SM cron event
+	 *
+	 * @param null $custom_cron_schedule
+	 *
+	 * @return void
+	 */
     public function schedule_salesmanago_cron( $custom_cron_schedule = null ) {
         $recurrence = $custom_cron_schedule && is_string( $custom_cron_schedule )
             ? $custom_cron_schedule
@@ -160,11 +162,14 @@ class CronController {
             $admin_model = $this->initialize_admin_model();
             $product_identifier_type = $admin_model->getPlatformSettings()->getPluginWc()->getProductIdentifierType();
 
-            $products_collection = $this->build_product_collection($products, $product_identifier_type, $admin_model);
+            $groupedProducts = $this->group_products_by_catalog( $products, $admin_model );
 
-            $this->upsert_product_collection($products_collection, $admin_model);
+            foreach ( $groupedProducts['groups'] as $catalogId => $products ) {
+                $products_collection = $this->build_product_collection( $products, $product_identifier_type, $admin_model );
+                $this->upsert_product_collection( $products_collection, $admin_model, $catalogId );
+            }
 
-            $this->clear_stored_products();
+            $this->clear_stored_products( $groupedProducts['unresolved'] );
         } catch ( ApiV3Exception $e ) {
             $entry = array(
                 'reasonCode' => $e->getCode(),
@@ -229,13 +234,18 @@ class CronController {
      *
      * @param ProductsCollection $product_collection
      * @param AdminModel $admin_model
+     * @param string $catalogId
      *
      * @return void
      * @throws ApiV3Exception
      * @throws Exception
      */
-    private function upsert_product_collection( ProductsCollection $product_collection, AdminModel $admin_model ) {
-        $catalog = new CatalogEntity( [ 'catalogId' => $admin_model->getConfiguration()->getActiveCatalog() ] );
+    private function upsert_product_collection(
+		ProductsCollection $product_collection,
+		AdminModel $admin_model,
+		string $catalogId
+    ) {
+        $catalog = new CatalogEntity( [ 'catalogId' => $catalogId ] );
         $product_service = new ProductService( $admin_model->getConfiguration() );
 
         if ( $product_collection->count() > 100)  {
@@ -247,6 +257,50 @@ class CronController {
             $product_service->upsertProducts( $catalog, $product_collection );
         }
     }
+
+	/**
+	 * Groups queued products by their resolved catalog.
+	 *
+	 * Products without a selected catalog remain unresolved and are retained in the CRON queue for later run.
+	 *
+	 * @param  array  $products
+	 * @param  AdminModel  $admin_model
+	 *
+	 * @return array
+	 */
+	private function group_products_by_catalog( array $products, AdminModel $admin_model ) {
+		$configuration = $admin_model->getConfiguration();
+		$enabled = $admin_model->getPlatformSettings()->isWpmlMultilocationEnabled();
+		$resolver = new WpmlCatalogResolver();
+		$groups = [];
+		$unresolved = [];
+
+		foreach ( $products as $product ) {
+			$catalogId = $resolver->getCatalogIdForProduct(
+				(int) $product->get_id(),
+				$configuration->getLocation(),
+				$configuration->getMultilocations(),
+				$configuration->getActiveCatalogsByLocation(),
+				$enabled
+			);
+
+			if ( !$resolver->isMultiCatalogMode( $enabled ) ) {
+				$catalogId = $configuration->getActiveCatalog();
+			}
+
+			if ( empty( $catalogId ) ) {
+				$unresolved[] = $product;
+				continue;
+			}
+
+			$groups[ $catalogId ][] = $product;
+		}
+
+		return [
+			'groups' => $groups,
+			'unresolved' => $unresolved
+		];
+	}
 
     /**
      * Return products that are already stored in DB
@@ -260,10 +314,12 @@ class CronController {
     /**
      * Clear stored products and update DB
      *
+     * Unresolved products remain in the DB (WPML only)
+     *
      * @return void
      */
-    private function clear_stored_products() {
-        update_option( 'salesmanago_cron', [] );
+    private function clear_stored_products( array $unresolved ) {
+        update_option( 'salesmanago_cron', $unresolved );
     }
 
 }

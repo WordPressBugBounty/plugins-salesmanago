@@ -1,0 +1,9 @@
+.idea/
+vendor/
+composer.lock
+.phpunit.result.cache
+bitbucket-pipelines.yml
+dev.phpunit.xml
+*.phpunit.xml
+phpunit.xml
+coverage/

@@ -3,8 +3,8 @@
  * Plugin Name: Manago AI & Leadoo AI
  * Plugin URI:  https://manago.ai/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace
  * Description: Manago AI Marketing Automation integration for WordPress, WooCommerce, Contact Form 7, Gravity Forms, Tier Pricing
- * Version:     3.12.0
- * Tested up to: 7.0
+ * Version:     3.13.0
+ * Tested up to: 7.1.0
  * Requires PHP: 7.4
  * Author:      Manago AI
  * Author URI:  https://www.manago.ai/?utm_source=integration&utm_medium=WORDPRESS&utm_content=marketplace

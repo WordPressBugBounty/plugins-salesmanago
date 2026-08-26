@@ -10,6 +10,7 @@ use bhr\Admin\Model\AdminModel;
 use bhr\Admin\Model\ExportModel;
 use bhr\Admin\Model\Helper;
 use bhr\Includes\Helper as IncludesHelper;
+use bhr\Includes\Integrations\Wpml\WpmlCatalogResolver;
 use bhr\Includes\SecureHelper;
 use SALESmanago\Entity\Api\V3\CatalogEntity;
 use SALESmanago\Exception\ApiV3Exception;
@@ -279,13 +280,38 @@ class ExportController {
 		}
 		try {
 			$this->ExportModel->parseProductExportArgs();
-			$products = $this->ExportModel->getProductsFromDB();
+			$configuration = $this->AdminModel->getConfiguration();
+			$multi_catalog_resolver = new WpmlCatalogResolver();
+			$multi_catalog_mode = $multi_catalog_resolver->isMultiCatalogMode(
+				$this->AdminModel->getPlatformSettings()->isWpmlMultilocationEnabled()
+			);
+			$catalog_id = $configuration->getActiveCatalog();
+			$language_codes = array();
+
+			if ( $multi_catalog_mode ) {
+				$language_codes = $this->ExportModel->getProductExportLanguageCodes();
+				$catalog_id = $multi_catalog_resolver->getCatalogIdForLocation(
+					$this->ExportModel->getProductExportLocation(),
+					$configuration->getActiveCatalogsByLocation(),
+					true
+				);
+
+				if ( empty( $language_codes ) || empty( $catalog_id ) ) {
+					throw new Exception( 'The selected location is not configured for product export' );
+				}
+			}
+
+			if ( empty( $catalog_id ) ) {
+				throw new Exception( 'No product catalog selected for export' );
+			}
+
+			$products = $this->ExportModel->getProductsFromDB( $language_codes );
 			$productIdentifierType = $this->AdminModel->getPlatformSettingsFromDb()->getPlatformSettings()->getPluginWc()->getProductIdentifierType();
 			$ProductsCollection = $this->ExportModel->prepareProductsForExport( $products, $productIdentifierType );
 			$ProductService = new ProductService( $this->AdminModel->getConfiguration() );
 			$Catalog = new CatalogEntity(
 				array(
-					'catalogId' => $this->AdminModel->getConfiguration()->getActiveCatalog(),
+					'catalogId' => $catalog_id,
 				)
 			);
 			$ProductService->upsertProducts( $Catalog, $ProductsCollection );

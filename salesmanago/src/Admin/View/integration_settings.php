@@ -3,9 +3,8 @@
 		<h2><?php
 
 			use bhr\Frontend\Model\Helper;
-			use bhr\Admin\Controller\CronController;
 
-			_e( 'General settings', 'salesmanago' ); ?></h2>
+            _e( 'General settings', 'salesmanago' ); ?></h2>
 
 		<table class="form-table">
 			<tbody>
@@ -92,12 +91,16 @@
 		<h3><?php _e( 'Account settings', 'salesmanago' ); ?></h3>
 		<table class="form-table">
 			<?php
-				$accountSettingsInputs = array(
+
+            $wpml_multilocation_enabled = $this->AdminModel->getPlatformSettings()->isWpmlMultilocationEnabled();
+            $wpml_multilocation_fields = $this->AdminModel->getWpmlMultilocationFields();
+
+            $accountSettingsInputs = array(
 					'location'  => array(
 						'label'       => __( 'Location field for external events', 'salesmanago' ),
 						'description' => __( 'If you want, you can change default \'location\' for external events', 'salesmanago' ),
 						'value'       => $this->AdminModel->getConfiguration()->getLocation(),
-						'readonly'    => '',
+						'readonly'    => $wpml_multilocation_enabled ? 'readonly' : '',
                         'validation'  => 'onblur="salesmanagoLocationValidation()"',
                         'error'       => __( 'Please use lowercase and uppercase letters, numbers, and underscore', 'salesmanago' ),
 					),
@@ -130,30 +133,75 @@
 					?>
 				<tr valign="top">
 					<th scope="row">
-						<label for="salesmanago-<?php echo $key; ?>"><?php echo $value['label']; ?></label>
+						<label for="salesmanago-<?php echo esc_attr( $key ); ?>">
+                            <?php echo esc_html( $value['label'] ); ?>
+                        </label>
 					</th>
 					<td>
 						<input
-                                id="salesmanago-<?php echo $key; ?>"
+                                id="salesmanago-<?php echo esc_attr( $key ); ?>"
                                 type="text"
-                                name="salesmanago-<?php echo $key; ?>"
-                                value="<?php echo $value['value']; ?>"
-							    class="regular-text"
-                                maxlength="36"
+                                name="salesmanago-<?php echo esc_attr( $key ); ?>"
+                                value="<?php echo esc_attr( $value['value'] ); ?>"
+							    class="regular-text <?php echo 'location' === $key ? 'salesmanago-location-input' : ''; ?>"
+                                maxlength="<?php echo 'location' === $key ? '255' : '36'; ?>"
+                                <?php echo 'location' === $key ? 'data-error-id="salesmanago-location-error"' : ''; ?>
 								<?php echo $value['readonly']; ?>
                                 <?php echo $value['validation']; ?>
 						>
                         <?php if ( ! empty($value['error'] ) ) : ?>
-                        <p id="salesmanago-<?php echo $key?>-error" class="description <?php if ($key !== 'apiV3CallbackUrl' || Helper::checkEndpointForHTTPS( Helper::generate_api_v3_webhook_url() ))
-                            {echo 'hidden';}?>">
-                            <span class="span-error"><?php echo $value['error'];?></span>
+                        <p
+                                id="salesmanago-<?php echo esc_attr( $key ); ?>-error"
+                                class="description <?php if ($key !== 'apiV3CallbackUrl' || Helper::checkEndpointForHTTPS( Helper::generate_api_v3_webhook_url() )) {
+                                    echo 'hidden';
+                                }?>">
+                            <span class="span-error"><?php echo esc_html( $value['error'] );?></span>
                         </p>
                         <?php endif;?>
 						<p class="description">
-								<?php echo $value['description']; ?>
+								<?php echo wp_kses_post( $value['description'] ); ?>
 						</p>
 					</td>
 				</tr>
+                <?php if ( 'location' === $key && !empty( $wpml_multilocation_fields ) ) : ?>
+                    <tr valign="top">
+                        <th scope="row">
+                            <?php esc_html_e( 'Multilanguage locations', 'salesmanago' ); ?>
+                        </th>
+                        <td>
+                            <?php foreach ( $wpml_multilocation_fields as $field ) : ?>
+                            <?php
+                                $language_code = $field['code'];
+                                $value = $field['value'];
+                            ?>
+                            <div>
+                                <label for="salesmanago-multilocations-<?php echo esc_attr($language_code); ?>">
+                                    <?php echo esc_html( $field['name']); ?>
+                                </label>
+                                <br>
+                                <input
+                                    id="salesmanago-multilocations-<?php echo esc_attr($language_code); ?>"
+                                    type="text"
+                                    name="salesmanago-multilocations[<?php echo esc_attr($language_code); ?>]"
+                                    value="<?php echo esc_attr($value); ?>"
+                                    class="regular-text salesmanago-location-input"
+                                    maxlength="255"
+                                    data-error-id="salesmanago-multilocations-<?php echo esc_attr( $language_code ); ?>-error"
+                                    onblur="salesmanagoLocationValidation()"
+                                >
+                                <p
+                                    id="salesmanago-multilocations-<?php echo esc_attr( $language_code ); ?>-error"
+                                    class="description hidden"
+                                >
+                                    <span class="span-error">
+                                        <?php esc_html_e('Please use lowercase and uppercase letters, numbers, and underscore.', 'salesmanago' ); ?>
+                                    </span>
+                                </p>
+                            </div>
+                            <?php endforeach; ?>
+                        </td>
+                    </tr>
+                <?php endif; ?>
 				<?php endforeach; ?>
 		</table>
 		<h3><?php _e( 'Web Push Notifications', 'salesmanago' ); ?></h3>
